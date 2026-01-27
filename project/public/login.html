@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Login with Google</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;padding:40px}
+    .center{max-width:420px;margin:0 auto;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="center">
+    <h2>Đăng nhập bằng Google</h2>
+
+    <div id="g_id_onload"
+         data-client_id="742640877548-86ueog4oi9uudf960m598ojl8rs6ufp5.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="g_id_signin" data-type="standard"></div>
+
+    <p>Hoặc dùng nút truyền thống:</p>
+    <button id="signout">Đăng xuất (chỉ client)</button>
+  </div>
+
+<script>
+function handleCredentialResponse(response) {
+  // response.credential là ID token (JWT)
+  // gửi về backend để verify & login
+  fetch('/verify.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id_token: response.credential })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      // vào dashboard
+      window.location = data.redirect || '/dashboard.php';
+    } else {
+      alert('Login thất bại: ' + (data.error || 'Unknown'));
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Lỗi mạng, thử lại.');
+  });
+}
+
+// nút demo xóa local Google state (chỉ client)
+document.getElementById('signout').addEventListener('click', () => {
+  google.accounts.id.disableAutoSelect();
+  alert('Client-side signout done.');
+});
+</script>
+</body>
+</html>

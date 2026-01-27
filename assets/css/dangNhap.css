@@ -1,0 +1,382 @@
+
+    .giua-trang {
+    margin: 140px 24px;
+    margin-top: 140px;
+    padding-top: 0;
+    padding-left: 60px;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    gap: 20px;
+    display: flex;   
+    }
+    .than-trai{
+    flex: 1;
+    padding-left:30px;
+
+    }
+    .cauchao {
+    max-width: 100%;
+    padding-right: 0;
+    line-height: 1.6;
+    padding-bottom: 50px;
+    }
+    .cauchao h1{
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--bs-pink-400);
+    margin-bottom: 15px;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+    }
+    .cauchao p {
+    font-size: 20px;
+    color: #333;  
+    margin: 16px 0;
+    
+    }
+    .quote{
+    border-top: 2px solid var(--bs-pink-400);
+    }
+    .quote blockquote {
+    font-style: italic;
+    font-size: 18px;
+    color: #555;
+    border-left: 4px solid var(--bs-pink-400);
+    padding-left: 15px;
+    margin-top: 30px;
+    
+    }
+    .animated-title span {
+    display: inline-block;
+    animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+    0%   { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+    }
+
+    /*-------------------------Thân bên phải---------------------------*/
+    .than-phai{
+    flex: 0.6 ;
+    padding-left: 0;
+    padding-right: 60px;
+    }
+    .bieu-mau-noi input{
+    width: 100%;
+    padding: 12px 12px;
+    border: 2px solid var(--bs-pink-300);
+    border-radius: 12px;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    transition: border-color 0.3s;
+    }
+    .bieu-mau-noi input:focus{
+    border-color: var(--bs-pink-500);
+    }
+    .bieu-mau-noi label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    padding: 0 2px;
+    color: #888;
+    font-size: 16px;
+    pointer-events: none;
+    transition: top 0.2s, font-size 0.2s, color 0.2s;
+    }
+    /*áp dung khi click vào ô*/
+    .bieu-mau-noi input:focus + label,
+    .bieu-mau-noi input:not(:placeholder-shown) + label{ /*áp dụng khi nhập dữ liệu vào*/
+    top:-10px;
+    font-size: 12px;
+    color: var(--bs-pink-400);
+    }
+
+    .submit{
+    display: flex;
+    justify-content: center; /*ngang*/
+    align-items: center;  /*dọc*/
+    width: 100%;
+    height: 40px;
+    color: #000;
+    background-color: var(--bs-pink-200);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0px 8px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    color: #3b3a3a;
+    font-size: 16px;
+    margin-bottom: 10px;
+    }
+    .submit:hover{
+    background-color: var(--bs-pink-400);
+    box-shadow: 0px 0px 20px var(--bs-pink-200);
+    color: #fff;
+    }
+    .bieu-mau {
+    display: flex;
+    flex-direction: column; 
+    height:400px; /* hoặc đặt chiều cao cụ thể nếu cần */
+    }
+    .bieu-mau h2{
+        color: var(--bs-pink-300);
+        font-size: 30px;
+    }
+    .bieu-mau-tren {
+        flex: 1; /* phần trên chiếm khoảng trống */
+    }
+    .bieu-mau-duoi {
+        flex: 1;
+        margin-top: auto; /* ép phần dưới xuống cuối */
+    }
+ /* của gg */
+    .gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: WHITE;
+  background-image: none;
+  border: 1px solid #747775;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+  transition: background-color .218s, border-color .218s, box-shadow .218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
+}
+
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 12px;
+  min-width: 20px;
+  width: 20px;
+}
+
+.gsi-material-button .gsi-material-button-content-wrapper {
+  -webkit-align-items: center;
+  align-items: center;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.gsi-material-button .gsi-material-button-contents {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  -webkit-transition: opacity .218s;
+  transition: opacity .218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents {
+  opacity: 38%;
+}
+
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 8%;
+}
+.dang-nhap-google{
+  display: flex;
+justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+/* ------------------------- Liên kết Chuyển tới Đăng ký ---------------------------*/
+
+.chuyen-toi-dang-ky, .chuyen-toi-dang-nhap {
+    text-align: center; 
+    margin-top: 20px; 
+    font-size: 16px;
+    color: #3b3a3a;
+}
+
+.chuyen-toi-dang-ky a, .chuyen-toi-dang-nhap a {
+    /* Tạo điểm nhấn cho liên kết "Đăng ký ở đây" */
+    display: inline-block;
+    font-weight: 600; /* Chữ đậm hơn */
+    color: var(--bs-pink-500); /* Màu hồng đậm hơn để nổi bật */
+    text-decoration: none; /* Bỏ gạch chân mặc định */
+    padding: 0 5px; /* Khoảng cách đệm nhẹ */
+    transition: color 0.3s ease;
+    border-bottom: 2px solid transparent; 
+}
+
+.chuyen-toi-dang-ky a:hover, .chuyen-toi-dang-nhap a:hover {
+    color: var(--bs-pink-600); /* Đậm hơn nữa khi hover */
+}
+
+.bieu-mau-noi {
+    position: relative; /* Quan trọng để định vị thông báo lỗi tuyệt đối theo input */
+    margin-bottom: 18px; /* Tăng margin để có chỗ cho thông báo lỗi nếu muốn, hoặc giữ nguyên nếu dùng absolute */
+}
+
+/* Thêm vào cuối file CSS */
+
+.global-error-container {
+    width: 100%;
+    background-color: #fff5f5; /* Nền đỏ nhạt */
+    border: 1px solid #fc8181; /* Viền đỏ */
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 10px; /* Cách input trên */
+    margin-bottom: 15px; /* Cách nút bấm dưới */
+    box-sizing: border-box;
+    
+    /* Hiệu ứng ẩn hiện */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.5s ease;
+    display: none; /* Mặc định ẩn để không chiếm chỗ khi không có lỗi */
+}
+
+.global-error-container.show {
+    display: block;
+    opacity: 2;
+    transform: translateY(0);
+}
+
+.global-error-container p {
+    color: #c53030; /* Chữ đỏ đậm */
+    font-size: 13px;
+    margin: 5px 0;
+    text-align: left; /* Hoặc center tùy bạn */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.global-error-container p:first-child {
+    margin-top: 0;
+}
+
+.global-error-container p:last-child {
+    margin-bottom: 0;
+}
+
+/* css cho điện thoạ */
+@media screen and (max-width: 768px) {
+    
+    .giua-trang {
+        display: block; 
+        margin-top: 120px; 
+        padding-left: 15px; 
+        padding-right: 15px;
+        padding-top: 120px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .than-trai {
+        display: none;
+    }
+
+    .than-phai {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+        margin: 0 auto;
+    }
+
+    .bieu-mau {
+        height: auto; 
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    }
+
+    .bieu-mau h2 {
+        font-size: 24px;
+        text-align: center;
+        padding-bottom: 30px !important;
+    }
+
+    .bieu-mau-noi input {
+        font-size: 16px; 
+        padding: 14px;
+    }
+
+    .gsi-material-button {
+        width: 100%; 
+        max-width: none;
+    }
+    
+    .dang-nhap-google a {
+        width: 100% !important;
+    }
+
+    .chuyen-toi-dang-ky {
+        font-size: 14px;
+    }
+    
+    .bieu-mau-duoi {
+        margin-top: 20px;
+    }
+    .bieu-mau-noi input{
+       width: 90%;
+    }
+}

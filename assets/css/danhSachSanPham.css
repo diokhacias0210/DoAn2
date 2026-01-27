@@ -1,0 +1,239 @@
+@import url(sanPham.css);
+/* Smooth scroll toàn trang */
+html {
+  scroll-behavior: smooth;
+}
+
+.danhsachsanpham {
+  display: none;
+}
+/* --------------------------phần tiêu đề thân ---------------- */
+.tieu-de-san-pham {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--bs-pink-200);
+}
+
+.tieu-de-san-pham h2 {
+  font-weight: 800;
+  font-size: 40px;
+  color: var(--bs-pink-500);
+  margin: 0;
+  padding: 0;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+/* ----------------------- phần nút tìm kiếm và nút lọc ------------ */
+/* --- Thanh filter chung --- */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-bar label {
+  font-weight: bold;
+  color: var(--bs-pink-800);
+}
+
+.nut-san-pham {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  margin: 16px 0;
+  padding: 10px;
+  flex: 1;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.search-bar {
+  flex: 2;
+}
+
+.search-bar input {
+  min-width: 200px;
+}
+
+#sort, #category {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--bs-pink-300);
+  outline: none;
+  min-width: 140px;
+}
+
+.sort-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+
+.form-control:focus, 
+.form-select:focus {
+  border-color: var(--bs-pink-500) !important;
+  box-shadow: 0 0 0 .25rem rgba(214, 51, 132, .25) !important;
+  outline: none;
+}
+
+.btn-primary {
+  background-color: var(--bs-pink-500) !important;
+  border: none !important;
+}
+
+/* ---------------------------phần sản phẩm chính------------------- */
+.san-pham-giam-gia, .san-pham-chinh {
+
+  padding: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+}
+.loai-san-pham.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+#tieudesanpham {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--bs-pink-800);
+  margin-bottom: 6px;
+}
+
+/* -------------------------- phần xem thêm ---------------- */
+.nut-xem-them-san-pham {
+  display: flex;
+  justify-content: center; /* căn giữa ngang */
+  margin-top: 20px;
+}
+
+.nut-xem-them-san-pham button {
+  max-width: 600px;
+  width: 100%;
+  height: 40px;
+  font-weight: 800;
+  color: var(--bs-black);
+  background-color: var(--bs-pink-100);
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  color: #3b3a3a;
+  font-size: 16px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.nut-xem-them-san-pham button:hover {
+  background-color: var(--bs-pink-300);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.trang-thai-san-pham {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* căn giữa ngang */
+  justify-content: center;  /* căn giữa dọc trong khối */
+  text-align: center;
+  padding: 40px 0;
+}
+
+#no-products {
+  margin-bottom: 20px;
+}
+
+.nut-xem-them-san-pham {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* --- Giao diện trên điện thoại --- */
+@media (max-width: 768px) {
+  .san-pham-chinh {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .tieu-de-san-pham h2 {
+    font-size: 24px; /* Giảm kích thước chữ tiêu đề */
+    padding: 0 10px;
+    text-align: center;
+  }
+
+  .nut-san-pham {
+    flex-direction: column; /* Xếp dọc các bộ lọc */
+    align-items: stretch;   /* Kéo dãn full chiều ngang */
+    gap: 15px;
+    padding: 10px 0;
+    margin: 10px 0;
+  }
+
+  .filter-bar {
+    flex-direction: column; /* Label nằm trên, input nằm dưới */
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .filter-bar label {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  #sort, 
+  #category, 
+  .search-bar input {
+    width: 100%;
+    min-width: unset; /* Bỏ min-width cũ */
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .search-bar {
+    flex-direction: row; /* Giữ input và nút tìm kiếm nằm ngang */
+    gap: 5px;
+  }
+  
+  .search-bar input {
+    flex: 1; /* Input chiếm phần còn lại */
+  }
+
+  .search-bar button {
+    width: auto; /* Nút tìm kiếm tự động theo nội dung */
+    padding: 0 15px;
+  }
+
+  .loai-san-pham {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 cột */
+    gap: 10px;
+    padding-top: 15px;
+  }
+
+  .nut-xem-them-san-pham button {
+    width: 100%; /* Full width */
+    max-width: none;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .trang-thai-san-pham {
+    padding: 20px 0;
+  }
+  .giua-trang{
+    padding-top: 120px;
+  }
+}

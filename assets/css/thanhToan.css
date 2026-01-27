@@ -1,0 +1,344 @@
+/* --------------------- phần giữa ---------------------- */
+.giua-trang{
+    margin-bottom: 24px;
+}
+.top-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 25px;
+  border-bottom: 2px solid var(--bs-pink-200);
+}
+
+.top-banner span {
+  align-items: flex-end;
+  font-weight: 800;
+  font-size: 32px;
+  margin-bottom: 14px;
+  color: var(--bs-pink-500);
+}
+.page-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+}
+.section {
+  margin-bottom: 20px;
+}
+.section-title {
+  display: flex;
+  margin-top: 12px;
+
+  background: var(--bs-pink-100);
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--bs-pink-800);
+}
+#thongtin{
+  margin-top: 20px;
+}
+.hoten , .diachi, .sodienthoai{
+  display: flex;
+  align-items: center;
+  margin: 15px 15px;
+  width: 100%;
+}
+
+.hoten label, .diachi label, .sodienthoai label{
+  width: 130px; 
+  min-width: 130px;
+  font-weight: bold;
+  
+}
+
+.hoten input, 
+.sodienthoai input, 
+.diachi select, 
+.diachi input#input-location {
+    width: 40%; /* Đảm bảo chiếm hết flex-item */
+    max-width: 40%; 
+    padding: 6px 8px;
+    font-size: 14px;
+    border: 1px solid var(--bs-pink-200);
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box; /* ể padding không làm vỡ layout */
+}
+
+
+#input-name:focus,#input-phone:focus,#address-select:focus {
+  border-color: var(--bs-pink-500);
+}
+label {
+  font-weight: bold;
+  color: #003f5c;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.row-flex {
+  gap: 20px;
+  margin-top: 25px;
+  
+}
+.half-box {
+  display: flex;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px var(--bs-pink-200) solid;
+  position: relative;
+}
+ .half-box-left{
+  flex: 1;
+  
+}
+.half-box-right{
+  flex: 1;
+  
+}
+.half-box h3 {
+  color: var(--bs-pink-800);
+  margin-bottom: 10px;
+}
+textarea {
+  width: 70%;
+  height: 120px;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--bs-pink-200);
+  resize: none;
+}
+.total-box {
+  margin-top: 15px;
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--bs-red);
+}
+
+.action-box {
+  display: flex;
+  gap: 5px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.back-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background-color: #999;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.back-btn:hover {
+  background-color: var(--bs-gray-600);
+}
+
+.order-btn {
+  flex: 2;
+  padding: 12px 16px;
+  background-color: var(--bs-success);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.order-btn:hover {
+  background-color: var(--bs-teal);
+}
+
+
+/*bảng sản phẩm*/
+.order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-family: Arial, sans-serif;
+    }
+
+    .order-table th,
+    .order-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .order-table td img {
+      height: 50px;
+      margin-right: 8px;
+      vertical-align: middle;
+      border-radius: 4px;
+    }
+      .giua-trang{
+    padding-left: 256px;
+    padding-right: 256px;
+  }
+.order-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #003f5c;
+}
+
+/* Định dạng cột ảnh */
+.order-table .img-cell {
+    width: 70px;
+    padding: 5px;
+}
+
+.order-table .img-cell img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+}
+
+.product-name {
+    font-weight: 500;
+    color: #333;
+}
+.nut-them-dia-chi{
+  height: 35px;
+  border: 2px solid var(--bs-pink-500);
+  color: var(--bs-pink-500);
+  background-color: transparent;
+}
+
+ /* cho điện thoại */
+@media(max-width: 768px) {
+    
+    /* Reset khung trang web */
+    .giua-trang {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        margin-bottom: 20px;
+        padding-top: 130px;
+    }
+    
+    .page-container {
+        padding: 15px; /* Giảm padding trong khung trắng */
+        margin: 15px auto;
+    }
+
+    /* Form nhập liệu chuyển sang dạng dọc (Label trên, Input dưới) */
+    .hoten, .diachi, .sodienthoai {
+        flex-direction: column; /* Xếp dọc */
+        align-items: flex-start; /* Căn trái */
+        gap: 8px;
+    }
+
+    .hoten label, .diachi label, .sodienthoai label {
+        width: 100%; /* Label chiếm hết dòng */
+        margin-bottom: 5px;
+    }
+
+    .hoten input, .sodienthoai input, .diachi select, .diachi input {
+        width: 100%; /* Input chiếm hết dòng */
+    }
+
+    /*  Layout cột ghi chú và thanh toán */
+    .row-flex {
+        flex-direction: column; /* Xếp dọc 2 cột */
+        gap: 20px;
+    }
+
+    .half-box {
+        flex-direction: column;
+        border: 1px solid var(--bs-pink-200);
+    }
+    
+    textarea {
+        width: 100%; /* Textarea full chiều ngang */
+        box-sizing: border-box;
+    }
+
+    /* Ẩn tiêu đề bảng */
+    .order-table thead {
+        display: none;
+    }
+
+    /* Biến mỗi dòng tr thành một khối (card) */
+    .order-table tbody tr {
+        display: grid;
+        grid-template-columns: 70px 1fr; /* Cột ảnh và Cột nội dung */
+        grid-template-areas: 
+            "img name"
+            "img info"
+            "img total";
+        gap: 5px 15px;
+        background: #fff;
+        border: 1px solid #eee;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Vị trí ảnh */
+    .order-table td.img-cell {
+        grid-area: img;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Vị trí tên sản phẩm */
+    .order-table td:nth-child(2) { /* Cột thứ 2 là tên sản phẩm */
+        grid-area: name;
+        border: none;
+        padding: 0;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Gộp Đơn giá và Số lượng hiển thị chung 1 dòng */
+    .order-table td:nth-child(3), /* Đơn giá */
+    .order-table td:nth-child(4) { /* Số lượng */
+        grid-area: info;
+        border: none;
+        padding: 0;
+        text-align: left;
+        font-size: 13px;
+        color: #666;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    /* Thêm nhãn trước số lượng cho dễ hiểu */
+    .order-table td:nth-child(3)::after {
+        content: " x ";
+    }
+
+    /* Thành tiền */
+    .order-table td:nth-child(5) {
+        grid-area: total;
+        border: none;
+        padding: 0;
+        text-align: left;
+        color: var(--bs-red);
+        font-weight: bold;
+    }
+    
+    .order-table td:nth-child(5)::before {
+        content: "Thành tiền: ";
+        font-weight: normal;
+        color: #333;
+        font-size: 13px;
+    }
+}

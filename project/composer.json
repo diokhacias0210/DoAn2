@@ -1,0 +1,7 @@
+{
+    "name": "nha/project",
+    "require": {
+        "guzzlehttp/guzzle": "^7.10",
+        "google/apiclient": "2.15"
+    }
+}

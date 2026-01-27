@@ -1,0 +1,86 @@
+footer {
+  position: relative;
+  padding-top: 40px; /* để có chỗ hiển thị đường gạch */
+}
+
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;  /* độ dài đoạn gạch */
+  height: 2px;
+  background-color: var(--bs-pink-200); /* màu đường gạch */
+}
+
+footer a {
+  color: #003f5c;
+  text-decoration: none;
+  font-weight: bold;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+footer .footer-info {
+  margin-top: 5px;
+  font-size: 16px;
+}
+footer .footer-info span{
+  margin:0 5px
+}
+#btnUp{
+  background-color: transparent;
+  border: none;
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  opacity: .8;
+  font-size: 30px;
+  border-radius: 25px;
+  transition: 0.2s linear;
+  cursor: pointer;
+}
+#btnUp:hover{
+  background-color: var(--bs-pink-200);
+  opacity: 1;
+}
+footer div p a:hover {
+  color: var(--bs-pink-500); /* đổi sang hồng khi hover */
+  text-decoration: underline; /* hoặc thêm gạch chân khi hover */
+}
+
+/* --- giao diện cho điện thoại--- */
+@media (max-width: 768px) {
+  /* Sửa lỗi đường kẻ ngang 1000px làm vỡ giao diện mobile */
+  footer::before {
+    width: 90%; /* Chuyển từ 1000px cứng sang 90% màn hình */
+  }
+
+  footer .footer-info {
+    font-size: 13px;
+    padding: 0 10px;
+    line-height: 1.8;
+  }
+
+  /* Xếp các thông tin footer xuống dòng thay vì nằm ngang */
+  footer .footer-info span {
+    display: none; /* Ẩn dấu gạch đứng | */
+  }
+  
+  footer .footer-info a, 
+  footer .footer-info i {
+    display: block; /* Xuống dòng từng mục */
+    margin-bottom: 5px;
+  }
+
+  #btnUp {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    bottom: 15px;
+    right: 15px;
+  }
+}

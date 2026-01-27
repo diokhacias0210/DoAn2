@@ -1,0 +1,260 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  font-family: sans-serif;
+  margin-left: 205px;
+  flex: 1;
+  padding: 30px;
+  min-height: 100vh;
+  background: #f0f0f0;
+}
+
+/* .content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+} */
+
+
+/* ===== CONTAINER CHUNG ===== */
+.admin-container, 
+.qlsp-container, 
+.qldh-container,
+.qlmgg-container, 
+.qlnd-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.admin-container h1,
+.qlsp-container h1,
+.qldh-container h1,
+.qlmgg-container h1,
+.qlnd-container h1 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 15px;
+}
+
+/* ===== TABLES ===== */
+.qlsp-table, 
+.qldh-table, 
+.qlnd-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.qlsp-table th,
+.qldh-table th,
+.qlnd-table th {
+  background: #28a745;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qlsp-table td,
+.qldh-table td,
+.qlnd-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.qlsp-table tr:hover,
+.qldh-table tr:hover,
+.qlnd-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* ===== FORMS ===== */
+.qlsp-form {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+}
+
+.qlsp-form h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.qlsp-form input,
+.qlsp-form textarea,
+.qlsp-form select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.qlsp-form input:focus,
+.qlsp-form textarea:focus,
+.qlsp-form select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.qlsp-form button {
+  background: #4CAF50;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.qlsp-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* ===== BUTTONS ===== */
+.qlsp-btn {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.qlsp-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== ORDER STATUS ===== */
+.order-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.order-status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.order-status.completed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.order-status.cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ===== MOBILE TOGGLE BUTTON ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 15px;
+  }
+
+  .qlsp-table, 
+  .qldh-table, 
+  .qlnd-table {
+    font-size: 0.8rem;
+  }
+
+  .qlsp-table th,
+  .qldh-table th,
+  .qlnd-table th,
+  .qlsp-table td,
+  .qldh-table td,
+  .qlnd-table td {
+    padding: 10px 8px;
+  }
+
+  .admin-container h1,
+  .qlsp-container h1,
+  .qldh-container h1,
+  .qlmgg-container h1,
+  .qlnd-container h1 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .qlsp-table, 
+  .qldh-table, 
+  .qlnd-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

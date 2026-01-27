@@ -1,0 +1,82 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f8f9fa;
+}
+
+.admin-container, .qlsp-container, .qldh-container, .qlnd-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 30px 30px 40px 30px;
+}
+
+.admin-container h1,
+.qlsp-container h1,
+.qldh-container h1,
+.qlnd-container h1 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.admin-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-container ul li {
+  margin: 12px 0;
+}
+
+.admin-container ul li a {
+  color: #2980b9;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.admin-container ul li a:hover {
+  background: #eaf6fb;
+}
+
+@media (max-width: 800px) {
+  .admin-container, .qlsp-container, .qldh-container, .qlnd-container {
+    padding: 10px;
+  }
+  
+}
+.qldh-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background: #fff;
+}
+
+.qldh-table th, .qldh-table td {
+  border: 1px solid #e1e1e1;
+  padding: 12px 10px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.qldh-table th {
+  background: #f1f1f1;
+  color: #34495e;
+  font-weight: 600;
+}
+
+.qldh-table tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.order-status.pending { color: orange; font-weight: bold; }
+.order-status.completed { color: green; font-weight: bold; }
+.order-status.cancelled { color: red; font-weight: bold; }
