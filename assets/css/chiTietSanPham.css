@@ -690,9 +690,18 @@
     background: var(--bs-pink-500);
     border: none;
     color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.chat-voi-nguoi-ban button:hover {
+.chat-voi-nguoi-ban button:hover, .nut-xem-nguoi-ban button:hover {
     background: var(--bs-pink-600);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
