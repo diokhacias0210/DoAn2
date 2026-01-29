@@ -107,7 +107,30 @@
                     </div>
                 </div>
             </div>
+            <div class="container-mid">
+                <div class="nguoi-ban">
+                    <div class="avatar-nguoi-ban">
+                        <img src="../<?php echo $hoSoNguoiBan['Avatar'] ?? '../assets/images/placeholder.png'; ?>" alt="avatar người bán">
+                    </div>
+                    <div class="thong-tin-nguoi-ban">
+                        <h3><?php echo htmlspecialchars($hoSoNguoiBan['TenCuaHang'] ?? 'Người bán ẩn danh'); ?></h3>
+                        <p><i class="fa-solid fa-location-dot"></i> Địa chỉ: <span><?php echo htmlspecialchars($hoSoNguoiBan['DiaChiKhoHang'] ?? 'Chưa cập nhật'); ?></span></p>
+                    </div>
+                    <div class="nut-xem-nguoi-ban">
+                        <!-- <a href="/DoAn2/controllers/chiTietNguoiBanController.php?IdTaiKhoan=<?php echo $chiTiet['IdTaiKhoan']; ?>"> -->
+                        <a>
+                            <button>Xem cửa hàng</button>
+                        </a>
 
+                    </div>
+                    <div class="chat-voi-nguoi-ban">
+                        <!-- <a href="/DoAn2/controllers/chatController.php?IdTaiKhoan=<?php echo $chiTiet['IdTaiKhoan']; ?>"> -->
+                        <a>
+                            <button><i class="fa-solid fa-comments"></i> Chat với người bán</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
             <!-- mô tả -->
             <div class="container-bot">
                 <div class="thong-tin-them">

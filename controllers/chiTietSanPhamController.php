@@ -7,6 +7,7 @@ $maHH = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $chiTiet = null;
 $hinhAnhs = [];
 $binhLuans = [];
+$hoSoNguoiBan = [];
 $giaGoc = 0;
 $giamGia = 0;
 $giaSauGiam = 0;
@@ -31,7 +32,11 @@ if ($maHH <= 0) {
 
             // Lấy bình luận (GỌI MODEL)
             $binhLuans = $sanPham->getBinhLuanSanPham($maHH);
-
+            // Lấy hồ sơ người bán
+            if (isset($chiTiet['IdNguoiBan'])) {
+                // Hàm này bạn vừa viết thêm trong Model ở bước trước
+                $hoSoNguoiBan = $sanPham->getThongTinNguoiBan($chiTiet['IdNguoiBan']);
+            }
             // Tính giá sau giảm
             $giaGoc = $chiTiet['Gia'];
             $giamGia = $chiTiet['GiamGia'] ?? 0;

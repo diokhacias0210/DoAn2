@@ -3,126 +3,219 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý đơn hàng - Kênh người bán</title>
-    <link href="../../assets/css/bootstrap/bootstrap.css" rel="stylesheet">
-    <link href="../../assets/css/color.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kênh người bán - Đơn hàng</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../../assets/css/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="../../assets/css/header.css" rel="stylesheet">
+    <link href="../../assets/css/color.css" rel="stylesheet">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         body {
-            background: #f5f6fa;
+            background-color: #fff;
         }
 
-        .seller-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 15px;
+        .seller-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bs-pink-200);
+            padding-bottom: 10px;
         }
 
-        .card {
-            border: none;
+        .seller-nav a {
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            color: #666;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .seller-nav a.active,
+        .seller-nav a:hover {
+            background-color: var(--bs-pink-100);
+            color: var(--bs-pink-600);
+        }
+
+        .order-card {
+            border: 1px solid var(--bs-pink-200);
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            background-color: var(--bs-pink-100);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--bs-pink-800);
+        }
+
+        .order-body {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: center;
         }
 
         .status-select {
+            padding: 5px 10px;
+            border-radius: 20px;
             border: 1px solid #ddd;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 0.9rem;
+            font-weight: bold;
             cursor: pointer;
+            outline: none;
         }
 
-        .status-select.pending {
-            color: orange;
-            border-color: orange;
+        /* Màu trạng thái */
+        .st-cho-xu-ly {
+            color: #fd7e14;
+            border-color: #fd7e14;
         }
 
-        .status-select.confirmed {
-            color: blue;
-            border-color: blue;
+        .st-da-xac-nhan {
+            color: #0d6efd;
+            border-color: #0d6efd;
         }
 
-        .status-select.shipping {
-            color: purple;
-            border-color: purple;
+        .st-dang-giao {
+            color: #6f42c1;
+            border-color: #6f42c1;
         }
 
-        .status-select.completed {
-            color: green;
-            border-color: green;
+        .st-hoan-tat {
+            color: #198754;
+            border-color: #198754;
+            background: #d1e7dd;
         }
 
-        .status-select.cancelled {
-            color: red;
-            border-color: red;
+        .st-da-huy {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .price-info strong {
+            font-size: 1.1rem;
+            color: var(--bs-pink-600);
+        }
+
+        .fee-info {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .order-body {
+                grid-template-columns: 1fr;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="../../index.php">TWO HAND STORE (Seller)</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="sellerSanPhamController.php">Sản phẩm</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="sellerDonHangController.php">Đơn hàng</a>
-                    </li>
-                </ul>
+    <?php include '../../includes/header.php'; ?>
+
+    <div class="giua-trang">
+        <div class="container" style="max-width: 1200px; padding: 0;">
+
+            <div class="seller-nav">
+                <a href="sellerSanPhamController.php"><i class="fa-solid fa-box"></i> Quản lý sản phẩm</a>
+                <a href="sellerDonHangController.php" class="active"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
             </div>
-            <div class="ml-auto text-white">
-                Hello, <?php echo $_SESSION['TenTK']; ?>
+
+            <div class="mb-4">
+                <form method="GET" class="d-flex" style="max-width: 500px;">
+                    <input type="text" name="search" class="form-control" placeholder="Tìm mã đơn hàng hoặc tên khách..." value="<?= htmlspecialchars($keyword) ?>" style="border-radius: 20px 0 0 20px;">
+                    <button class="btn btn-pink" style="background: var(--bs-pink-500); color: white; border-radius: 0 20px 20px 0; border:none; padding: 0 20px;">Tìm</button>
+                </form>
             </div>
-        </div>
-    </nav>
 
-    <div class="seller-container">
-        <?php if (!empty($message)): ?>
-            <div class="alert alert-info"><?= $message ?></div>
-        <?php endif; ?>
+            <?php if (!empty($message)): ?>
+                <div class="alert alert-info alert-dismissible fade show">
+                    <?= $message ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
 
-        <div class="card p-4">
-            <h3 class="mb-4">📋 Đơn hàng của bạn</h3>
+            <div class="order-list">
+                <?php if (empty($dsDonHang)): ?>
+                    <div class="text-center py-5">
+                        <i class="fa-regular fa-folder-open fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa có đơn hàng nào.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($dsDonHang as $dh): ?>
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div>
+                                    <i class="fa-solid fa-hashtag"></i> Mã đơn: <strong>#<?= $dh['MaDH'] ?></strong>
+                                    <span class="mx-2">|</span>
+                                    <i class="fa-regular fa-clock"></i> <?= date('d/m/Y H:i', strtotime($dh['NgayDat'])) ?>
+                                </div>
+                                <div>
+                                    Khách hàng: <strong><?= htmlspecialchars($dh['NguoiMua']) ?></strong>
+                                </div>
+                            </div>
 
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Mã ĐH</th>
-                        <th>Ngày đặt</th>
-                        <th>Khách hàng</th>
-                        <th>Tổng tiền khách trả</th>
-                        <th>Phí sàn (5%)</th>
-                        <th>Thực nhận</th>
-                        <th>Trạng thái</th>
-                        <th>Chi tiết</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($dsDonHang)): ?>
-                        <tr>
-                            <td colspan="8" class="text-center">Chưa có đơn hàng nào.</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach ($dsDonHang as $dh): ?>
-                            <tr>
-                                <td>#<?= $dh['MaDH'] ?></td>
-                                <td><?= date('d/m/Y H:i', strtotime($dh['NgayDat'])) ?></td>
-                                <td>
-                                    <strong><?= htmlspecialchars($dh['NguoiMua']) ?></strong><br>
-                                    <small><?= htmlspecialchars($dh['Sdt']) ?></small>
-                                </td>
-                                <td><?= number_format($dh['TongTien'], 0, ',', '.') ?>đ</td>
-                                <td class="text-danger">-<?= number_format($dh['PhiSan'], 0, ',', '.') ?>đ</td>
-                                <td class="text-success font-weight-bold"><?= number_format($dh['TienNguoiBanNhan'], 0, ',', '.') ?>đ</td>
-                                <td>
-                                    <form method="POST" style="margin:0;">
+                            <div class="order-body">
+                                <div>
+                                    <p class="mb-1"><i class="fa-solid fa-phone"></i> <?= htmlspecialchars($dh['Sdt']) ?></p>
+                                    <p class="mb-1 text-muted" style="font-size: 0.9rem;">
+                                        <i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($dh['DiaChiGiao'] ?? 'Chưa cập nhật') ?>
+                                    </p>
+                                    <?php if (!empty($dh['GhiChu'])): ?>
+                                        <p class="mb-0 text-danger" style="font-size: 0.85rem;">
+                                            <i class="fa-solid fa-note-sticky"></i> Note: <?= htmlspecialchars($dh['GhiChu']) ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="price-info">
+                                    <div>Khách trả: <?= number_format($dh['TongTien'], 0, ',', '.') ?>đ</div>
+                                    <div class="fee-info">Phí sàn (5%): -<?= number_format($dh['PhiSan'], 0, ',', '.') ?>đ</div>
+                                    <div class="mt-1" style="border-top: 1px dashed #ccc; padding-top:5px;">
+                                        Thực nhận: <strong><?= number_format($dh['TienNguoiBanNhan'], 0, ',', '.') ?>đ</strong>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <form method="POST">
                                         <input type="hidden" name="action" value="update_status">
                                         <input type="hidden" name="maDH" value="<?= $dh['MaDH'] ?>">
-                                        <select name="trangThai" class="status-select" onchange="this.form.submit()">
+
+                                        <?php
+                                        // Mapping class màu cho select
+                                        $classStatus = 'st-cho-xu-ly';
+                                        if ($dh['TrangThai'] == 'Đã xác nhận') $classStatus = 'st-da-xac-nhan';
+                                        if ($dh['TrangThai'] == 'Đang giao') $classStatus = 'st-dang-giao';
+                                        if ($dh['TrangThai'] == 'Hoàn tất') $classStatus = 'st-hoan-tat';
+                                        if ($dh['TrangThai'] == 'Đã hủy') $classStatus = 'st-da-huy';
+
+                                        // Nếu đơn đã hoàn tất hoặc hủy thì disable không cho sửa
+                                        $disabled = ($dh['TrangThai'] == 'Hoàn tất' || $dh['TrangThai'] == 'Đã hủy') ? 'disabled' : '';
+                                        ?>
+
+                                        <select name="trangThai" class="status-select <?= $classStatus ?>" onchange="this.form.submit()" <?= $disabled ?>>
                                             <option value="Chờ xử lý" <?= $dh['TrangThai'] == 'Chờ xử lý' ? 'selected' : '' ?>>⏳ Chờ xử lý</option>
                                             <option value="Đã xác nhận" <?= $dh['TrangThai'] == 'Đã xác nhận' ? 'selected' : '' ?>>✅ Đã xác nhận</option>
                                             <option value="Đang giao" <?= $dh['TrangThai'] == 'Đang giao' ? 'selected' : '' ?>>🚚 Đang giao</option>
@@ -130,60 +223,52 @@
                                             <option value="Đã hủy" <?= $dh['TrangThai'] == 'Đã hủy' ? 'selected' : '' ?>>❌ Hủy đơn</option>
                                         </select>
                                     </form>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="xemChiTiet(<?= $dh['MaDH'] ?>)">
-                                        Xem hàng
+                                </div>
+
+                                <div class="text-end">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="xemChiTiet(<?= $dh['MaDH'] ?>)">
+                                        Xem sản phẩm <i class="fa-solid fa-angle-right"></i>
                                     </button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
     <div id="modalChiTiet" class="modal" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Chi tiết sản phẩm đơn hàng #<span id="spanMaDH"></span></h5>
-                    <button type="button" class="btn-close" onclick="closeModal()">&times;</button>
+                    <h5 class="modal-title">Chi tiết đơn #<span id="spanMaDH"></span></h5>
+                    <button type="button" class="btn-close" onclick="closeModal()" style="filter: invert(1);"></button>
                 </div>
-                <div class="modal-body" id="modalContent">
-                    Đang tải...
+                <div class="modal-body">
+                    <p class="text-center text-muted">Chức năng xem chi tiết đang cập nhật...</p>
+                    <div class="text-center">
+                        <small>Bạn có thể tạo thêm controller lấy chi tiết đơn hàng trả về HTML tại đây.</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- <script>
+    <?php include '../../includes/footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
         function xemChiTiet(maDH) {
-            document.getElementById('modalChiTiet').style.display = 'block';
+            // Để đơn giản cho đồ án, ta có thể alert hoặc redirect
+            // Hoặc hiển thị modal placeholder
             document.getElementById('spanMaDH').innerText = maDH;
-
-            // Gọi AJAX lấy chi tiết (hoặc reload trang có kèm param view_id - cách đơn giản nhất cho đồ án)
-            // Ở đây dùng cách đơn giản là fetch API tự chế
-            // Hoặc bạn có thể dùng cách reload: location.href = '?view_id=' + maDH;
-
-            // Cách dùng AJAX gọi về Controller hiện tại
-            // Để đơn giản, tôi sẽ giả lập HTML render từ PHP luôn nếu bạn dùng reload trang
-            // Nhưng để UX tốt hơn, ta dùng fetch nhẹ:
-
-            // (Bạn cần viết thêm 1 case trong Controller để trả về JSON hoặc HTML cho AJAX này)
-            // Tạm thời tôi sẽ hiển thị thông báo.
-
-            // Để code chạy ngay không cần sửa controller nhiều, ta dùng logic JS render từ mảng PHP (nếu load hết từ đầu)
-            // Hoặc đơn giản nhất: redirect sang trang chi tiết đơn hàng (tận dụng trang chi tiết đơn hàng cũ nhưng sửa lại quyền)
-
-            alert("Bạn có thể tạo thêm file sellerChiTietDonHang.php để xem kỹ hơn!");
+            document.getElementById('modalChiTiet').style.display = 'block';
         }
 
         function closeModal() {
             document.getElementById('modalChiTiet').style.display = 'none';
         }
-    </script> -->
+    </script>
 </body>
 
 </html>

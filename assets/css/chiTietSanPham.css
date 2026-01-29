@@ -611,6 +611,106 @@
   max-width: 100%;             /* Đảm bảo không vượt quá cha */
 }
 
+/* --- PHẦN THÔNG TIN NGƯỜI BÁN (CONTAINER MID) --- */
+.container-mid {
+    max-width: 1200px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 32px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.nguoi-ban {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Avatar shop */
+.avatar-nguoi-ban img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--bs-pink-200);
+}
+
+/* Thông tin tên và địa chỉ */
+.thong-tin-nguoi-ban {
+    flex: 1; /* Chiếm phần giữa */
+}
+
+.thong-tin-nguoi-ban h3 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bs-pink-600);
+    text-transform: uppercase;
+}
+
+.thong-tin-nguoi-ban p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Các nút bấm bên phải */
+.nut-xem-nguoi-ban {
+    display: flex;
+    gap: 10px;
+}
+
+.nut-xem-nguoi-ban button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Nút Xem cửa hàng: Viền hồng, nền trắng */
+.nut-xem-nguoi-ban a:first-child button {
+    background: white;
+    border: 1px solid var(--bs-pink-400);
+    color: var(--bs-pink-500);
+}
+
+.nut-xem-nguoi-ban a:first-child button:hover {
+    background: var(--bs-pink-50);
+}
+
+/* Nút Chat: Nền hồng, chữ trắng */
+.chat-voi-nguoi-ban button {
+    background: var(--bs-pink-500);
+    border: none;
+    color: white;
+}
+
+.chat-voi-nguoi-ban button:hover {
+    background: var(--bs-pink-600);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Responsive cho điện thoại */
+@media (max-width: 768px) {
+    .nguoi-ban {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nut-xem-nguoi-ban {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* --- RESPONSIVE CHO ĐIỆN THOẠI (MOBILE) --- */
 @media (max-width: 768px) {
   /* 1. Căn chỉnh lại lề toàn trang */
