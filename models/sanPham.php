@@ -221,4 +221,99 @@ class SanPham
 
         return 0;
     }
+    //lấy sản phẩm theo người bán
+    public function getSanPhamCuaNguoiBan($idNguoiBan, $offset, $limit, $sapxep, $iddanhmuc = null, $tukhoa = null)
+    {
+        $sql = "SELECT h.MaHH, h.TenHH, h.Gia, h.SoLuongHH, 
+                       (SELECT URL FROM HinhAnh WHERE MaHH = h.MaHH LIMIT 1) AS URL,
+                       IFNULL(ROUND(AVG(d.SoSao), 1), 0) AS Rating,
+                       MAX(mg.GiaTri) AS GiaTri
+                FROM HangHoa h
+                LEFT JOIN DanhGiaSao d ON h.MaHH = d.MaHH
+                LEFT JOIN MaGiamGiaDanhMuc mgdm ON h.MaDM = mgdm.MaDM
+                LEFT JOIN MaGiamGia mg ON mg.MaGG = mgdm.MaGG 
+                    AND mg.TrangThai = 'Hoạt động'
+                    AND (mg.NgayKetThuc IS NULL OR mg.NgayKetThuc >= NOW())
+                WHERE h.IdNguoiBan = ? 
+                AND h.TrangThaiDuyet = 'DaDuyet' 
+                AND h.HienThi = 1";
+
+        $params = [$idNguoiBan];
+        $types = "i";
+
+        // Lọc danh mục
+        if ($iddanhmuc) {
+            $sql .= " AND h.MaDM = ?";
+            $params[] = $iddanhmuc;
+            $types .= "i";
+        }
+
+        // Tìm kiếm
+        if ($tukhoa) {
+            $sql .= " AND h.TenHH LIKE ?";
+            $params[] = "%" . $tukhoa . "%";
+            $types .= "s";
+        }
+
+        $sql .= " GROUP BY h.MaHH";
+
+        // Sắp xếp
+        switch ($sapxep) {
+            case 'old':
+                $sql .= " ORDER BY h.NgayThem ASC";
+                break;
+            case 'az':
+                $sql .= " ORDER BY h.TenHH ASC";
+                break;
+            case 'za':
+                $sql .= " ORDER BY h.TenHH DESC";
+                break;
+            case 'giacao':
+                $sql .= " ORDER BY h.Gia DESC";
+                break;
+            case 'giathap':
+                $sql .= " ORDER BY h.Gia ASC";
+                break;
+            default:
+                $sql .= " ORDER BY h.NgayThem DESC";
+                break; // Mặc định mới nhất
+        }
+
+        $sql .= " LIMIT ?, ?";
+        $params[] = $offset;
+        $params[] = $limit;
+        $types .= "ii";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
+     * Đếm tổng sản phẩm của người bán (để tính xem còn nút "Xem thêm" không)
+     */
+    public function demSanPhamCuaNguoiBan($idNguoiBan, $iddanhmuc = null, $tukhoa = null)
+    {
+        $sql = "SELECT COUNT(*) as dem FROM HangHoa 
+                WHERE IdNguoiBan = ? AND TrangThaiDuyet = 'DaDuyet' AND HienThi = 1";
+        $params = [$idNguoiBan];
+        $types = "i";
+
+        if ($iddanhmuc) {
+            $sql .= " AND MaDM = ?";
+            $params[] = $iddanhmuc;
+            $types .= "i";
+        }
+        if ($tukhoa) {
+            $sql .= " AND TenHH LIKE ?";
+            $params[] = "%" . $tukhoa . "%";
+            $types .= "s";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc()['dem'];
+    }
 }
