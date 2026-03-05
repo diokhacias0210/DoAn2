@@ -207,7 +207,7 @@ CREATE TABLE ThongBao (
     MaTB INT AUTO_INCREMENT PRIMARY KEY,
     TieuDe VARCHAR(255) NOT NULL,
     NoiDung TEXT,
-    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai') DEFAULT 'HeThong',
+    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong';
     NguoiGui INT(10) DEFAULT NULL, 
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
