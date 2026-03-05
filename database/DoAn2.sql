@@ -1,4 +1,4 @@
-
+DROP DATABASE IF EXISTS doan2;
 CREATE DATABASE doan2;
 USE doan2;
 
@@ -191,7 +191,7 @@ CREATE TABLE MaGiamGiaDanhMuc (
 -- 17. Bảng hồ sơ người bán
 CREATE TABLE HoSoNguoiBan (
     IdHoSo INT AUTO_INCREMENT PRIMARY KEY,
-    IdNguoiBan INT(10) NOT NULL UNIQUE,
+    IdTaiKhoan INT(10) NOT NULL UNIQUE,
     TenCuaHang VARCHAR(100), 
     DiaChiKhoHang VARCHAR(255),
     SoCCCD VARCHAR(20),
@@ -199,7 +199,7 @@ CREATE TABLE HoSoNguoiBan (
     SoTaiKhoanNganHang VARCHAR(30),
     TenChuTaiKhoan VARCHAR(100),
     NgayDuyet DATETIME, 
-    FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
 
 -- 18. Bảng thông báo
@@ -207,7 +207,7 @@ CREATE TABLE ThongBao (
     MaTB INT AUTO_INCREMENT PRIMARY KEY,
     TieuDe VARCHAR(255) NOT NULL,
     NoiDung TEXT,
-    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong',
+    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong';
     NguoiGui INT(10) DEFAULT NULL, 
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -226,11 +226,11 @@ CREATE TABLE ThongBaoNguoiDung (
 -- 20. Bảng phòng chat
 CREATE TABLE PhongChat (
     MaPhong INT AUTO_INCREMENT PRIMARY KEY,
-    IdTaiKhoan INT(10),
+    IdNguoiMua INT(10),
     IdNguoiBan INT(10),
     MaHH INT(10),
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
+    FOREIGN KEY (IdNguoiMua) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH)
 );
@@ -287,7 +287,7 @@ INSERT INTO TaiKhoan (TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang) VALU
 ('Hoàng Văn E', 'vane@example.com', '0945555666', '123456', 0, 'ChuaKichHoat'),
 ('Đỗ Thị F', 'thif@example.com', '0977778888', '123456', 0, 'ChuaKichHoat');
 
-INSERT INTO HoSoNguoiBan (IdNguoiBan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet) VALUES
+INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet) VALUES
 (2, 'Shop Cũ Người Mới Ta', '456 Đường B, Hà Nội', '098123456789', 'MB Bank', '999999999', 'NGUYEN VAN NHA', NOW()),
 (3, 'Quyên Secondhand', '789 Đường C, Đà Nẵng', '098123456000', 'Vietcombank', '888888888', 'LE THI QUYEN', NOW()),
 (4, 'Lai Gaming Store', '321 Đường D, Cần Thơ', '098123456111', 'Techcombank', '777777777', 'PHAM VAN LAI', NOW());
@@ -510,7 +510,7 @@ SET TongTien = (
     WHERE ctdh.MaDH = dh.MaDH
 );
 -- thêm hồ sơ người bán mẫu
-INSERT INTO HoSoNguoiBan (IdNguoiBan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet) VALUES
+INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet) VALUES
 (6, 'A Mobile Store', '123 Hẻm 51, Xuân Khánh, Cần Thơ', '091000000001', 'TPBank', '00001234567', 'NGUYEN VAN A', NOW()),
 (7, 'Bê Boutique 2Hand', '88 Mậu Thân, An Hòa, Cần Thơ', '091000000002', 'BIDV', '123123123', 'TRAN THI B', NOW()),
 (8, 'Tiệm Sách Cũ Ông C', '45 Đường 3/2, Ninh Kiều, Cần Thơ', '091000000003', 'Agribank', '555566667777', 'LE VAN C', NOW());
