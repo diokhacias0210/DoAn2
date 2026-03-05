@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS doan2;
+
 CREATE DATABASE doan2;
 USE doan2;
 
@@ -191,7 +191,7 @@ CREATE TABLE MaGiamGiaDanhMuc (
 -- 17. Bảng hồ sơ người bán
 CREATE TABLE HoSoNguoiBan (
     IdHoSo INT AUTO_INCREMENT PRIMARY KEY,
-    IdTaiKhoan INT(10) NOT NULL UNIQUE,
+    IdNguoiBan INT(10) NOT NULL UNIQUE,
     TenCuaHang VARCHAR(100), 
     DiaChiKhoHang VARCHAR(255),
     SoCCCD VARCHAR(20),
@@ -199,7 +199,7 @@ CREATE TABLE HoSoNguoiBan (
     SoTaiKhoanNganHang VARCHAR(30),
     TenChuTaiKhoan VARCHAR(100),
     NgayDuyet DATETIME, 
-    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
+    FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
 
 -- 18. Bảng thông báo
@@ -207,7 +207,7 @@ CREATE TABLE ThongBao (
     MaTB INT AUTO_INCREMENT PRIMARY KEY,
     TieuDe VARCHAR(255) NOT NULL,
     NoiDung TEXT,
-    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong';
+    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong',
     NguoiGui INT(10) DEFAULT NULL, 
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -226,11 +226,11 @@ CREATE TABLE ThongBaoNguoiDung (
 -- 20. Bảng phòng chat
 CREATE TABLE PhongChat (
     MaPhong INT AUTO_INCREMENT PRIMARY KEY,
-    IdNguoiMua INT(10),
+    IdTaiKhoan INT(10),
     IdNguoiBan INT(10),
     MaHH INT(10),
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (IdNguoiMua) REFERENCES TaiKhoan(IdTaiKhoan),
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH)
 );
