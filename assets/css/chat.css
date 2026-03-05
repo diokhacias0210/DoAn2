@@ -1,0 +1,120 @@
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #d7d7d7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            display: flex;
+            width: 900px;
+            height: 600px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Cột trái: Danh sách phòng chat */
+        .sidebar {
+            width: 300px;
+            border-right: 1px solid #ddd;
+            background: #fff;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            background: #0068ff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .room-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .room-item:hover,
+        .room-item.active {
+            background: #e5efff;
+        }
+
+        /* Cột phải: Nội dung chat */
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #e2e8f0;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Tin nhắn */
+        .msg {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .msg.sent {
+            background: #e5efff;
+            border: 1px solid #cce0ff;
+            align-self: flex-end;
+        }
+
+        .msg.received {
+            background: #fff;
+            border: 1px solid #ddd;
+            align-self: flex-start;
+        }
+
+        /* Nhập liệu */
+        .chat-footer {
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .chat-footer button {
+            padding: 10px 20px;
+            background: #0068ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }

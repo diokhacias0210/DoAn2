@@ -18,14 +18,78 @@
 
     <div class="giua-trang">
         <div class="container">
+            <?php
+            $soThongBaoMoi_Sidebar = 0;
+            if (isset($_SESSION['IdTaiKhoan'])) {
+                if (!class_exists('ThongBaoModel')) {
+                    require_once __DIR__ . '/../models/thongBaoModel.php';
+                }
+                global $conn;
+                if ($conn) {
+                    $modelTB_Sidebar = new ThongBaoModel($conn);
+                    $soThongBaoMoi_Sidebar = $modelTB_Sidebar->demThongBaoChuaDoc($_SESSION['IdTaiKhoan']);
+                }
+            }
+
+            // Hàm hỗ trợ kiểm tra file hiện tại để gán class "active" tự động
+            $current_page = basename($_SERVER['PHP_SELF']);
+            ?>
             <div class="side">
+                <div class="avatar-ten" style="text-align: center; margin-bottom: 20px;">
+                    <div class="avatar" style="width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid var(--bs-pink-200); padding: 3px; display: flex; justify-content: center; align-items: center;">
+
+                        <img src="../<?php echo isset($_SESSION['Avatar']) && !empty($_SESSION['Avatar']) ? $_SESSION['Avatar'] : 'assets/images/placeholder.png'; ?>"
+                            alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+
+                    </div>
+                </div>
+
                 <nav class="menu">
                     <ul>
-                        <li class="active"><a href="thongTinTaiKhoanController.php" style="text-decoration:none; color:inherit;"><i class='bx bx-user'></i> Thông tin tài khoản</a></li>
-                        <li><a href="lichSuDonHangController.php"><i class='bx bx-package'></i> Lịch sử giao dịch</a></li>
-                        <li><a href="gioHangController.php"><i class='bx bx-cart'></i> Giỏ Hàng</a></li>
-                        <li><a href="danhSachYeuThichController.php"><i class='bx bx-heart'></i> Sản phẩm yêu thích</a></li>
-                        <li class="dangxuat"><a href="dangXuatController.php"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+                        <li>
+                            <a href="../controllers/thongTinTaiKhoanController.php" class="<?= ($current_page == 'thongTinTaiKhoanController.php') ? 'active' : '' ?>">
+                                <i class="fa-solid fa-id-badge"></i> Quản lý tài khoản
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../controllers/thongBaoController.php" class="<?= ($current_page == 'thongBaoController.php') ? 'active' : '' ?>">
+                                <i class="fa-solid fa-bell"></i> Thông báo hệ thống
+                                <?php if ($soThongBaoMoi_Sidebar > 0): ?>
+                                    <span class="menu-badge-count"><?= $soThongBaoMoi_Sidebar ?></span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../controllers/gioHangController.php" class="<?= ($current_page == 'gioHangController.php') ? 'active' : '' ?>">
+                                <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng của tôi
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../controllers/danhSachYeuThichController.php" class="<?= ($current_page == 'danhSachYeuThichController.php') ? 'active' : '' ?>">
+                                <i class="fa-solid fa-heart"></i> Sản phẩm yêu thích
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../controllers/lichSuDonHangController.php" class="<?= ($current_page == 'lichSuDonHangController.php') ? 'active' : '' ?>">
+                                <i class="fa-solid fa-clipboard-list"></i> Lịch sử giao dịch
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
+                                <i class="fa-solid fa-store"></i> Kênh Người Bán
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../controllers/dangXuatController.php" class="logout-link">
+                                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>

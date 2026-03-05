@@ -2,6 +2,16 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+$soThongBaoMoi = 0;
+if (isset($_SESSION['IdTaiKhoan'])) {
+    require_once __DIR__ . '/../models/thongBaoModel.php';
+    // Kiểm tra xem biến $conn đã có chưa (vì header.php được include ở nhiều nơi)
+    global $conn;
+    if ($conn) {
+        $modelTB_Header = new ThongBaoModel($conn);
+        $soThongBaoMoi = $modelTB_Header->demThongBaoChuaDoc($_SESSION['IdTaiKhoan']);
+    }
+}
 ?>
 
 <div class="dau-trang">
@@ -21,30 +31,66 @@ if (session_status() === PHP_SESSION_NONE) {
             </div>
         </div>
         <!-- Menu điều hướng -->
-        <nav class="header-right">
-            <ul class="nav-menu">
-                <li class="trangchu"><a href="/DoAn2/controllers/trangChuController.php"><i class="fa-solid fa-house"></i>Trang chủ</a></li>
-                <li class="danhsachsanpham"><a href="/DoAn2/controllers/danhSachSanPhamController.php"><i class="fa-solid fa-cart-shopping"></i> Sản phẩm</a></li>
-                <li class="giohang"><a href="/DoAn2/controllers/gioHangController.php"><i class="fa-solid fa-bag-shopping"></i> Giỏ hàng</a></li>
-                <li class="lichsu"><a href="/DoAn2/controllers/lichSuDonHangController.php"><i class="fa-solid fa-box"></i> Lịch sử giao dịch</a></li>
-                <li class="dangnhap" style="display:none;"><a href="/DoAn2/controllers/dangNhapController.php"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a></li>
-                <li class="dangky" style="display:none;"><a href="/DoAn2/controllers/dangKyController.php"><i class="fa-solid fa-user-plus"></i> Đăng ký</a></li>
-                <li class="dangxuat" style="display:none;"><a href="/DoAn2/controllers/dangXuatController.php"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
-                <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
-                    <li class="taikhoan">
-                        <a href="/DoAn2/controllers/thongTinTaiKhoanController.php">
-                            <i class="fa-solid fa-user"></i>
-                            <?php echo htmlspecialchars($_SESSION['TenTK']); ?>
+        <div class="header-right" style="display: flex; align-items: center; gap: 20px;">
+
+            <a href="../controllers/trangChuController.php" class="trangchu"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <a href="../controllers/danhSachSanPhamController.php" class="sanpham"><i class="fa-solid fa-box"></i> Sản phẩm</a>
+
+            <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
+                <div class="account-dropdown">
+                    <a href="../controllers/thongTinTaiKhoanController.php" class="account-btn">
+                        <i class="fa-solid fa-user-circle" style="font-size: 22px;"></i>
+
+                        <span><?php echo isset($_SESSION['TenTK']) ? htmlspecialchars($_SESSION['TenTK']) : 'Tài khoản'; ?></span>
+
+                        <?php if ($soThongBaoMoi > 0): ?>
+                            <span class="dot-badge"></span>
+                        <?php endif; ?>
+                    </a>
+
+                    <div class="dropdown-content">
+                        <a href="../controllers/thongTinTaiKhoanController.php">
+                            <i class="fa-solid fa-id-badge"></i> Quản lý tài khoản
                         </a>
-                    </li>
-                    <li class="dangxuat">
-                        <a href="/DoAn2/controllers/dangXuatController.php"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
-                    </li>
-                <?php else: ?>
-                    <li class="taikhoan"><a href="/DoAn2/controllers/thongTinTaiKhoanController.php"><i class="fa-solid fa-user"></i> Tài khoản</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
+
+                        <a href="../controllers/thongBaoController.php">
+                            <i class="fa-solid fa-bell"></i> Thông báo hệ thống
+                            <?php if ($soThongBaoMoi > 0): ?>
+                                <span class="badge-count" id="bell-count"><?= $soThongBaoMoi ?></span>
+                            <?php endif; ?>
+                        </a>
+
+                        <a href="../controllers/gioHangController.php">
+                            <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng của tôi
+                        </a>
+
+                        <a href="../controllers/danhSachYeuThichController.php">
+                            <i class="fa-solid fa-heart"></i> Sản phẩm yêu thích
+                        </a>
+
+                        <a href="../controllers/lichSuDonHangController.php">
+                            <i class="fa-solid fa-clipboard-list"></i> Lịch sử giao dịch
+                        </a>
+
+                        <a href="../seller/controllers/sellerSanPhamController.php" style="color: #fd7e14;">
+                            <i class="fa-solid fa-store" style="color: #fd7e14;"></i> Kênh Người Bán
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                        <a href="../controllers/dangXuatController.php" class="logout-link">
+                            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+
+            <?php else: ?>
+                <a href="../controllers/dangNhapController.php" style="text-decoration: none; color: var(--bs-pink-600); font-weight: bold; font-size: 16px;">
+                    <i class="fa-solid fa-user"></i> Đăng nhập
+                </a>
+            <?php endif; ?>
+
+        </div>
     </div>
 </div>
 <script src="../assets/js/liveSearch.js"></script>

@@ -12,10 +12,11 @@ CREATE TABLE TaiKhoan (
     VaiTro TINYINT DEFAULT 0 CHECK (VaiTro IN (0,1)), 
     IdGoogle VARCHAR(255) DEFAULT NULL, 
     TrangThaiBanHang ENUM('ChuaKichHoat','DangHoatDong','BiKhoa') DEFAULT 'ChuaKichHoat', 
+    Avatar VARCHAR(255) DEFAULT NULL,
     ThoiGianTao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    Avatar VARCHAR(255) DEFAULT NULL
+    DiemViPham INT DEFAULT 0, -- Điểm gậy cảnh cáo (1, 2, 3...)
+    HanKhoaTaiKhoan DATETIME DEFAULT NULL -- Thời gian hết hạn khóa (nếu bị khóa 7 ngày)
 );
-
 -- 2. Bảng địa chỉ
 CREATE TABLE DiaChi (
     MaDC INT AUTO_INCREMENT PRIMARY KEY, 
@@ -207,7 +208,7 @@ CREATE TABLE ThongBao (
     MaTB INT AUTO_INCREMENT PRIMARY KEY,
     TieuDe VARCHAR(255) NOT NULL,
     NoiDung TEXT,
-    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong';
+    LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong',
     NguoiGui INT(10) DEFAULT NULL, 
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -263,12 +264,25 @@ CREATE TABLE BaoCao (
     IdNguoiBaoCao INT(10),
     IdDoiTuongBiBaoCao INT(10), 
     MaHH INT(10) DEFAULT NULL, 
-    LyDo VARCHAR(255),
-    TrangThai ENUM('ChoXuLy', 'DaXuLy', 'BoQua') DEFAULT 'ChoXuLy',
+    LoaiBaoCao ENUM('SanPham', 'NguoiBan') NOT NULL,
+    LyDoChinh VARCHAR(255) NOT NULL, -- Dropdown lý do
+    ChiTiet TEXT, -- Textarea người dùng tự ghi
+    TrangThai ENUM('ChoXuLy', 'ViPham', 'KhongViPham') DEFAULT 'ChoXuLy',
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (IdNguoiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan)
+    FOREIGN KEY (IdNguoiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
+    FOREIGN KEY (IdDoiTuongBiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
-
+-- 24. Bảng kháng cáo
+CREATE TABLE KhangCao (
+    MaKC INT AUTO_INCREMENT PRIMARY KEY,
+    MaBC INT NOT NULL, -- Liên kết với báo cáo nào
+    IdNguoiKhangCao INT(10), -- Người bán
+    NoiDung TEXT NOT NULL,
+    TrangThai ENUM('ChoDuyet', 'ChapNhan', 'TuChoi') DEFAULT 'ChoDuyet',
+    NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (MaBC) REFERENCES BaoCao(MaBC) ON DELETE CASCADE,
+    FOREIGN KEY (IdNguoiKhangCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
+);
 
 -- =============================================
 -- INSERT DỮ LIỆU
