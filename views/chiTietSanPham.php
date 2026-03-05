@@ -126,7 +126,7 @@
                         <?php if (isset($_SESSION['IdTaiKhoan']) && $_SESSION['IdTaiKhoan'] == $chiTiet['IdNguoiBan']): ?>
                             <button disabled style="background:#ccc; cursor:not-allowed;">Bạn là người bán</button>
                         <?php else: ?>
-                            <a href="chatController.php?IdTaiKhoan=<?php echo $chiTiet['IdNguoiBan']; ?>">
+                            <a href="chatController.php?MaHH=<?php echo $chiTiet['MaHH']; ?>">
                                 <button><i class="fa-solid fa-comments"></i> Chat với người bán</button>
                             </a>
                         <?php endif; ?>
