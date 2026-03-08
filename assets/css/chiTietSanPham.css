@@ -627,7 +627,9 @@
     align-items: center;
     gap: 20px;
 }
-
+.nut-bao-cao{
+display: flex ;
+}
 /* Avatar shop */
 .avatar-nguoi-ban img {
     width: 70px;
@@ -708,7 +710,7 @@
     gap: 5px;
 }
 
-.chat-voi-nguoi-ban button:hover, .nut-xem-nguoi-ban button:hover {
+.chat-voi-nguoi-ban button:hover, .nut-xem-nguoi-ban button:hover, .nut-xem-nguoi-ban a:first-child button:hover {
     background: var(--bs-pink-600);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);

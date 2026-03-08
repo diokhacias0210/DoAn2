@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../assets/css/bootstrap/bootstrap.css" rel="stylesheet">
     <link href="../assets/css/header.css" rel="stylesheet">
     <link href="../assets/css/chiTietSanPham.css" rel="stylesheet">
     <link href="../assets/css/color.css" rel="stylesheet">
@@ -21,7 +22,6 @@
                 <h2>CHI TIẾT SẢN PHẨM</h2>
                 <button onclick="history.back()"><i class="fa-solid fa-angle-left"></i> Trở lại</button>
             </div>
-
             <!-- phần trên: ảnh + thông tin -->
             <div class="container-top">
                 <div class="container-top-left">
@@ -131,6 +131,10 @@
                             </a>
                         <?php endif; ?>
                     </div>
+
+                    <button onclick="moBaoCao('SanPham', <?= $chiTiet['IdNguoiBan'] ?>, <?= $chiTiet['MaHH'] ?>)" class="btn btn-sm btn-outline-danger nut-bao-cao">
+                        <i class="fa-solid fa-flag"></i> Báo cáo sản phẩm này
+                    </button>
                 </div>
             </div>
             <!-- mô tả -->
@@ -185,8 +189,91 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalBaoCao" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formBaoCao">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title"><i class="fa-solid fa-triangle-exclamation"></i> Báo cáo vi phạm</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="bc_idBiBaoCao" name="idBiBaoCao">
+                        <input type="hidden" id="bc_maHH" name="maHH">
+                        <input type="hidden" id="bc_loaiBaoCao" name="loaiBaoCao">
 
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Chọn lý do chính:</label>
+                            <select class="form-select" id="bc_lyDoChinh" name="lyDoChinh" required>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mô tả chi tiết (Tùy chọn):</label>
+                            <textarea class="form-control" name="chiTiet" rows="3" placeholder="Nhập thêm thông tin để admin dễ xác minh..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Gửi báo cáo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <?php include '../includes/footer.php'; ?>
+
+    <script>
+        // Logic mở Modal Báo Cáo
+        function moBaoCao(loai, idDoiTuong, maHH = '') {
+            // Gán giá trị ẩn
+            document.getElementById('bc_loaiBaoCao').value = loai;
+            document.getElementById('bc_idBiBaoCao').value = idDoiTuong;
+            document.getElementById('bc_maHH').value = maHH;
+
+            // Thay đổi options lý do dựa trên loại
+            const selectLyDo = document.getElementById('bc_lyDoChinh');
+            selectLyDo.innerHTML = '';
+            let options = [];
+            if (loai === 'SanPham') {
+                options = ['Lừa đảo', 'Hàng giả/nhái', 'Thông tin không đúng thực tế', 'Trùng lặp', 'Lý do khác'];
+            } else {
+                options = ['Người dùng có dấu hiệu lừa đảo', 'Thông tin cá nhân sai phạm', 'Ngôn ngữ đả kích/phản cảm', 'Lý do khác'];
+            }
+
+            options.forEach(opt => {
+                selectLyDo.innerHTML += `<option value="${opt}">${opt}</option>`;
+            });
+
+            new bootstrap.Modal(document.getElementById('modalBaoCao')).show();
+        }
+
+        // Logic gửi form AJAX
+        document.getElementById('formBaoCao').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btnSubmit = this.querySelector('button[type="submit"]');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = 'Đang gửi...';
+
+            const formData = new FormData(this);
+
+            fetch('../controllers/baoCaoController.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message); // Có thể thay bằng SweetAlert cho đẹp
+                    if (data.success) {
+                        bootstrap.Modal.getInstance(document.getElementById('modalBaoCao')).hide();
+                    }
+                })
+                .catch(err => console.error(err))
+                .finally(() => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = 'Gửi báo cáo';
+                });
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="../assets/js/js.js"></script>

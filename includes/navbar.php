@@ -1,5 +1,4 @@
 <?php
-// Lấy tên file controller hiện tại
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
@@ -24,7 +23,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <a href="adminDanhGiaController.php" class="sidebar-link <?= ($current_page == 'adminDanhGiaController.php') ? 'active' : '' ?>">✏️ <span>Đánh giá</span></a>
         <a href="adminThongBaoController.php" class="sidebar-link <?= ($current_page == 'adminThongBaoController.php') ? 'active' : '' ?>">🔔 <span>Thông báo</span></a>
-
+        <a href="adminBaoCaoController.php" class="sidebar-link <?= ($current_page == 'adminBaoCaoController.php') ? 'active' : '' ?>">⚠️ <span>Báo cáo</span></a>
 
         <a href="../../controllers/dangXuatController.php" class="sidebar-link">🚪 <span>Đăng xuất</span></a>
     </nav>
