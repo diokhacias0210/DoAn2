@@ -53,12 +53,21 @@ class chatModel
     // Lấy danh sách các phòng chat của một người dùng (Cột trái giao diện)
     public function layDanhSachPhongCuaNguoiDung($idNguoiDung)
     {
-        $sql = "SELECT p.MaPhong, h.TenHH 
+        // Sử dụng CASE WHEN để xác định tên đối phương đang chat với mình
+        $sql = "SELECT p.MaPhong, h.TenHH, 
+                       CASE 
+                           WHEN p.IdNguoiMua = ? THEN tk_ban.TenTK
+                           ELSE tk_mua.TenTK
+                       END as TenNguoiChat
                 FROM PhongChat p 
                 JOIN HangHoa h ON p.MaHH = h.MaHH 
+                JOIN TaiKhoan tk_ban ON p.IdNguoiBan = tk_ban.IdTaiKhoan
+                JOIN TaiKhoan tk_mua ON p.IdNguoiMua = tk_mua.IdTaiKhoan
                 WHERE p.IdNguoiMua = ? OR p.IdNguoiBan = ?";
+                
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idNguoiDung, $idNguoiDung);
+        // Bind 3 tham số $idNguoiDung
+        $stmt->bind_param("iii", $idNguoiDung, $idNguoiDung, $idNguoiDung);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
@@ -80,6 +89,38 @@ class chatModel
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("iis", $maPhong, $idNguoiGui, $noiDung);
         return $stmt->execute();
+    }
+    // Hàm lưu tin nhắn vào bảng TinNhan
+    public function guiTinNhan($maPhong, $idNguoiGui, $noiDung) {
+        $sql = "INSERT INTO TinNhan (MaPhong, IdNguoiGui, NoiDung) VALUES (?, ?, ?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iis", $maPhong, $idNguoiGui, $noiDung);
+        return $stmt->execute();
+    }
+
+    // Lấy thông tin chi tiết của 1 phòng chat (bao gồm Tên sản phẩm và Tên đối phương)
+    public function layChiTietPhongChat($maPhong, $idNguoiDung)
+    {
+        $sql = "SELECT p.MaPhong, h.TenHH, 
+                       CASE 
+                           WHEN p.IdNguoiMua = ? THEN tk_ban.TenTK
+                           ELSE tk_mua.TenTK
+                       END as TenNguoiChat
+                FROM PhongChat p 
+                JOIN HangHoa h ON p.MaHH = h.MaHH 
+                JOIN TaiKhoan tk_ban ON p.IdNguoiBan = tk_ban.IdTaiKhoan
+                JOIN TaiKhoan tk_mua ON p.IdNguoiMua = tk_mua.IdTaiKhoan
+                WHERE p.MaPhong = ?";
+                
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $idNguoiDung, $maPhong);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+        return null;
     }
 }
 ?>

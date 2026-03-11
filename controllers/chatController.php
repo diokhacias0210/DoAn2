@@ -24,16 +24,25 @@ switch ($action) {
 
         $idNguoiBan = $chatModel->layIdNguoiBanTuSanPham($maHH);
         if ($idNguoiBan === 0) die("Không tìm thấy người bán!");
-        if ($idNguoiDung === $idNguoiBan) die("Bạn không thể tự chat với chính mình!");
+        
+        // Tránh trường hợp người mua tự chat với chính sản phẩm của mình
+        if ($idNguoiDung === $idNguoiBan) {
+            echo "<script>alert('Bạn không thể tự chat với chính mình!'); history.back();</script>";
+            exit();
+        }
 
+        // Kiểm tra xem phòng chat giữa 2 người về sản phẩm này đã tồn tại chưa
         $maPhong = $chatModel->kiemTraPhongTonTai($idNguoiDung, $idNguoiBan, $maHH);
-        if ($maPhong === 0) {
+        
+        // Nếu chưa có thì tạo phòng mới
+        if ($maPhong == 0) {
             $maPhong = $chatModel->taoPhongChat($idNguoiDung, $idNguoiBan, $maHH);
         }
 
-        // Tạo/Tìm xong thì chuyển hướng về Controller này nhưng với action='index' để mở giao diện
+        // QUAN TRỌNG: Chuyển hướng sang giao diện chat và truyền MaPhong lên URL
         header("Location: chatController.php?action=index&MaPhong=" . $maPhong);
         exit();
+        break;
 
     // 2. CHỨC NĂNG HIỂN THỊ GIAO DIỆN CHAT (Mở file View)
     case 'index':
@@ -42,6 +51,12 @@ switch ($action) {
         // Gọi model lấy dữ liệu danh sách phòng bên cột trái
         $danhSachPhong = $chatModel->layDanhSachPhongCuaNguoiDung($idNguoiDung);
         
+        // Lấy chi tiết phòng chat hiện tại để hiển thị ở khung bên phải
+        $chiTietPhong = null;
+        if ($maPhong > 0) {
+            $chiTietPhong = $chatModel->layChiTietPhongChat($maPhong, $idNguoiDung);
+        }
+
         // Load file View giao diện (Giả sử file chat.php nằm trong thư mục views)
         require_once '../views/chat.php';
         break;

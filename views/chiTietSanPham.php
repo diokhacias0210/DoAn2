@@ -127,7 +127,9 @@
                             <button disabled style="background:#ccc; cursor:not-allowed;">Bạn là người bán</button>
                         <?php else: ?>
                             <a href="chatController.php?MaHH=<?php echo $chiTiet['MaHH']; ?>">
-                                <button><i class="fa-solid fa-comments"></i> Chat với người bán</button>
+                                <button class="..." onclick="window.location.href='../controllers/chatController.php?action=tao_phong&MaHH=<?php echo $chiTiet['MaHH']; ?>'">
+                                    Chat với người bán
+                                </button>
                             </a>
                         <?php endif; ?>
                     </div>

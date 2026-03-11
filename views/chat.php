@@ -19,8 +19,11 @@
                     $activeClass = ($r['MaPhong'] == $maPhong) ? 'active' : '';
                     // Click thì load lại Controller gọi Action 'index'
                     echo "<div class='room-item $activeClass' onclick='window.location.href=\"../controllers/chatController.php?action=index&MaPhong=" . $r['MaPhong'] . "\"'>
-                        " . $r['TenHH'] . "
-                      </div>";
+                            <div style='font-weight: bold; font-size: 16px; color: #000;'>" . htmlspecialchars($r['TenNguoiChat']) . "</div>
+                            <div style='font-size: 13px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
+                                Tên SP: " . htmlspecialchars($r['TenHH']) . "
+                            </div>
+                          </div>";
                 }
             } else {
                 echo "<div style='padding:15px; text-align:center;'>Bạn chưa có tin nhắn nào.</div>";
@@ -29,7 +32,20 @@
         </div>
 
         <div class="chat-window">
-            <div class="chat-header">Đang chat về sản phẩm...</div>
+            <div class="chat-header">
+                <?php if (!empty($chiTietPhong)): ?>
+                    <div style="font-size: 18px; font-weight: bold; color: #333;">
+                        <i class="fa-solid fa-user"></i> <?php echo htmlspecialchars($chiTietPhong['TenNguoiChat']); ?>
+                    </div>
+                    <div style="font-size: 14px; color: #666; margin-top: 4px;">
+                        <i class="fa-solid fa-box"></i> Sản phẩm: <strong><?php echo htmlspecialchars($chiTietPhong['TenHH']); ?></strong>
+                    </div>
+                <?php else: ?>
+                    <div style="font-size: 16px; color: #666;">
+                        Vui lòng chọn một cuộc trò chuyện để bắt đầu
+                    </div>
+                <?php endif; ?>
+            </div>
 
             <div class="chat-body" id="chatBox">
             </div>
