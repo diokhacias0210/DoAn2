@@ -269,6 +269,8 @@
             document.getElementById('modalChiTiet').style.display = 'none';
         }
     </script>
+    <script src="../../assets/js/js.js"></script>
+
 </body>
 
 </html>
