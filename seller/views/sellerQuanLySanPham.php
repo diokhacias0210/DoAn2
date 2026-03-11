@@ -18,7 +18,8 @@
     <style>
         /* Tùy chỉnh riêng cho trang Seller để đồng bộ màu */
         body {
-            background-color: #fff;
+            background-color: #f8f9fa;
+            /* Nền xám nhạt cho nổi bật khối trắng */
         }
 
         .seller-nav {
@@ -107,6 +108,22 @@
             text-align: center;
             cursor: pointer;
         }
+
+        /* Style Phân trang (Màu hồng) */
+        .pagination .page-item.active .page-link {
+            background-color: var(--bs-pink-500);
+            border-color: var(--bs-pink-500);
+            color: white;
+        }
+
+        .pagination .page-link {
+            color: var(--bs-pink-500);
+        }
+
+        .pagination .page-link:hover {
+            color: var(--bs-pink-600);
+            background-color: var(--bs-pink-50);
+        }
     </style>
 </head>
 
@@ -116,42 +133,83 @@
     <div class="giua-trang">
         <div class="container" style="max-width: 1200px; padding: 0;">
 
-            <div class="seller-nav">
+            <div class="seller-nav bg-white p-3 rounded shadow-sm mb-4">
                 <a href="sellerSanPhamController.php" class="active"><i class="fa-solid fa-box"></i> Quản lý sản phẩm</a>
                 <a href="sellerDonHangController.php"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <form method="GET" class="d-flex" style="gap: 10px;">
-                    <input type="text" name="search" class="form-control" placeholder="Tìm tên sản phẩm..." value="<?= htmlspecialchars($keyword) ?>" style="width: 300px; border-radius: 20px;">
-                    <button class="btn btn-pink" style="border-radius: 20px;"><i class="fas fa-search"></i> Tìm</button>
-                </form>
-                <button class="btn btn-pink" onclick="openModal('add')" style="border-radius: 20px; padding: 8px 20px; font-weight: bold;">
-                    <i class="fas fa-plus"></i> Đăng bán mới
-                </button>
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body rounded">
+                    <form method="GET" action="sellerSanPhamController.php" class="row gx-2 gy-2 align-items-center">
+                        <div class="col-md-3">
+                            <input type="text" name="search" class="form-control" placeholder="Tên sản phẩm..." value="<?= htmlspecialchars($keyword ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="madm" class="form-select">
+                                <option value="">- Mọi danh mục -</option>
+                                <?php if (isset($danhSachDanhMuc)): ?>
+                                    <?php foreach ($danhSachDanhMuc as $dm): ?>
+                                        <option value="<?= $dm['MaDM'] ?>" <?= (isset($filter_dm) && $filter_dm == $dm['MaDM']) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($dm['TenDM']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="trangthaiduyet" class="form-select">
+                                <option value="">- Trạng thái -</option>
+                                <option value="DaDuyet" <?= (isset($filter_duyet) && $filter_duyet == 'DaDuyet') ? 'selected' : '' ?>>Đã duyệt</option>
+                                <option value="ChoDuyet" <?= (isset($filter_duyet) && $filter_duyet == 'ChoDuyet') ? 'selected' : '' ?>>Chờ duyệt</option>
+                                <option value="TuChoi" <?= (isset($filter_duyet) && $filter_duyet == 'TuChoi') ? 'selected' : '' ?>>Bị từ chối</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select name="sort" class="form-select">
+                                <option value="new" <?= (isset($sort) && $sort == 'new') ? 'selected' : '' ?>>Mới nhất</option>
+                                <option value="banchay" <?= (isset($sort) && $sort == 'banchay') ? 'selected' : '' ?>>Bán chạy nhất</option>
+                                <option value="gia_desc" <?= (isset($sort) && $sort == 'gia_desc') ? 'selected' : '' ?>>Giá cao đến thấp</option>
+                                <option value="gia_asc" <?= (isset($sort) && $sort == 'gia_asc') ? 'selected' : '' ?>>Giá thấp đến cao</option>
+                                <option value="tonkho_asc" <?= (isset($sort) && $sort == 'tonkho_asc') ? 'selected' : '' ?>>Sắp hết hàng</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-pink"><i class="fas fa-filter"></i> Lọc</button>
+                            <a href="sellerSanPhamController.php" class="btn btn-outline-secondary">Xóa lọc</a>
+                            <button type="button" class="btn btn-success ms-auto" onclick="openModal('add')">
+                                <i class="fas fa-plus"></i> Đăng mới
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <?php if (!empty($message)): ?>
-                <div class="alert alert-success alert-dismissible fade show">
+                <div class="alert alert-success alert-dismissible fade show shadow-sm">
                     <?= $message ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
             <?php if (!empty($error)): ?>
-                <div class="alert alert-danger alert-dismissible fade show">
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm">
                     <?= $error ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             <?php endif; ?>
 
-            <div class="table-responsive" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                <table class="table table-hover seller-table">
+            <div class="table-responsive bg-white p-3 border-0 shadow-sm rounded">
+                <table class="table table-hover seller-table align-middle">
                     <thead>
                         <tr>
                             <th>Ảnh</th>
-                            <th>Tên sản phẩm</th>
+                            <th style="width: 30%">Tên sản phẩm</th>
                             <th>Giá bán</th>
                             <th>Kho</th>
+                            <th>Đã bán</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
@@ -159,7 +217,10 @@
                     <tbody>
                         <?php if (empty($danhSachSanPham)): ?>
                             <tr>
-                                <td colspan="6" class="text-center py-4">Bạn chưa đăng sản phẩm nào.</td>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="fa-solid fa-box-open" style="font-size: 3rem; color: #ccc; margin-bottom: 10px;"></i><br>
+                                    Không tìm thấy sản phẩm nào phù hợp.
+                                </td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($danhSachSanPham as $sp): ?>
@@ -170,12 +231,15 @@
                                     </td>
                                     <td>
                                         <strong><?= htmlspecialchars($sp['TenHH']) ?></strong><br>
-                                        <small class="text-muted"><?= htmlspecialchars($sp['TenDM']) ?></small>
+                                        <small class="text-muted"><i class="fa-solid fa-tag"></i> <?= htmlspecialchars($sp['TenDM']) ?></small>
                                     </td>
                                     <td class="text-center text-danger font-weight-bold">
                                         <?= number_format($sp['Gia'], 0, ',', '.') ?>đ
                                     </td>
                                     <td class="text-center"><?= $sp['SoLuongHH'] ?></td>
+                                    <td class="text-center fw-bold text-success">
+                                        <?= isset($sp['DaBan']) ? $sp['DaBan'] : 0 ?>
+                                    </td>
                                     <td class="text-center">
                                         <?php if ($sp['TrangThaiDuyet'] == 'ChoDuyet'): ?>
                                             <span class="badge bg-warning text-dark">⏳ Chờ duyệt</span>
@@ -183,6 +247,11 @@
                                             <span class="badge bg-success">✅ Đã duyệt</span>
                                         <?php else: ?>
                                             <span class="badge bg-danger">❌ Bị từ chối</span>
+                                            <?php if (!empty($sp['LyDoTuChoi'])): ?>
+                                                <div style="font-size: 11px; margin-top: 3px; color: red;" title="<?= htmlspecialchars($sp['LyDoTuChoi']) ?>">
+                                                    (<?= htmlspecialchars(mb_substr($sp['LyDoTuChoi'], 0, 20)) ?>...)
+                                                </div>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
@@ -198,6 +267,27 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+
+                <?php if (isset($total_pages) && $total_pages > 1): ?>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= urlencode($keyword ?? '') ?>&madm=<?= $filter_dm ?? '' ?>&trangthaiduyet=<?= $filter_duyet ?? '' ?>&sort=<?= $sort ?? 'new' ?>">« Trước</a>
+                            </li>
+
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                                    <a class="page-link" href="?page=<?= $i ?>&search=<?= urlencode($keyword ?? '') ?>&madm=<?= $filter_dm ?? '' ?>&trangthaiduyet=<?= $filter_duyet ?? '' ?>&sort=<?= $sort ?? 'new' ?>"><?= $i ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= urlencode($keyword ?? '') ?>&madm=<?= $filter_dm ?? '' ?>&trangthaiduyet=<?= $filter_duyet ?? '' ?>&sort=<?= $sort ?? 'new' ?>">Sau »</a>
+                            </li>
+                        </ul>
+                    </nav>
+                <?php endif; ?>
+
             </div>
         </div>
     </div>
@@ -207,7 +297,7 @@
             <div class="modal-content">
                 <form action="sellerSanPhamController.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
-                        <h5 class="modal-title"><?= isset($edit_item) ? 'Cập nhật sản phẩm' : 'Đăng bán sản phẩm mới' ?></h5>
+                        <h5 class="modal-title"><?= isset($edit_item) ? '<i class="fas fa-edit"></i> Cập nhật sản phẩm' : '<i class="fas fa-plus-circle"></i> Đăng bán sản phẩm mới' ?></h5>
                         <button type="button" class="btn-close" onclick="closeModal()" style="filter: invert(1);"></button>
                     </div>
                     <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
@@ -268,7 +358,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Hình ảnh sản phẩm</label>
                             <input type="file" name="image_file[]" class="form-control" multiple accept="image/*">
-                            <small class="text-muted">Giữ Ctrl để chọn nhiều ảnh.</small>
+                            <small class="text-muted">Giữ Ctrl để chọn nhiều ảnh. Ảnh đầu tiên sẽ làm ảnh đại diện.</small>
 
                             <?php if (isset($edit_item['DanhSachAnh']) && !empty($edit_item['DanhSachAnh'])): ?>
                                 <div class="mt-2 p-2 border rounded bg-light">
@@ -309,6 +399,7 @@
         function openModal(mode) {
             if (mode === 'add') {
                 if (window.location.search.includes('edit')) {
+                    // Nếu đang ở URL có tham số edit, chuyển hướng về trang chủ sản phẩm để mở modal rỗng
                     window.location.href = 'sellerSanPhamController.php';
                 } else {
                     document.getElementById('productModal').style.display = 'block';
@@ -318,23 +409,31 @@
 
         function closeModal() {
             document.getElementById('productModal').style.display = 'none';
+            // Nếu thoát khỏi modal sửa, xóa tham số URL
             if (window.location.search.includes('edit')) {
                 window.location.href = 'sellerSanPhamController.php';
             }
         }
 
         function deleteImage(element, url, mahh) {
-            if (confirm('Bạn muốn xóa ảnh này?')) {
-                // Gửi AJAX để xóa ảnh (cần thêm case delete_image trong controller)
-                // Trong phạm vi bài này, ta tạm ẩn nó đi
+            if (confirm('Bạn muốn xóa ảnh này? Lịch sử sẽ không thể hoàn tác nếu bạn nhấn lưu form.')) {
                 element.parentElement.style.display = 'none';
 
-                // Nếu muốn xử lý backend, cần thêm code AJAX gọi controller
-                /*
-                $.post('sellerSanPhamController.php', { action: 'delete_image', url: url, mahh: mahh }, function(res){ ... });
-                */
+                // Thêm input hidden để báo cho controller biết cần xóa ảnh nào khi ấn Lưu
+                let hiddenInput = document.createElement("input");
+                hiddenInput.setAttribute("type", "hidden");
+                hiddenInput.setAttribute("name", "delete_images[]");
+                hiddenInput.setAttribute("value", url);
+                document.querySelector("form").appendChild(hiddenInput);
             }
         }
+
+        // Tự động ẩn Alert sau 3s
+        $(document).ready(function() {
+            setTimeout(function() {
+                $(".alert").slideUp(500);
+            }, 3000);
+        });
     </script>
     <script src="../../assets/js/js.js"></script>
 

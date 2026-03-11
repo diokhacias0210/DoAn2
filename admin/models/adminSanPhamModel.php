@@ -9,51 +9,110 @@ class AdminSanPhamModel
         $this->conn = $conn;
     }
 
+    public function countTatCaSanPham($keyword, $madm, $idNguoiBan, $tinhtrang, $trangthaiduyet)
+    {
+        $sql = "SELECT COUNT(*) as total FROM HangHoa hh JOIN TaiKhoan tk ON hh.IdNguoiBan = tk.IdTaiKhoan WHERE 1=1";
+        $params = [];
+        $types = "";
+
+        if (!empty($keyword)) {
+            $sql .= " AND (hh.TenHH LIKE ? OR tk.TenTK LIKE ?)";
+            $params[] = "%$keyword%";
+            $params[] = "%$keyword%";
+            $types .= "ss";
+        }
+        if (!empty($madm)) {
+            $sql .= " AND hh.MaDM = ?";
+            $params[] = $madm;
+            $types .= "i";
+        }
+        if (!empty($idNguoiBan)) {
+            $sql .= " AND hh.IdNguoiBan = ?";
+            $params[] = $idNguoiBan;
+            $types .= "i";
+        }
+        if (!empty($tinhtrang)) {
+            $sql .= " AND hh.TinhTrangHang = ?";
+            $params[] = $tinhtrang;
+            $types .= "s";
+        }
+        if (!empty($trangthaiduyet)) {
+            $sql .= " AND hh.TrangThaiDuyet = ?";
+            $params[] = $trangthaiduyet;
+            $types .= "s";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        if (!empty($params)) $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc()['total'];
+    }
+
+
 
     //Lấy tất cả sản phẩm 
 
-    public function getTatCaSanPham($keyword = '')
+    public function getTatCaSanPham($keyword, $madm, $idNguoiBan, $tinhtrang, $trangthaiduyet, $sort, $limit, $offset)
     {
-        // Câu lệnh SQL chung cho cả tìm kiếm và lấy tất cả, chỉ khác ở mệnh đề WHERE
-        $sql_template = "
-            SELECT 
-                hh.*, 
-                dm.TenDM, 
-                tk.TenTK as NguoiBan,
-                (SELECT URL FROM HinhAnh WHERE MaHH = hh.MaHH LIMIT 1) as AnhDaiDien,
-                CASE 
-                    WHEN hh.TinhTrangHang = 'Ngưng kinh doanh' THEN 'Ngưng kinh doanh'
-                    WHEN hh.SoLuongHH <= 0 THEN 'Hết hàng'
-                    ELSE 'Còn hàng'
-                END AS TinhTrangHang
-            FROM 
-                HangHoa hh
-            LEFT JOIN   DanhMuc dm ON hh.MaDM = dm.MaDM
-            LEFT JOIN   TaiKhoan tk ON hh.IdNguoiBan = tk.IdTaiKhoan
-        ";
+        $sql = "SELECT hh.*, dm.TenDM, tk.TenTK as NguoiBan, tk.IdTaiKhoan,
+                (SELECT URL FROM HinhAnh WHERE MaHH = hh.MaHH LIMIT 1) as AnhDaiDien
+                FROM HangHoa hh
+                LEFT JOIN DanhMuc dm ON hh.MaDM = dm.MaDM
+                LEFT JOIN TaiKhoan tk ON hh.IdNguoiBan = tk.IdTaiKhoan
+                WHERE 1=1";
 
-        $result = null;
+        $params = [];
+        $types = "";
 
+        // Điều kiện lọc giống hàm count ở trên
         if (!empty($keyword)) {
-            // Tìm kiếm theo tên sản phẩm hoặc người bán (dùng prepared statement)
-            $sql = $sql_template . " WHERE hh.TenHH LIKE ? OR tk.TenTK LIKE ? ORDER BY hh.MaHH DESC";
-            $stmt = $this->conn->prepare($sql);
-            $searchTerm = "%" . $keyword . "%";
-            $stmt->bind_param("ss", $searchTerm, $searchTerm);
-            $stmt->execute();
-            $result = $stmt->get_result();
-        } else {
-            // Lấy tất cả (không tìm kiếm)
-            $sql = $sql_template . " ORDER BY hh.TrangThaiDuyet ASC, hh.MaHH DESC";
-            $result = $this->conn->query($sql);
+            $sql .= " AND (hh.TenHH LIKE ? OR tk.TenTK LIKE ?)";
+            $params[] = "%$keyword%";
+            $params[] = "%$keyword%";
+            $types .= "ss";
+        }
+        if (!empty($madm)) {
+            $sql .= " AND hh.MaDM = ?";
+            $params[] = $madm;
+            $types .= "i";
+        }
+        if (!empty($idNguoiBan)) {
+            $sql .= " AND hh.IdNguoiBan = ?";
+            $params[] = $idNguoiBan;
+            $types .= "i";
+        }
+        if (!empty($tinhtrang)) {
+            $sql .= " AND hh.TinhTrangHang = ?";
+            $params[] = $tinhtrang;
+            $types .= "s";
+        }
+        if (!empty($trangthaiduyet)) {
+            $sql .= " AND hh.TrangThaiDuyet = ?";
+            $params[] = $trangthaiduyet;
+            $types .= "s";
         }
 
-        if ($result) {
-            return $result->fetch_all(MYSQLI_ASSOC);
-        } else {
-            // Xử lý trường hợp truy vấn thất bại (tùy chọn)
-            return [];
-        }
+        // Sắp xếp
+        if ($sort == 'gia_asc') $sql .= " ORDER BY hh.Gia ASC";
+        elseif ($sort == 'gia_desc') $sql .= " ORDER BY hh.Gia DESC";
+        elseif ($sort == 'tonkho_desc') $sql .= " ORDER BY hh.SoLuongHH DESC";
+        else $sql .= " ORDER BY CASE WHEN hh.TrangThaiDuyet = 'ChoDuyet' THEN 1 ELSE 2 END, hh.MaHH DESC";
+
+        $sql .= " LIMIT ? OFFSET ?";
+        $params[] = $limit;
+        $params[] = $offset;
+        $types .= "ii";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!empty($params)) $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function layDanhSachNguoiBan()
+    {
+        $res = $this->conn->query("SELECT IdTaiKhoan, TenTK FROM TaiKhoan WHERE TrangThaiBanHang != 'ChuaKichHoat'");
+        return $res->fetch_all(MYSQLI_ASSOC);
     }
 
 
@@ -188,5 +247,32 @@ class AdminSanPhamModel
         $stmt = $this->conn->prepare("UPDATE HangHoa SET HienThi = ? WHERE MaHH = ?");
         $stmt->bind_param("ii", $trangThai, $mahh);
         return $stmt->execute();
+    }
+    // --- Lấy thông tin chi tiết cho Admin (Kèm thông tin người bán) ---
+    public function getChiTietSanPhamAdmin($id)
+    {
+        $sql = "SELECT hh.*, dm.TenDM, tk.TenTK as NguoiBan, tk.Email, tk.Sdt, tk.Avatar 
+                FROM HangHoa hh
+                LEFT JOIN DanhMuc dm ON hh.MaDM = dm.MaDM
+                LEFT JOIN TaiKhoan tk ON hh.IdNguoiBan = tk.IdTaiKhoan
+                WHERE hh.MaHH = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+    // Lấy danh sách SP đang chờ duyệt để gửi thông báo
+    public function getTatCaSanPhamChoDuyet()
+    {
+        $sql = "SELECT MaHH, IdNguoiBan, TenHH FROM HangHoa WHERE TrangThaiDuyet = 'ChoDuyet'";
+        $result = $this->conn->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    //  Cập nhật trạng thái duyệt tất cả
+    public function duyetTatCaSanPham()
+    {
+        $sql = "UPDATE HangHoa SET TrangThaiDuyet = 'DaDuyet' WHERE TrangThaiDuyet = 'ChoDuyet'";
+        return $this->conn->query($sql);
     }
 }

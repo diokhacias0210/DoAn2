@@ -159,23 +159,37 @@ try {
     $error = $e->getMessage();
 }
 
-//LẤY DỮ LIỆU ĐỂ HIỂN THỊ RA VIEW
+// LẤY DỮ LIỆU ĐỂ HIỂN THỊ RA VIEW (CÓ LỌC, SẮP XẾP, PHÂN TRANG)
 $keyword = $_GET['search'] ?? '';
-$danhSachSanPham = $sanPhamModel->getSanPhamCuaToi($idNguoiBan, $keyword);
-$danhSachDanhMuc = $danhMucModel->getTatCaDanhMuc(); // Lấy danh mục để hiển thị modal thêm/sửa
+$filter_dm = $_GET['madm'] ?? '';
+$filter_tinhtrang = $_GET['tinhtrang'] ?? '';
+$filter_duyet = $_GET['trangthaiduyet'] ?? '';
+$sort = $_GET['sort'] ?? 'new';
 
-//Xử lý lấy dữ liệu khi bấm Sửa
+// Thiết lập phân trang
+$limit = 8; // 10 sản phẩm 1 trang
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $limit;
+
+// Lấy tổng số dòng để chia trang
+$total_records = $sanPhamModel->countSanPhamCuaToi($idNguoiBan, $keyword, $filter_dm, $filter_tinhtrang, $filter_duyet);
+$total_pages = ceil($total_records / $limit);
+
+// Lấy danh sách sản phẩm
+$danhSachSanPham = $sanPhamModel->getSanPhamCuaToi($idNguoiBan, $keyword, $filter_dm, $filter_tinhtrang, $filter_duyet, $sort, $limit, $offset);
+$danhSachDanhMuc = $danhMucModel->getTatCaDanhMuc();
+
+// Xử lý lấy dữ liệu khi bấm Sửa (Giữ nguyên)
 $edit_item = null;
 if (isset($_GET['edit'])) {
     $edit_item = $sanPhamModel->getSanPhamById($idNguoiBan, (int)$_GET['edit']);
-    if ($edit_item) {
-        $edit_item['DanhSachAnh'] = $sanPhamModel->getAnhSanPham($edit_item['MaHH']);
-    }
+    if ($edit_item) $edit_item['DanhSachAnh'] = $sanPhamModel->getAnhSanPham($edit_item['MaHH']);
 }
 
 // Lấy ảnh đại diện cho danh sách
 foreach ($danhSachSanPham as &$sp) {
     $sp['DanhSachAnh'] = $sanPhamModel->getAnhSanPham($sp['MaHH']);
 }
-
+unset($sp);
 include_once __DIR__ . '/../views/sellerQuanLySanPham.php';
