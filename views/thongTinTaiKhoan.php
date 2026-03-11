@@ -18,84 +18,47 @@
 
     <div class="giua-trang">
         <div class="container">
-            <?php
-            $soThongBaoMoi_Sidebar = 0;
-            if (isset($_SESSION['IdTaiKhoan'])) {
-                if (!class_exists('ThongBaoModel')) {
-                    require_once __DIR__ . '/../models/thongBaoModel.php';
-                }
-                global $conn;
-                if ($conn) {
-                    $modelTB_Sidebar = new ThongBaoModel($conn);
-                    $soThongBaoMoi_Sidebar = $modelTB_Sidebar->demThongBaoChuaDoc($_SESSION['IdTaiKhoan']);
-                }
-            }
-
-            // Hàm hỗ trợ kiểm tra file hiện tại để gán class "active" tự động
-            $current_page = basename($_SERVER['PHP_SELF']);
-            ?>
             <div class="side">
-                <div class="avatar-ten" style="text-align: center; margin-bottom: 20px;">
-                    <div class="avatar" style="width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid var(--bs-pink-200); padding: 3px; display: flex; justify-content: center; align-items: center;">
-
-                        <img src="../<?php echo isset($_SESSION['Avatar']) && !empty($_SESSION['Avatar']) ? $_SESSION['Avatar'] : 'assets/images/placeholder.png'; ?>"
-                            alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-
-                    </div>
-                </div>
-
                 <nav class="menu">
                     <ul>
-                        <li>
-                            <a href="../controllers/thongTinTaiKhoanController.php" class="<?= ($current_page == 'thongTinTaiKhoanController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-id-badge"></i> Quản lý tài khoản
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../controllers/thongBaoController.php" class="<?= ($current_page == 'thongBaoController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-bell"></i> Thông báo hệ thống
-                                <?php if ($soThongBaoMoi_Sidebar > 0): ?>
-                                    <span class="menu-badge-count"><?= $soThongBaoMoi_Sidebar ?></span>
-                                <?php endif; ?>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../controllers/gioHangController.php" class="<?= ($current_page == 'gioHangController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng của tôi
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../controllers/danhSachYeuThichController.php" class="<?= ($current_page == 'danhSachYeuThichController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-heart"></i> Sản phẩm yêu thích
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../controllers/lichSuDonHangController.php" class="<?= ($current_page == 'lichSuDonHangController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-clipboard-list"></i> Lịch sử giao dịch
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
-                                <i class="fa-solid fa-store"></i> Kênh Người Bán
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="../controllers/dangXuatController.php" class="logout-link">
-                                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-                            </a>
-                        </li>
+                        <li class="active"><a href="thongTinTaiKhoanController.php" style="text-decoration:none; color:inherit;"><i class='bx bx-user'></i> Thông tin tài khoản</a></li>
+                        <li><a href="lichSuDonHangController.php"><i class='bx bx-package'></i> Lịch sử giao dịch</a></li>
+                        <li><a href="gioHangController.php"><i class='bx bx-cart'></i> Giỏ Hàng</a></li>
+                        <li><a href="danhSachYeuThichController.php"><i class='bx bx-heart'></i> Sản phẩm yêu thích</a></li>
+                        <li class="dangxuat"><a href="dangXuatController.php"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
                     </ul>
                 </nav>
             </div>
 
             <main class="content">
                 <h1><i class='bx bx-user'></i> TÀI KHOẢN CỦA TÔI</h1>
+
+                <!-- NÚT -->
+                <button id="btn-ban-hang" class="btn btn-primary">
+                <?php if (empty($trangThaiBanHang) || $trangThaiBanHang['TrangThai'] == 0): ?>
+                    Kích hoạt chức năng bán hàng
+                <?php else: ?>
+                    Hủy chức năng bán hàng
+                <?php endif; ?>
+                </button>
+
+                <!-- FORM -->
+                <?php if (empty($trangThaiBanHang) || $trangThaiBanHang['TrangThai'] == 0): ?>
+                <form id="form-ban-hang"
+                    method="POST"
+                    action="BanHangController.php"
+                    style="display:none; margin-top:15px;">
+
+                    <input type="hidden" name="action" value="kich_hoat">
+
+                    <input name="cccd" class="form-control mb-2" placeholder="CCCD" required>
+                    <input name="sdt" class="form-control mb-2" placeholder="Số điện thoại" required>
+                    <textarea name="diachi" class="form-control mb-2" placeholder="Địa chỉ" required></textarea>
+
+                    <button class="btn btn-success">Xác nhận</button>
+                </form>
+                <?php endif; ?>
+
 
                 <div id="alert-container">
                     <?php if (!empty($message)) echo $message; ?>
@@ -224,6 +187,56 @@
             }
         });
     </script>
+
+    // kích hoạt chức năng bán hàng
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('btn-ban-hang');
+        let dangBanHang = false; // trạng thái ban đầu
+
+        btn.addEventListener('click', function () {
+            dangBanHang = !dangBanHang;
+
+            if (dangBanHang) {
+                btn.textContent = 'Hủy chức năng bán hàng';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-danger');
+            } else {
+                btn.textContent = 'Kích hoạt chức năng bán hàng';
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-primary');
+            }
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('btn-ban-hang');
+            const form = document.getElementById('form-ban-hang');
+
+            btn.addEventListener('click', function () {
+
+                // nếu đang là nút "Kích hoạt" → hiện form
+                if (form) {
+                    form.style.display = 'block';
+                    btn.style.display = 'none';
+                } 
+                // nếu là "Hủy"
+                else {
+                    if (confirm('Bạn có chắc muốn hủy chức năng bán hàng?')) {
+                        const f = document.createElement('form');
+                        f.method = 'POST';
+                        f.action = 'BanHangController.php';
+                        f.innerHTML = '<input name="action" value="huy">';
+                        document.body.appendChild(f);
+                        f.submit();
+                    }
+                }
+            });
+        });
+        </script>
+
+
 </body>
 
 </html>
