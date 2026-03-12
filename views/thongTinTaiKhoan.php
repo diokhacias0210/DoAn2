@@ -105,9 +105,9 @@
                                 </a>
 
                             <?php else: ?>
-                                <button type="button" id="btn-mo-form-kich-hoat" class="btn btn-primary">
+                                <a href="kichHoatBanHangController.php" class="btn">
                                     <i class="fa-solid fa-rocket"></i> Kích hoạt chức năng bán hàng
-                                </button>
+                                </a>
                             <?php endif; ?>
                         </li>
 
@@ -211,49 +211,6 @@
                             <input type="text" name="diachi_moi" id="diachi-moi" class="form-control" placeholder="Nhập địa chỉ mới của bạn" required>
                         </div>
                         <button type="submit" id="luu-diachi" class="luudiachi">Lưu địa chỉ</button>
-                    </form>
-                </div>
-                <div id="form-kich-hoat-ban-hang" style="display: none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-                    <h4 style="margin-bottom: 20px;">Đăng ký thông tin người bán</h4>
-                    <form action="banHangController.php" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="action" value="kich_hoat">
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Tên cửa hàng <span class="text-danger">*</span></label>
-                            <input type="text" name="TenCuaHang" class="form-control" required placeholder="Nhập tên cửa hàng của bạn">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Số CCCD <span class="text-danger">*</span></label>
-                            <input type="text" name="SoCCCD" class="form-control" required maxlength="1" placeholder="Nhập đúng số CCCD">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Địa chỉ kho hàng <span class="text-danger">*</span></label>
-                            <input type="text" name="DiaChiKhoHang" class="form-control" required placeholder="Nhập địa chỉ cụ thể để lấy/giao hàng">
-                        </div>
-
-                        <h5 style="margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Thông tin thanh toán (Nhận tiền bán hàng)</h5>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Tên ngân hàng <span class="text-danger">*</span></label>
-                            <input type="text" name="TenNganHang" class="form-control" required placeholder="Ví dụ: Vietcombank, MB Bank, BIDV...">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Số tài khoản ngân hàng <span class="text-danger">*</span></label>
-                            <input type="text" name="SoTaiKhoanNganHang" class="form-control" required placeholder="Nhập số tài khoản ngân hàng">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Tên chủ tài khoản <span class="text-danger">*</span></label>
-                            <input type="text" name="TenChuTaiKhoan" class="form-control" required placeholder="NHẬP TÊN KHÔNG DẤU (VD: NGUYEN VAN A)">
-                        </div>
-
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-success">Xác nhận đăng ký</button>
-                            <button type="button" class="btn btn-secondary" id="btn-huy-kich-hoat">Hủy bỏ</button>
-                        </div>
                     </form>
                 </div>
             </main>

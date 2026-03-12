@@ -83,12 +83,12 @@ if (isset($_SESSION['IdTaiKhoan'])) {
                         </a>
 
                         <?php if ($trangThaiBanHangHeader === 'DangHoatDong'): ?>
-                            <a href="<?= $baseURL ?>/seller/controllers/sellerSanPhamController.php" style="color: #fd7e14;">
-                                <i class="fa-solid fa-store" style="color: #fd7e14;"></i> Kênh Người Bán
+                            <a href="<?= $baseURL ?>/seller/controllers/sellerSanPhamController.php">
+                                <i class="fa-solid fa-store"></i> Kênh Người Bán
                             </a>
                         <?php else: ?>
-                            <a href="<?= $baseURL ?>/controllers/thongTinTaiKhoanController.php" style="color: #fd0de5;">
-                                <i class="fa-solid fa-rocket" style="color: #fd0de5;"></i> Kích hoạt bán hàng
+                            <a href="<?= $baseURL ?>/controllers/kichHoatBanHangController.php">
+                                <i class="fa-solid fa-rocket"></i> Kích hoạt bán hàng
                             </a>
                         <?php endif; ?>
 

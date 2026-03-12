@@ -1,0 +1,64 @@
+body {
+    background-color: #f5f5f5; /* Đồng bộ nền với chiTietDonHang.css */
+}
+.form-dang-ky {
+    max-width: 700px;
+    margin: 80px auto; /* Cách top giống trang thông tin tài khoản */
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Đổ bóng nhẹ giống chiTietSanPham.css */
+    border: 1px solid var(--bs-pink-300); /* Viền màu hồng nhạt đồng bộ */
+}
+.icon-header {
+    font-size: 48px; 
+    color: var(--bs-pink-500); /* Chuyển icon store sang tone hồng */
+}
+.title-header {
+    font-weight: 700;
+    color: var(--bs-pink-600); /* Tiêu đề màu hồng đậm */
+    margin-top: 15px;
+}
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--bs-pink-600);
+    border-bottom: 2px solid var(--bs-pink-300);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+/* Style focus cho các input để viền đổi màu hồng khi click vào */
+.form-control:focus {
+    border-color: var(--bs-pink-400);
+    box-shadow: 0 0 0 0.25rem rgba(214, 51, 132, 0.25);
+}
+/* Nút hoàn tất đăng ký */
+.btn-xac-nhan {
+    background-color: var(--bs-pink-500);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px;
+    transition: all 0.3s ease;
+    border-radius: 25px; /* Bo tròn giống nút ở chi tiết sản phẩm */
+}
+.btn-xac-nhan:hover {
+    background-color: var(--bs-pink-600);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    color: white;
+}
+/* Nút hủy */
+.btn-huy {
+    color: var(--bs-pink-600);
+    border: 1px solid var(--bs-pink-300);
+    background: transparent;
+    font-weight: 600;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+.btn-huy:hover {
+    background-color: var(--bs-pink-100);
+    color: var(--bs-pink-700);
+}
