@@ -23,12 +23,8 @@
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             height: 100%;
-            border-top: 4px solid #34495e;
         }
 
-        .shop-card {
-            border-top: 4px solid #0dcaf0;
-        }
 
         .avatar-lg {
             width: 100px;
@@ -139,7 +135,7 @@
                     </div>
                 </div>
 
-                <div class="info-card" style="border-top: 4px solid #2ecc71;">
+                <div class="info-card">
                     <h5 class="fw-bold mb-3"><i class="fa-solid fa-boxes-stacked text-success"></i> Sản phẩm đã đăng bán</h5>
 
                     <div class="table-responsive">
