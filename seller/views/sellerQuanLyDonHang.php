@@ -129,6 +129,26 @@
                 gap: 5px;
             }
         }
+
+        /* --- CSS CHO SỐ THÔNG BÁO TIN NHẮN --- */
+        .seller-nav a {
+            position: relative; /* Thêm dòng này để làm mốc gắn huy hiệu đỏ */
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: -4px;
+            right: -8px;
+            background-color: #dc3545; /* Màu đỏ nổi bật */
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 50px;
+            line-height: 1;
+            border: 2px solid #fff; /* Viền trắng để tách biệt khỏi nền */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 
@@ -141,6 +161,10 @@
             <div class="seller-nav">
                 <a href="sellerSanPhamController.php"><i class="fa-solid fa-box"></i> Quản lý sản phẩm</a>
                 <a href="sellerDonHangController.php" class="active"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
+                <a href="sellerChatController.php">
+                    Tin nhắn khách hàng 
+                    <span class="chat-badge">3</span> 
+                </a>
             </div>
 
             <div class="mb-4">
