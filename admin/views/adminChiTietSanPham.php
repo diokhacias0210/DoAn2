@@ -71,7 +71,7 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="m-0 text-success fw-bold"><i class="fa-solid fa-circle-info"></i> Thông tin chi tiết</h2>
-                    <a href="adminSanPhamController.php" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Quay lại</a>
+                    <button onclick="history.back()" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Trở lại</button>
                 </div>
 
                 <div class="row">
