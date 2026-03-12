@@ -1,77 +1,94 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
-    <title>Chat - Giống Zalo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trò chuyện với người bán</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="../assets/css/color.css" rel="stylesheet">
+    <link href="../assets/css/header.css" rel="stylesheet">
     <link href="../assets/css/chat.css" rel="stylesheet">
 </head>
-
 <body>
 
-    <div class="chat-container">
-        <div class="sidebar">
-            <div class="sidebar-header">Tin nhắn của bạn</div>
-            <?php
-            // Biến $danhSachPhong đã được chatController.php chuẩn bị và truyền sang
-            if (!empty($danhSachPhong)) {
-                foreach ($danhSachPhong as $r) {
-                    $activeClass = ($r['MaPhong'] == $maPhong) ? 'active' : '';
-                    // Click thì load lại Controller gọi Action 'index'
-                    echo "<div class='room-item $activeClass' onclick='window.location.href=\"../controllers/chatController.php?action=index&MaPhong=" . $r['MaPhong'] . "\"'>
-                            <div style='font-weight: bold; font-size: 16px; color: #000;'>" . htmlspecialchars($r['TenNguoiChat']) . "</div>
-                            <div style='font-size: 13px; color: #666; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
-                                Tên SP: " . htmlspecialchars($r['TenHH']) . "
-                            </div>
-                          </div>";
-                }
-            } else {
-                echo "<div style='padding:15px; text-align:center;'>Bạn chưa có tin nhắn nào.</div>";
-            }
-            ?>
-        </div>
+    <?php include '../includes/header.php'; ?>
 
-        <div class="chat-window">
-            <div class="chat-header">
-                <?php if (!empty($chiTietPhong)): ?>
-                    <div style="font-size: 18px; font-weight: bold; color: #333;">
-                        <i class="fa-solid fa-user"></i> <?php echo htmlspecialchars($chiTietPhong['TenNguoiChat']); ?>
-                    </div>
-                    <div style="font-size: 14px; color: #666; margin-top: 4px;">
-                        <i class="fa-solid fa-box"></i> Sản phẩm: <strong><?php echo htmlspecialchars($chiTietPhong['TenHH']); ?></strong>
-                    </div>
-                <?php else: ?>
-                    <div style="font-size: 16px; color: #666;">
-                        Vui lòng chọn một cuộc trò chuyện để bắt đầu
-                    </div>
-                <?php endif; ?>
+    <div class="container-fluid giua-trang">
+        <div class="chat-wrapper">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <i class="fa-solid fa-comments"></i> Tin nhắn của bạn
+                </div>
+                <div class="room-list">
+                    <?php
+                    if (!empty($danhSachPhong)) {
+                        foreach ($danhSachPhong as $r) {
+                            $activeClass = ($r['MaPhong'] == $maPhong) ? 'active' : '';
+                            echo "<div class='room-item $activeClass' onclick='window.location.href=\"../controllers/chatController.php?action=index&MaPhong=" . $r['MaPhong'] . "\"'>
+                                    <div class='room-name'>
+                                        <i class='fa-solid fa-circle-user' style='color:#ccc; font-size: 18px;'></i> 
+                                        " . htmlspecialchars($r['TenNguoiChat']) . "
+                                    </div>
+                                    <div class='room-product-name'>
+                                        <i class='fa-solid fa-box-open'></i> SP: " . htmlspecialchars($r['TenHH']) . "
+                                    </div>
+                                  </div>";
+                        }
+                    } else {
+                        // Gọi class thay vì dùng style
+                        echo "<div class='empty-message'>Bạn chưa có cuộc trò chuyện nào.</div>";
+                    }
+                    ?>
+                </div>
             </div>
 
-            <div class="chat-body" id="chatBox">
-            </div>
+            <div class="chat-window">
+                <div class="chat-header">
+                    <?php if (isset($chiTietPhong) && !empty($chiTietPhong)): ?>
+                        <div style="font-size: 18px; font-weight: bold; color: var(--bs-pink-600);">
+                            <i class="fa-solid fa-store"></i> <?php echo htmlspecialchars($chiTietPhong['TenNguoiChat']); ?>
+                        </div>
+                        <div style="font-size: 14px; color: #555; margin-top: 5px;">
+                            Đang trao đổi về: <strong><?php echo htmlspecialchars($chiTietPhong['TenHH']); ?></strong>
+                        </div>
+                    <?php else: ?>
+                        <div style="font-size: 16px; color: #888; text-align: center; margin-top: 10px;">
+                            Vui lòng chọn một cuộc trò chuyện ở bên trái để bắt đầu
+                        </div>
+                    <?php endif; ?>
+                </div>
 
-            <div class="chat-footer">
-                <input type="text" id="txtMessage" placeholder="Nhập tin nhắn..." autocomplete="off" <?php echo ($maPhong == 0) ? 'disabled' : ''; ?>>
-                <button onclick="sendMessage()" <?php echo ($maPhong == 0) ? 'disabled' : ''; ?>>Gửi</button>
-                <button onclick="history.back()"><i class="fa-solid fa-angle-left"></i> Trở lại</button>
+                <div class="chat-body" id="chatBox">
+                    </div>
+
+                <div class="chat-footer">
+                    <input type="text" id="txtMessage" placeholder="Nhập tin nhắn..." autocomplete="off" <?php echo ($maPhong > 0) ? '' : 'disabled'; ?>>
+                    <button class="btn-send" onclick="sendMessage()" <?php echo ($maPhong > 0) ? '' : 'disabled'; ?>>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const maPhong = <?= $maPhong ?>;
+        const maPhong = <?php echo $maPhong; ?>;
         const chatBox = document.getElementById('chatBox');
         const txtMessage = document.getElementById('txtMessage');
 
-        // Nếu không có mã phòng thì dừng thực thi JS (tránh lỗi)
         if (maPhong > 0) {
             function loadMessages() {
-                // Gọi AJAX về đúng file Controller, dùng action=load
                 fetch(`../controllers/chatController.php?action=load&MaPhong=${maPhong}`)
                     .then(res => res.text())
                     .then(data => {
+                        let isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 5;
                         chatBox.innerHTML = data;
-                        chatBox.scrollTop = chatBox.scrollHeight;
+                        if (isScrolledToBottom) {
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }
                     });
             }
 
@@ -84,26 +101,33 @@
                 formData.append('MaPhong', maPhong);
                 formData.append('NoiDung', msg);
 
-                // Gọi AJAX gửi tin nhắn qua Controller
                 fetch('../controllers/chatController.php', {
                         method: 'POST',
                         body: formData
                     })
                     .then(() => {
-                        txtMessage.value = '';
-                        loadMessages();
+                        txtMessage.value = ''; 
+                        loadMessages(); 
+                        setTimeout(() => {
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }, 100);
                     });
             }
 
             txtMessage.addEventListener("keypress", function(event) {
-                if (event.key === "Enter") sendMessage();
+                if (event.key === "Enter") {
+                    event.preventDefault(); 
+                    sendMessage();
+                }
             });
 
             loadMessages();
+            setTimeout(() => {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 300);
+
             setInterval(loadMessages, 2000);
         }
     </script>
-
 </body>
-
 </html>
