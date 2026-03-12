@@ -80,9 +80,35 @@
                         </li>
 
                         <li>
-                            <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
+                            <!-- <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
                                 <i class="fa-solid fa-store"></i> Kênh Người Bán
-                            </a>
+                            </a> -->
+                            <?php 
+                            $trangThai = 'ChuaKichHoat'; // Gán mặc định
+
+                            // TRUY VẤN TRỰC TIẾP LẤY TRẠNG THÁI MỚI NHẤT
+                            if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+                                $idUser_check = (int)$_SESSION['IdTaiKhoan'];
+                                $sql_check = "SELECT TrangThaiBanHang FROM TaiKhoan WHERE IdTaiKhoan = $idUser_check";
+                                $res_check = $conn->query($sql_check);
+                                if ($res_check && $res_check->num_rows > 0) {
+                                    $row_check = $res_check->fetch_assoc();
+                                    $trangThai = $row_check['TrangThaiBanHang'];
+                                }
+                            }
+
+                            // KIỂM TRA ĐỂ HIỂN THỊ NÚT
+                            if ($trangThai === 'DangHoatDong'): 
+                            ?>
+                                <a href="../seller/controllers/sellerSanPhamController.php" class="btn btn-warning">
+                                    <i class="fa-solid fa-store"></i> Kênh người bán
+                                </a>
+
+                            <?php else: ?>
+                                <button type="button" id="btn-mo-form-kich-hoat" class="btn btn-primary">
+                                    <i class="fa-solid fa-rocket"></i> Kích hoạt chức năng bán hàng
+                                </button>
+                            <?php endif; ?>
                         </li>
 
                         <li>
@@ -97,6 +123,39 @@
             <main class="content">
                 <h1><i class='bx bx-user'></i> TÀI KHOẢN CỦA TÔI</h1>
 
+                <?php 
+                // Kiểm tra trạng thái để hiển thị nút Hủy trên menu
+                $trangThaiMenu = 'ChuaKichHoat';
+                if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+                    $idUser_menu = (int)$_SESSION['IdTaiKhoan'];
+                    $sql_menu = "SELECT TrangThaiBanHang FROM TaiKhoan WHERE IdTaiKhoan = $idUser_menu";
+                    $res_menu = $conn->query($sql_menu);
+                    if ($res_menu && $res_menu->num_rows > 0) {
+                        $trangThaiMenu = $res_menu->fetch_assoc()['TrangThaiBanHang'];
+                    }
+                }
+
+                // Nếu đã kích hoạt thì hiện nút Hủy
+                if ($trangThaiMenu === 'DangHoatDong'): 
+                ?>
+                    <li>
+                        <a href="#" onclick="xacNhanHuyBanHang(); return false;" style="color: #dc3545;">
+                            <i class='bx bx-store-alt'></i> Hủy kích hoạt bán hàng
+                        </a>
+
+                        <form id="form-huy-ban-hang" action="banHangController.php" method="POST" style="display: none;">
+                            <input type="hidden" name="action" value="huy">
+                        </form>
+
+                        <script>
+                            function xacNhanHuyBanHang() {
+                                if (confirm("Bạn có chắc chắn muốn hủy chức năng bán hàng không? Hệ thống sẽ thu hồi quyền bán hàng của bạn.")) {
+                                    document.getElementById('form-huy-ban-hang').submit();
+                                }
+                            }
+                        </script>
+                    </li>
+                <?php endif; ?>
                 <div id="alert-container">
                     <?php if (!empty($message)) echo $message; ?>
                 </div>
@@ -152,6 +211,49 @@
                             <input type="text" name="diachi_moi" id="diachi-moi" class="form-control" placeholder="Nhập địa chỉ mới của bạn" required>
                         </div>
                         <button type="submit" id="luu-diachi" class="luudiachi">Lưu địa chỉ</button>
+                    </form>
+                </div>
+                <div id="form-kich-hoat-ban-hang" style="display: none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+                    <h4 style="margin-bottom: 20px;">Đăng ký thông tin người bán</h4>
+                    <form action="banHangController.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="kich_hoat">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tên cửa hàng <span class="text-danger">*</span></label>
+                            <input type="text" name="TenCuaHang" class="form-control" required placeholder="Nhập tên cửa hàng của bạn">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Số CCCD <span class="text-danger">*</span></label>
+                            <input type="text" name="SoCCCD" class="form-control" required maxlength="1" placeholder="Nhập đúng số CCCD">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ kho hàng <span class="text-danger">*</span></label>
+                            <input type="text" name="DiaChiKhoHang" class="form-control" required placeholder="Nhập địa chỉ cụ thể để lấy/giao hàng">
+                        </div>
+
+                        <h5 style="margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Thông tin thanh toán (Nhận tiền bán hàng)</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tên ngân hàng <span class="text-danger">*</span></label>
+                            <input type="text" name="TenNganHang" class="form-control" required placeholder="Ví dụ: Vietcombank, MB Bank, BIDV...">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Số tài khoản ngân hàng <span class="text-danger">*</span></label>
+                            <input type="text" name="SoTaiKhoanNganHang" class="form-control" required placeholder="Nhập số tài khoản ngân hàng">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tên chủ tài khoản <span class="text-danger">*</span></label>
+                            <input type="text" name="TenChuTaiKhoan" class="form-control" required placeholder="NHẬP TÊN KHÔNG DẤU (VD: NGUYEN VAN A)">
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success">Xác nhận đăng ký</button>
+                            <button type="button" class="btn btn-secondary" id="btn-huy-kich-hoat">Hủy bỏ</button>
+                        </div>
                     </form>
                 </div>
             </main>
@@ -220,6 +322,30 @@
                             alert.remove();
                         }, 500);
                     }, 3000);
+                });
+            }
+        });
+    </script>
+    // kích hoạt bán hàng
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnMoForm = document.getElementById('btn-mo-form-kich-hoat');
+            const formKichHoat = document.getElementById('form-kich-hoat-ban-hang');
+            const btnHuy = document.getElementById('btn-huy-kich-hoat');
+
+            // Bấm nút Kích hoạt -> Hiện form
+            if (btnMoForm) {
+                btnMoForm.addEventListener('click', function () {
+                    formKichHoat.style.display = 'block';
+                    btnMoForm.style.display = 'none'; // Ẩn nút đi cho gọn
+                });
+            }
+
+            // Bấm nút Hủy -> Ẩn form, hiện lại nút
+            if (btnHuy) {
+                btnHuy.addEventListener('click', function () {
+                    formKichHoat.style.display = 'none';
+                    btnMoForm.style.display = 'inline-block';
                 });
             }
         });

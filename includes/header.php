@@ -8,12 +8,21 @@ if (session_status() === PHP_SESSION_NONE) {
 $baseURL = '/DoAn2';
 
 $soThongBaoMoi = 0;
+$trangThaiBanHangHeader = 'ChuaKichHoat'; // Thêm biến lưu trạng thái mặc định
 if (isset($_SESSION['IdTaiKhoan'])) {
     require_once __DIR__ . '/../models/thongBaoModel.php'; // __DIR__ của PHP luôn lấy đúng thư mục chứa file, nên giữ nguyên
     global $conn;
     if ($conn) {
         $modelTB_Header = new ThongBaoModel($conn);
         $soThongBaoMoi = $modelTB_Header->demThongBaoChuaDoc($_SESSION['IdTaiKhoan']);
+
+        // TRUY VẤN THÊM TRẠNG THÁI BÁN HÀNG CỦA USER ĐANG ĐĂNG NHẬP
+        $idUserHeader = (int)$_SESSION['IdTaiKhoan'];
+        $sql_tt = "SELECT TrangThaiBanHang FROM TaiKhoan WHERE IdTaiKhoan = $idUserHeader";
+        $res_tt = $conn->query($sql_tt);
+        if ($res_tt && $res_tt->num_rows > 0) {
+            $trangThaiBanHangHeader = $res_tt->fetch_assoc()['TrangThaiBanHang'];
+        }
     }
 }
 ?>
@@ -73,9 +82,15 @@ if (isset($_SESSION['IdTaiKhoan'])) {
                             <i class="fa-solid fa-clipboard-list"></i> Lịch sử giao dịch
                         </a>
 
-                        <a href="<?= $baseURL ?>/seller/controllers/sellerSanPhamController.php" style="color: #fd7e14;">
-                            <i class="fa-solid fa-store" style="color: #fd7e14;"></i> Kênh Người Bán
-                        </a>
+                        <?php if ($trangThaiBanHangHeader === 'DangHoatDong'): ?>
+                            <a href="<?= $baseURL ?>/seller/controllers/sellerSanPhamController.php" style="color: #fd7e14;">
+                                <i class="fa-solid fa-store" style="color: #fd7e14;"></i> Kênh Người Bán
+                            </a>
+                        <?php else: ?>
+                            <a href="<?= $baseURL ?>/controllers/thongTinTaiKhoanController.php" style="color: #fd0de5;">
+                                <i class="fa-solid fa-rocket" style="color: #fd0de5;"></i> Kích hoạt bán hàng
+                            </a>
+                        <?php endif; ?>
 
                         <div class="dropdown-divider"></div>
 
