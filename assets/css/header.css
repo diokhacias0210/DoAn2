@@ -1,6 +1,7 @@
 /* ---------------------- Phần heaeder -------------- */
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip !important; 
+            overflow-y: visible !important;
 }
 .header-container{
   display: flex;
@@ -329,7 +330,7 @@ body {
     font-weight: bold;
     margin-left: auto; /* Đẩy sát sang phải */
 }
-.trangchu, .sanpham {
+.trangchu, .sanpham, .chat {
     text-decoration: none;
     color: #333;
     font-weight: bold;
@@ -338,7 +339,7 @@ body {
     transition: color 0.3s ease; 
 }
 
-.trangchu:hover, .sanpham:hover {
+.trangchu:hover, .sanpham:hover, .chat:hover  {
     color: var(--bs-pink-500); 
 }
 @media (max-width: 768px) {

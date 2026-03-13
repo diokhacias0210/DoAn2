@@ -47,7 +47,7 @@ if (isset($_SESSION['IdTaiKhoan'])) {
 
             <a href="<?= $baseURL ?>/controllers/trangChuController.php" class="trangchu"><i class="fa-solid fa-house"></i> Trang chủ</a>
             <a href="<?= $baseURL ?>/controllers/danhSachSanPhamController.php" class="sanpham"><i class="fa-solid fa-box"></i> Sản phẩm</a>
-
+            <a href="<?= $baseURL ?>/controllers/chatController.php" class="chat"><i class="fa-solid fa-comments"></i> Chat</a>
             <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
                 <div class="account-dropdown">
                     <a href="<?= $baseURL ?>/controllers/thongTinTaiKhoanController.php" class="account-btn">
