@@ -22,6 +22,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="adminNguoiDungController.php" class="sidebar-link <?= ($current_page == 'adminNguoiDungController.php') ? 'active' : '' ?>">👥 <span>Người dùng</span></a>
 
         <a href="adminDanhGiaController.php" class="sidebar-link <?= ($current_page == 'adminDanhGiaController.php') ? 'active' : '' ?>">✏️ <span>Đánh giá</span></a>
+        <a href="adminBannerController.php" class="sidebar-link <?= ($current_page == 'adminBannerController.php') ? 'active' : '' ?>">🖼️ <span>Quản lý Banner</span></a>
         <a href="adminThongBaoController.php" class="sidebar-link <?= ($current_page == 'adminThongBaoController.php') ? 'active' : '' ?>">🔔 <span>Thông báo</span></a>
         <a href="adminBaoCaoController.php" class="sidebar-link <?= ($current_page == 'adminBaoCaoController.php') ? 'active' : '' ?>">⚠️ <span>Báo cáo</span></a>
 
