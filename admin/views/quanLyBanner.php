@@ -137,13 +137,24 @@
                     </div>
                     <div>
                         <label>Hình ảnh</label>
-                        <input type="file" name="hinhAnh" accept="image/*" <?= isset($edit_item) ? '' : 'required' ?>>
-                        
+
+                        <input type="file" name="hinhAnh" id="hinhAnhInput" accept="image/*">
+
+                        <!-- Ảnh hiện tại -->
                         <?php if(isset($edit_item) && !empty($edit_item['HinhAnh'])): ?>
-                            <p style="font-size: 13px; margin-top: 5px; color: #666;">
-                                <i>Ảnh hiện tại đang dùng: <?= htmlspecialchars($edit_item['HinhAnh']) ?></i>
-                            </p>
+                            <div style="margin-top:10px">
+                                <p style="font-size:13px;margin-bottom:5px"><b>Ảnh hiện tại</b></p>
+                                <img src="../../assets/images/banners/<?= $edit_item['HinhAnh'] ?>"
+                                    style="width:200px;border-radius:6px;border:1px solid #ddd">
+                            </div>
                         <?php endif; ?>
+
+                        <!-- Ảnh mới -->
+                        <div style="margin-top:10px">
+                            <p style="font-size:13px;margin-bottom:5px"><b>Ảnh mới sẽ thay thế</b></p>
+                            <img id="previewBanner"
+                                style="display:none;width:200px;border-radius:6px;border:1px solid #ddd">
+                        </div>
                     </div>
                     <div>
                         <label>Trạng thái</label>
@@ -207,6 +218,26 @@
             if (event.key === 'Escape' && modals.style.display === 'flex') {
                 closemodals();
             }
+        });
+
+        // Xem trước ảnh khi chọn file
+        const input = document.getElementById("hinhAnhInput");
+        const preview = document.getElementById("previewBanner");
+
+        input.addEventListener("change", function () {
+
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            };
+
+            reader.readAsDataURL(file);
+
         });
     </script>
 </body>
