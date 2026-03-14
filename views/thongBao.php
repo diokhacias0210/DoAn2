@@ -82,9 +82,35 @@
                         </li>
 
                         <li>
-                            <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
+                            <!-- <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
                                 <i class="fa-solid fa-store"></i> Kênh Người Bán
-                            </a>
+                            </a> -->
+                            <?php 
+                            $trangThai = 'ChuaKichHoat'; // Gán mặc định
+
+                            // TRUY VẤN TRỰC TIẾP LẤY TRẠNG THÁI MỚI NHẤT
+                            if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+                                $idUser_check = (int)$_SESSION['IdTaiKhoan'];
+                                $sql_check = "SELECT TrangThaiBanHang FROM TaiKhoan WHERE IdTaiKhoan = $idUser_check";
+                                $res_check = $conn->query($sql_check);
+                                if ($res_check && $res_check->num_rows > 0) {
+                                    $row_check = $res_check->fetch_assoc();
+                                    $trangThai = $row_check['TrangThaiBanHang'];
+                                }
+                            }
+
+                            // KIỂM TRA ĐỂ HIỂN THỊ NÚT
+                            if ($trangThai === 'DangHoatDong'): 
+                            ?>
+                                <a href="../seller/controllers/sellerSanPhamController.php" class="btn btn-warning">
+                                    <i class="fa-solid fa-store"></i> Kênh người bán
+                                </a>
+
+                            <?php else: ?>
+                                <a href="kichHoatBanHangController.php" class="btn">
+                                    <i class="fa-solid fa-rocket"></i> Kích hoạt chức năng bán hàng
+                                </a>
+                            <?php endif; ?>
                         </li>
 
                         <li>
