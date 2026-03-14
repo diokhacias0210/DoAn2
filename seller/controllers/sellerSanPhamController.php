@@ -37,7 +37,8 @@ if ($tk_info && $tk_info['TrangThaiBanHang'] == 'BiKhoa') {
         $stmt_kc = $conn->prepare($sql_kc);
         $stmt_kc->bind_param("iis", $maBC, $_SESSION['IdTaiKhoan'], $noiDung);
         if ($stmt_kc->execute()) {
-            echo "<script>alert('Đã gửi kháng cáo thành công. Admin sẽ xem xét sớm nhất!'); window.location.href='../controllers/trangChuController.php';</script>";
+            // SỬA Ở ĐÂY: Thêm ../ để thành ../../controllers/trangChuController.php
+            echo "<script>alert('Đã gửi kháng cáo thành công. Admin sẽ xem xét sớm nhất!'); window.location.href='../../controllers/trangChuController.php';</script>";
             exit;
         }
     }
@@ -58,7 +59,7 @@ if ($tk_info && $tk_info['TrangThaiBanHang'] == 'BiKhoa') {
                 <form method='POST'>
                     <textarea class='form-control mb-3' name='noiDungKhangCao' rows='4' required placeholder='Ghi rõ lý do bạn không vi phạm chính sách...'></textarea>
                     <button type='submit' class='btn btn-primary w-100'>Gửi Kháng Cáo Cho Admin</button>
-                    <a href='../controllers/trangChuController.php' class='btn btn-secondary w-100 mt-2'>Quay lại Trang Chủ</a>
+                    <a href='../../controllers/trangChuController.php' class='btn btn-secondary w-100 mt-2'>Quay lại Trang Chủ</a>
                 </form>
             </div>
         </div>

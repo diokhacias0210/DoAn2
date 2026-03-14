@@ -9,15 +9,18 @@ class AdminBaoCaoModel
     }
 
     // Lấy danh sách tất cả báo cáo
+    // Lấy danh sách tất cả báo cáo (Có kèm nội dung kháng cáo nếu có)
     public function getDanhSachBaoCao($loai = '', $trangThai = '', $search = '')
     {
         $sql = "SELECT bc.*, 
                 nguoibc.TenTK as TenNguoiBaoCao, 
                 nguoibi.TenTK as TenBiBaoCao, 
-                nguoibi.DiemViPham
+                nguoibi.DiemViPham,
+                kc.NoiDung as NoiDungKhangCao
                 FROM BaoCao bc
                 JOIN TaiKhoan nguoibc ON bc.IdNguoiBaoCao = nguoibc.IdTaiKhoan
                 JOIN TaiKhoan nguoibi ON bc.IdDoiTuongBiBaoCao = nguoibi.IdTaiKhoan
+                LEFT JOIN KhangCao kc ON bc.MaBC = kc.MaBC
                 WHERE 1=1 ";
 
         $params = [];

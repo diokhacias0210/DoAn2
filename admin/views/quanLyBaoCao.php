@@ -115,7 +115,7 @@
                                 <th>Đối tượng Bị Báo Cáo</th>
                                 <th style="width: 25%;">Lý do vi phạm</th>
                                 <th>Trạng thái</th>
-                                <th class="text-center">Thao tác</th>
+                                <th class="text-center" style="width: 180px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -150,18 +150,31 @@
                                                 <span class="badge bg-warning text-dark">⏳ Chờ xử lý</span>
                                             <?php elseif ($bc['TrangThai'] == 'ViPham'): ?>
                                                 <span class="badge bg-danger">✅ Có vi phạm</span>
+                                                <?php if (!empty($bc['NoiDungKhangCao'])): ?>
+                                                    <br><span class="badge bg-info text-dark mt-1"><i class="fa-solid fa-envelope"></i> Có kháng cáo</span>
+                                                <?php endif; ?>
                                             <?php else: ?>
                                                 <span class="badge bg-secondary">❌ Bỏ qua</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if ($bc['TrangThai'] == 'ChoXuLy'): ?>
-                                                <button class="btn btn-sm btn-primary" onclick="moModalXuLy(<?= $bc['MaBC'] ?>, '<?= $bc['LoaiBaoCao'] ?>')">Xử lý</button>
-                                            <?php elseif ($bc['TrangThai'] == 'ViPham'): ?>
-                                                <a href="adminBaoCaoController.php?action=revoke&id=<?= $bc['MaBC'] ?>" class="btn btn-sm btn-outline-warning text-dark" onclick="return confirm('Bạn muốn thu hồi hình phạt này? (Người bán sẽ được trừ đi 1 gậy vi phạm)')"><i class="fa-solid fa-rotate-left"></i> Thu hồi</a>
-                                            <?php else: ?>
-                                                <span class="text-muted"><i class="fa-solid fa-check"></i> Đã đóng</span>
-                                            <?php endif; ?>
+                                            <div class="d-flex flex-column gap-1 align-items-center">
+                                                <?php if ($bc['TrangThai'] == 'ChoXuLy'): ?>
+                                                    <button class="btn btn-sm btn-primary w-100" onclick="moModalXuLy(<?= $bc['MaBC'] ?>, '<?= $bc['LoaiBaoCao'] ?>')">Xử lý</button>
+
+                                                <?php elseif ($bc['TrangThai'] == 'ViPham'): ?>
+                                                    <?php if (!empty($bc['NoiDungKhangCao'])): ?>
+                                                        <button class="btn btn-sm btn-info text-white w-100 fw-bold" onclick="moModalKhangCao(`<?= htmlspecialchars($bc['NoiDungKhangCao']) ?>`)">
+                                                            <i class="fa-solid fa-envelope-open-text"></i> Xem Kháng cáo
+                                                        </button>
+                                                    <?php endif; ?>
+
+                                                    <a href="adminBaoCaoController.php?action=revoke&id=<?= $bc['MaBC'] ?>" class="btn btn-sm btn-outline-warning text-dark w-100" onclick="return confirm('Bạn muốn thu hồi hình phạt này? (Người bán sẽ được mở khóa nếu đủ điều kiện)')"><i class="fa-solid fa-rotate-left"></i> Thu hồi</a>
+
+                                                <?php else: ?>
+                                                    <span class="text-muted"><i class="fa-solid fa-check"></i> Đã đóng</span>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -186,7 +199,7 @@
                         <input type="hidden" name="maBC" id="input_maBC">
 
                         <div class="alert alert-warning" id="warning_sp" style="display:none; font-size:13px;">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo Sản Phẩm: Nếu "CÓ VI PHẠM", sản phẩm này sẽ bị xóa.
+                            <i class="fa-solid fa-triangle-exclamation"></i> Báo cáo Sản Phẩm: Nếu "CÓ VI PHẠM", sản phẩm này sẽ bị ẩn.
                         </div>
 
                         <div class="mb-3">
@@ -213,13 +226,38 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalXemKhangCao" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-envelope-open-text"></i> Nội dung Kháng Cáo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-2">Lời giải trình từ người bị báo cáo/khóa tài khoản:</p>
+                    <div id="noidung_khangcao_text" class="p-3 bg-light border border-info rounded" style="min-height: 120px; white-space: pre-wrap; font-size: 15px;"></div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        // Mở Modal Xử lý báo cáo
         function moModalXuLy(maBC, loaiBaoCao) {
             document.getElementById('input_maBC').value = maBC;
             document.getElementById('warning_sp').style.display = (loaiBaoCao === 'SanPham') ? 'block' : 'none';
             new bootstrap.Modal(document.getElementById('modalXuLyBaoCao')).show();
+        }
+
+        // Mở Modal Xem Kháng Cáo
+        function moModalKhangCao(noiDung) {
+            document.getElementById('noidung_khangcao_text').innerText = noiDung;
+            new bootstrap.Modal(document.getElementById('modalXemKhangCao')).show();
         }
     </script>
 </body>
