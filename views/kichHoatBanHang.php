@@ -10,6 +10,8 @@
     <link href="../assets/css/color.css" rel="stylesheet">
     <link href="../assets/css/kichHoatBanHang.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -40,6 +42,20 @@
                     <input type="text" name="DiaChiKhoHang" class="form-control" required placeholder="Nhập địa chỉ nhà hoặc kho hàng của bạn">
                 </div>
 
+                <!-- khung hiển thị Bản đồ trong Form -->
+                <div class="mb-3">
+                    <label for="DiaChiKhoHang" class="form-label">Địa chỉ kho hàng</label>
+                    <input type="text" class="form-control" id="DiaChiKhoHang" name="DiaChiKhoHang" placeholder="Nhập địa chỉ, ví dụ: Ninh Kiều, Cần Thơ" required>
+                    
+                    <input type="hidden" id="ViDo" name="ViDo">
+                    <input type="hidden" id="KinhDo" name="KinhDo">
+                    
+                    <button type="button" class="btn btn-sm btn-secondary mt-2 mb-2" id="btnTimBanDo">
+                        <i class="fa-solid fa-location-dot"></i> Định vị trên bản đồ
+                    </button>
+                    <div id="map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ddd; display: none;"></div>
+                </div>
+
                 <div class="section-title">2. Thông tin thanh toán (Nhận tiền)</div>
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tên ngân hàng <span class="text-danger">*</span></label>
@@ -63,6 +79,97 @@
             </form>
         </div>
     </div>
+    <script>
+        // Khởi tạo biến bản đồ và marker (ghim)
+        let map;
+        let marker;
 
+        document.getElementById('btnTimBanDo').addEventListener('click', function() {
+            const address = document.getElementById('DiaChiKhoHang').value.trim();
+            if (address === '') {
+                alert('Vui lòng nhập địa chỉ trước khi định vị!');
+                return;
+            }
+
+            // Hiện khung bản đồ
+            document.getElementById('map').style.display = 'block';
+
+            // Khởi tạo bản đồ nếu chưa có
+            if (!map) {
+                map = L.map('map').setView([14.0583, 108.2772], 5); // Trung tâm VN
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+            }
+
+            // 1. Dùng API để dịch Địa chỉ -> Tọa độ
+            const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Vietnam')}`;
+
+            fetch(searchUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const lat = data[0].lat;
+                        const lon = data[0].lon;
+
+                        // Lưu tọa độ lúc mới tìm thấy vào form ẩn
+                        document.getElementById('ViDo').value = lat;
+                        document.getElementById('KinhDo').value = lon;
+
+                        map.setView([lat, lon], 16); // Zoom gần hơn một chút (mức 16)
+
+                        // Nếu đã có ghim cũ trên bản đồ thì xóa đi
+                        if (marker) {
+                            map.removeLayer(marker);
+                        }
+                        
+                        // TẠO GHIM MỚI VÀ CHO PHÉP KÉO THẢ (draggable: true)
+                        marker = L.marker([lat, lon], { draggable: true }).addTo(map);
+                        marker.bindPopup(`<b>Vị trí ban đầu:</b><br>${data[0].display_name}`).openPopup();
+
+                        // --- TÍNH NĂNG MỚI: BẮT SỰ KIỆN KHI NGƯỜI DÙNG KÉO THẢ GHIM ---
+                        marker.on('dragend', function(event) {
+                            const position = marker.getLatLng();
+                            
+                            // BỔ SUNG DÒNG NÀY: Cập nhật lại tọa độ mới khi thả ghim
+                            document.getElementById('ViDo').value = position.lat;
+                            document.getElementById('KinhDo').value = position.lng;
+                            
+                            // Tạo hiệu ứng loading cho ô input để người dùng biết hệ thống đang xử lý
+                            const inputDiaChi = document.getElementById('DiaChiKhoHang');
+                            inputDiaChi.value = 'Đang dịch tọa độ thành địa chỉ...';
+
+                            // 2. Dùng API Reverse Geocoding để dịch ngược Tọa độ -> Địa chỉ mới
+                            const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}&accept-language=vi`; // Ưu tiên tiếng Việt
+
+                            fetch(reverseUrl)
+                                .then(res => res.json())
+                                .then(reverseData => {
+                                    if (reverseData && reverseData.display_name) {
+                                        // Cập nhật lại tên đường/phường/quận vào ô input
+                                        inputDiaChi.value = reverseData.display_name;
+                                        // Cập nhật lại bóng thoại trên ghim
+                                        marker.bindPopup(`<b>Vị trí đã chọn:</b><br>${reverseData.display_name}`).openPopup();
+                                    } else {
+                                        inputDiaChi.value = 'Không lấy được thông tin địa chỉ tại điểm này.';
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Lỗi dịch ngược địa chỉ:', err);
+                                    inputDiaChi.value = 'Có lỗi xảy ra khi lấy tên đường.';
+                                });
+                        });
+                        // --- KẾT THÚC SỰ KIỆN KÉO THẢ ---
+
+                    } else {
+                        alert('Không tìm thấy địa chỉ này trên bản đồ. Vui lòng nhập chi tiết hơn (ví dụ thêm Phường, Quận, Thành phố)!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tìm vị trí:', error);
+                    alert('Có lỗi xảy ra khi kết nối với bản đồ.');
+                });
+        });
+    </script>
 </body>
 </html>
