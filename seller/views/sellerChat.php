@@ -55,12 +55,37 @@
 
     <div class="container mt-4 mb-5" style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
         
-        
+        <?php
+        // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+        $soTinNhanChuaDoc = 0;
+        if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+            $idSellerCurrent = $_SESSION['IdTaiKhoan'];
+            
+            // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này, 
+            // do người khác gửi (Khách hàng) và có trạng thái DaDoc = 0
+            $sqlDemTinNhan = "SELECT COUNT(tn.MaTN) AS SoLuong 
+                              FROM TinNhan tn 
+                              JOIN PhongChat p ON tn.MaPhong = p.MaPhong 
+                              WHERE p.IdNguoiBan = $idSellerCurrent 
+                              AND tn.IdNguoiGui != $idSellerCurrent 
+                              AND tn.DaXem = 0";
+                              
+            $rsDem = $conn->query($sqlDemTinNhan);
+            if ($rsDem && $rsDem->num_rows > 0) {
+                $rowDem = $rsDem->fetch_assoc();
+                $soTinNhanChuaDoc = $rowDem['SoLuong'];
+            }
+        }
+        ?>
+
         <div class="seller-nav">
             <a href="sellerSanPhamController.php">Quản lý Sản phẩm</a>
             <a href="sellerDonHangController.php">Quản lý Đơn hàng</a>
             <a href="sellerChatController.php" class="active">
-                Tin nhắn khách hàng <span class="chat-badge">3</span>
+                Tin nhắn khách hàng 
+                <?php if ($soTinNhanChuaDoc > 0): ?>
+                    <span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span>
+                <?php endif; ?>
             </a>
         </div>
 
@@ -97,14 +122,22 @@
                             echo "  </div>";
                             
                             echo "  <div class='shop-group-items' style='{$displayStyle}'>";
+                            
                             foreach ($cacPhongChat as $r) {
-                                $activeClass = ($r['MaPhong'] == $maPhong) ? 'active' : '';
-                                echo "      <div class='room-item {$activeClass}' onclick='window.location.href=\"sellerChatController.php?MaPhong=" . $r['MaPhong'] . "\"'>";
-                                echo "          <div class='room-product-name' style='font-size: 14px; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
-                                echo "              <i class='fa-solid fa-box-open' style='color: #888; margin-right: 5px;'></i> SP: " . htmlspecialchars($r['TenHH']);
-                                echo "          </div>";
-                                echo "      </div>";
+                            $activeClass = ($r['MaPhong'] == $maPhong) ? 'active' : '';
+                            
+                            // Tạo cục badge đỏ nếu có tin nhắn mới
+                            $badgeHTML = '';
+                            if ($r['SoTinNhanMoi'] > 0) {
+                                $badgeHTML = "<span style='background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);'>{$r['SoTinNhanMoi']}</span>";
                             }
+
+                            echo "      <div class='room-item {$activeClass}' onclick='window.location.href=\"sellerChatController.php?MaPhong=" . $r['MaPhong'] . "\";'>"; 
+                            echo "          <div class='room-product-name' style='font-size: 14px; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center;'>";
+                            echo "              <i class='fa-solid fa-box-open' style='color: #888; margin-right: 5px;'></i> SP: " . htmlspecialchars($r['TenHH']) . $badgeHTML;
+                            echo "          </div>";
+                            echo "      </div>";
+                        }
                             echo "  </div>";
                             echo "</div>";
                         }

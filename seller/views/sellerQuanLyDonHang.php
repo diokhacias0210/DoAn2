@@ -158,12 +158,37 @@
     <div class="giua-trang">
         <div class="container" style="max-width: 1200px; padding: 0;">
 
+            <?php
+            // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+            $soTinNhanChuaDoc = 0;
+            if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+                $idSellerCurrent = $_SESSION['IdTaiKhoan'];
+                
+                // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này, 
+                // do người khác gửi (Khách hàng) và có trạng thái DaDoc = 0
+                $sqlDemTinNhan = "SELECT COUNT(tn.MaTN) AS SoLuong 
+                                FROM TinNhan tn 
+                                JOIN PhongChat p ON tn.MaPhong = p.MaPhong 
+                                WHERE p.IdNguoiBan = $idSellerCurrent 
+                                AND tn.IdNguoiGui != $idSellerCurrent 
+                                AND tn.DaXem = 0";
+                                
+                $rsDem = $conn->query($sqlDemTinNhan);
+                if ($rsDem && $rsDem->num_rows > 0) {
+                    $rowDem = $rsDem->fetch_assoc();
+                    $soTinNhanChuaDoc = $rowDem['SoLuong'];
+                }
+            }
+            ?>
+
             <div class="seller-nav">
-                <a href="sellerSanPhamController.php"><i class="fa-solid fa-box"></i> Quản lý sản phẩm</a>
-                <a href="sellerDonHangController.php" class="active"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
+                <a href="sellerSanPhamController.php">Quản lý Sản phẩm</a>
+                <a href="sellerDonHangController.php" class="active">Quản lý Đơn hàng</a>
                 <a href="sellerChatController.php">
                     Tin nhắn khách hàng 
-                    <span class="chat-badge">3</span> 
+                    <?php if ($soTinNhanChuaDoc > 0): ?>
+                        <span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span>
+                    <?php endif; ?>
                 </a>
             </div>
 
