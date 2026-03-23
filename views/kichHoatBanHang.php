@@ -25,7 +25,7 @@
                 <p class="text-muted">Cung cấp thông tin để bắt đầu bán hàng ngay hôm nay</p>
             </div>
             
-            <form action="../controllers/banHangController.php" method="POST">
+            <form action="../controllers/kichHoatBanHangController.php" method="POST">
                 <input type="hidden" name="action" value="kich_hoat">
                 
                 <div class="section-title">1. Thông tin cửa hàng</div>
@@ -37,14 +37,10 @@
                     <label class="form-label fw-bold">Số CCCD / CMND <span class="text-danger">*</span></label>
                     <input type="text" name="SoCCCD" class="form-control" placeholder="Nhập đúng số CCCD/CMND của bạn">
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Địa chỉ kho lấy/trả hàng <span class="text-danger">*</span></label>
-                    <input type="text" name="DiaChiKhoHang" class="form-control" required placeholder="Nhập địa chỉ nhà hoặc kho hàng của bạn">
-                </div>
 
                 <!-- khung hiển thị Bản đồ trong Form -->
                 <div class="mb-3">
-                    <label for="DiaChiKhoHang" class="form-label">Địa chỉ kho hàng</label>
+                    <label for="DiaChiKhoHang" class="form-label fw-bold">Địa chỉ kho hàng <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="DiaChiKhoHang" name="DiaChiKhoHang" placeholder="Nhập địa chỉ, ví dụ: Ninh Kiều, Cần Thơ" required>
                     
                     <input type="hidden" id="ViDo" name="ViDo">

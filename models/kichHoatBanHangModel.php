@@ -1,5 +1,5 @@
 <?php
-class banHangModel {
+class kichHoatBanHangModel {
     private $conn;
 
     public function __construct($conn) {
