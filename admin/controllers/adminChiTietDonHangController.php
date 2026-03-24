@@ -1,27 +1,27 @@
 <?php
-
+session_start();
 require_once __DIR__ . '/../../includes/ketnoi.php';
-require_once __DIR__ . '/../../models/donHang.php';
+require_once __DIR__ . '/../models/adminDonHangModel.php';
 
 if (!isset($_SESSION['VaiTro']) || $_SESSION['VaiTro'] != 1) {
-    header('Location: ../../controllers/dangNhapController.php');
-    exit();
+    header("Location: ../../controllers/dangNhapController.php");
+    exit;
 }
 
-if (!isset($_GET['MaDH'])) {
-    header('Location: adminDonHangController.php'); // Về trang danh sách
-    exit();
+if (!isset($_GET['id'])) {
+    header("Location: adminDonHangController.php");
+    exit;
 }
 
-$maDH = intval($_GET['MaDH']);
-$donHangModel = new DonHang($conn);
+$maDH = intval($_GET['id']);
+$model = new AdminDonHangModel($conn);
 
-$thongTinDH = $donHangModel->getThongTinDonHang($maDH);
-$chiTietSP = $donHangModel->getChiTietDonHang($maDH);
+$thongTin = $model->getThongTinDonHang($maDH);
+$chiTiet = $model->getChiTietDonHang($maDH);
 
-if (!$thongTinDH) {
-    header('Location: adminDonHangController.php');
-    exit();
+if (empty($thongTin)) {
+    header("Location: adminDonHangController.php");
+    exit;
 }
 
-include_once __DIR__ . '/../views/quanLyChiTietDonHang.php';
+include_once __DIR__ . '/../views/adminChiTietDonHang.php';

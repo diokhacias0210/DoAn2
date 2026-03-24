@@ -25,10 +25,12 @@
         }
 
         .qlnd-table th {
-            background-color: #34495e !important;
+            background-color: #4CAF50 !important;
+            /* Đã đồng bộ màu */
             color: white;
             border: none;
             vertical-align: middle;
+            white-space: nowrap;
         }
 
         .qlnd-table td {
@@ -45,7 +47,7 @@
                 <?= $message ?>
 
                 <div class="mb-4">
-                    <h2 class="m-0 text-dark fw-bold"><i class="fa-solid fa-users"></i> Quản lý Người dùng</h2>
+                    <h2 class="m-0 text-dark fw-bold"><i class="fa-solid fa-users text-success"></i> Quản lý Người dùng</h2>
                     <p class="text-muted mt-1">Tìm kiếm, lọc và quản lý trạng thái hoạt động của thành viên.</p>
                 </div>
 
@@ -71,8 +73,8 @@
                                 </select>
                             </div>
                             <div class="col-md-3 d-flex gap-2">
-                                <button type="submit" class="btn btn-dark"><i class="fas fa-filter"></i> Lọc</button>
-                                <a href="adminNguoiDungController.php" class="btn btn-outline-secondary">Xóa</a>
+                                <button type="submit" class="btn btn-success w-100"><i class="fas fa-filter"></i> Lọc</button>
+                                <a href="adminNguoiDungController.php" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-right"></i></a>
                             </div>
                         </form>
                     </div>

@@ -26,10 +26,12 @@
         }
 
         .qlsp-table th {
-            background-color: #2ecc71 !important;
+            background-color: #4CAF50 !important;
+            /* Đã đồng bộ màu */
             color: white;
             border: none;
             vertical-align: middle;
+            white-space: nowrap;
         }
 
         .qlsp-table td {
@@ -48,7 +50,7 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="m-0 text-success fw-bold"><i class="fa-solid fa-box-open"></i> Quản lý Sản Phẩm</h2>
+                        <h2 class="m-0 text-dark fw-bold"><i class="fa-solid fa-box-open text-success"></i> Quản lý Sản Phẩm</h2>
                     </div>
 
                     <a href="adminSanPhamController.php?action=duyet_tat_ca" class="btn btn-primary fw-bold" onclick="return confirm('Bạn chắc chắn muốn duyệt TẤT CẢ các sản phẩm đang chờ chứ?')">
@@ -94,8 +96,8 @@
                                 </select>
                             </div>
                             <div class="col-md-2 d-flex gap-2">
-                                <button type="submit" class="btn btn-success"><i class="fas fa-filter"></i> Lọc</button>
-                                <a href="adminSanPhamController.php" class="btn btn-outline-secondary">Xóa</a>
+                                <button type="submit" class="btn btn-success w-100"><i class="fas fa-filter"></i> Lọc</button>
+                                <a href="adminSanPhamController.php" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-right"></i></a>
                             </div>
                         </form>
                     </div>
@@ -196,16 +198,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Tự động ẩn Alert sau 3 giây
         setTimeout(() => {
             $(".alert").slideUp(500);
         }, 3000);
 
-        // Hàm JS để mở khung nhập lý do từ chối
         function tuChoiSanPham(id) {
             let lydo = prompt("Vui lòng nhập lý do từ chối sản phẩm này:", "Hình ảnh hoặc nội dung vi phạm tiêu chuẩn.");
-
-            // Nếu người dùng bấm OK và có nhập chữ
             if (lydo !== null && lydo.trim() !== "") {
                 window.location.href = "adminSanPhamController.php?action=tuchoi&id=" + id + "&lydo=" + encodeURIComponent(lydo);
             }
