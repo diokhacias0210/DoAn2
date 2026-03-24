@@ -18,11 +18,12 @@ $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     $thongTin = $result->fetch_assoc();
 } else {
-    $thongTin = null; 
+    $thongTin = null;
 }
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,43 +33,97 @@ if ($result && $result->num_rows > 0) {
     <link href="../../assets/css/header.css" rel="stylesheet">
     <link href="../../assets/css/color.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; }
-        
+        body {
+            background-color: #f4f6f9;
+        }
+
         /* --- ĐỒNG BỘ KHUNG SƯỜN --- */
-        .seller-wrapper { max-width: 1300px; margin: 0 auto; padding: 0 15px; } 
-        .seller-content-box { background: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 600px; }
-        
+        .seller-wrapper {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .seller-content-box {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            min-height: 600px;
+        }
+
         /* --- MENU BÊN TRÁI (SIDEBAR) --- */
         .seller-sidebar {
             background: #ffffff;
             border-radius: 10px;
             padding: 15px 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             display: flex;
-            flex-direction: column; 
+            flex-direction: column;
             gap: 5px;
         }
+
         .seller-sidebar a {
-            text-decoration: none; color: #555; font-weight: 600; padding: 12px 15px; 
-            border-radius: 8px; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; position: relative; 
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
         }
-        .seller-sidebar a:hover { background-color: #f8f9fa; color: var(--bs-pink-500); }
-        .seller-sidebar a.active { background-color: var(--bs-pink-100); color: var(--bs-pink-600); border-left: 4px solid var(--bs-pink-600); }
-        
+
+        .seller-sidebar a:hover {
+            background-color: #f8f9fa;
+            color: var(--bs-pink-500);
+        }
+
+        .seller-sidebar a.active {
+            background-color: var(--bs-pink-100);
+            color: var(--bs-pink-600);
+            border-left: 4px solid var(--bs-pink-600);
+        }
+
         /* --- BADGE TIN NHẮN --- */
-        .chat-badge { 
-            position: absolute; top: 50%; right: 15px; transform: translateY(-50%); 
-            background-color: #dc3545; color: white; font-size: 11px; 
-            font-weight: bold; padding: 3px 6px; border-radius: 50px; line-height: 1; 
+        .chat-badge {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            background-color: #dc3545;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 50px;
+            line-height: 1;
         }
-        
+
         /* Đồng bộ thông tin */
-        .info-row { border-bottom: 1px dashed #eee; padding: 15px 0; }
-        .info-row:last-child { border-bottom: none; }
-        .info-label { font-weight: bold; color: #666; }
-        .info-value { color: #222; font-size: 1.1em; }
+        .info-row {
+            border-bottom: 1px dashed #eee;
+            padding: 15px 0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .info-value {
+            color: #222;
+            font-size: 1.1em;
+        }
     </style>
 </head>
+
 <body>
     <?php include '../../includes/header.php'; ?>
 
@@ -77,7 +132,7 @@ if ($result && $result->num_rows > 0) {
     $soTinNhanChuaDoc = 0;
     if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
         $idSellerCurrent = $_SESSION['IdTaiKhoan'];
-        
+
         // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này, 
         // do người khác gửi (Khách hàng) và có trạng thái DaDoc = 0
         $sqlDemTinNhan = "SELECT COUNT(tn.MaTN) AS SoLuong 
@@ -86,7 +141,7 @@ if ($result && $result->num_rows > 0) {
                         WHERE p.IdNguoiBan = $idSellerCurrent 
                         AND tn.IdNguoiGui != $idSellerCurrent 
                         AND tn.DaXem = 0";
-                        
+
         $rsDem = $conn->query($sqlDemTinNhan);
         if ($rsDem && $rsDem->num_rows > 0) {
             $rowDem = $rsDem->fetch_assoc();
@@ -97,7 +152,7 @@ if ($result && $result->num_rows > 0) {
 
     <div class="seller-wrapper mt-4 mb-5">
         <h3 class="mb-4 text-secondary text-center"><i class="fa-solid fa-shop"></i> KÊNH NGƯỜI BÁN</h3>
-        
+
         <div class="row">
             <div class="col-md-3 mb-4">
                 <div class="seller-sidebar">
@@ -111,7 +166,7 @@ if ($result && $result->num_rows > 0) {
             <div class="col-md-9">
                 <div class="seller-content-box">
                     <h4 class="mb-4 text-center" style="color: var(--bs-pink-600);">Hồ Sơ Cửa Hàng</h4>
-                    
+
                     <?php if (isset($thongTin) && $thongTin): ?>
                         <div class="row info-row">
                             <div class="col-sm-4 info-label">Tên cửa hàng:</div>
@@ -146,5 +201,8 @@ if ($result && $result->num_rows > 0) {
     </div>
 
     <?php include '../../includes/footer.php'; ?>
+    <script src="../../assets/js/js.js"></script>
+
 </body>
+
 </html>

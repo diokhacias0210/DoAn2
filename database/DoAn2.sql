@@ -283,10 +283,45 @@ CREATE TABLE KhangCao (
     FOREIGN KEY (MaBC) REFERENCES BaoCao(MaBC) ON DELETE CASCADE,
     FOREIGN KEY (IdNguoiKhangCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
+CREATE TABLE CauHinhHeThong (
+    MaCH INT PRIMARY KEY AUTO_INCREMENT,
+    TenCauHinh VARCHAR(50) UNIQUE,
+    GiaTri VARCHAR(255),
+    MoTa TEXT
+);
+-- Tạo bảng Yêu cầu rút tiền
+CREATE TABLE YeuCauRutTien (
+    MaYC INT PRIMARY KEY AUTO_INCREMENT,
+    IdTaiKhoan INT NOT NULL,
+    SoTien DECIMAL(15,2) NOT NULL,
+    NganHang VARCHAR(100),
+    SoTaiKhoan VARCHAR(50),
+    TenChuTaiKhoan VARCHAR(100),
+    TrangThai ENUM('ChoDuyet', 'DaChuyen', 'TuChoi') DEFAULT 'ChoDuyet',
+    LyDoTuChoi TEXT,
+    NgayYeuCau DATETIME DEFAULT CURRENT_TIMESTAMP,
+    NgayXuLy DATETIME NULL,
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan)
+);
 
+-- Tạo bảng Biến động số dư (Lịch sử tiền vào/ra của người bán)
+CREATE TABLE BienDongSoDu (
+    MaBD INT PRIMARY KEY AUTO_INCREMENT,
+    IdTaiKhoan INT NOT NULL,
+    LoaiGiaoDich ENUM('CongTienDonHang', 'RutTien', 'HoanTien', 'TruTien') NOT NULL,
+    SoTien DECIMAL(15,2) NOT NULL,
+    SoDuSauGiaoDich DECIMAL(15,2) NOT NULL,
+    NoiDung TEXT,
+    MaDH INT NULL, 
+    NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH)
+);
 -- =============================================
 -- INSERT DỮ LIỆU
 -- =============================================
+
+INSERT INTO CauHinhHeThong (TenCauHinh, GiaTri, MoTa) VALUES ('PhiSan', '5', 'Phí sàn phần trăm (%) thu trên mỗi đơn hàng hoàn tất');
 
 INSERT INTO TaiKhoan (TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang) VALUES
 ('kha', 'vtchoangkha@gmail.com', '0913420982', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
