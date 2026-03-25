@@ -49,6 +49,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            position: relative;
         }
 
         .seller-sidebar a:hover {
@@ -60,6 +61,20 @@
             background-color: var(--bs-pink-100);
             color: var(--bs-pink-600);
             border-left: 4px solid var(--bs-pink-600);
+        }
+
+        .chat-badge {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            background-color: #dc3545;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 50px;
+            line-height: 1;
         }
 
         .filter-box {
@@ -177,6 +192,29 @@
             </div>
         <?php endif; ?>
     </div>
+
+    <?php
+    // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+    $soTinNhanChuaDoc = 0;
+    if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+        $idSellerCurrent = $_SESSION['IdTaiKhoan'];
+
+        // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này, 
+        // do người khác gửi (Khách hàng) và có trạng thái DaDoc = 0
+        $sqlDemTinNhan = "SELECT COUNT(tn.MaTN) AS SoLuong 
+                                FROM TinNhan tn 
+                                JOIN PhongChat p ON tn.MaPhong = p.MaPhong 
+                                WHERE p.IdNguoiBan = $idSellerCurrent 
+                                AND tn.IdNguoiGui != $idSellerCurrent 
+                                AND tn.DaXem = 0";
+
+        $rsDem = $conn->query($sqlDemTinNhan);
+        if ($rsDem && $rsDem->num_rows > 0) {
+            $rowDem = $rsDem->fetch_assoc();
+            $soTinNhanChuaDoc = $rowDem['SoLuong'];
+        }
+    }
+    ?>
 
     <div class="seller-wrapper mt-4 mb-5">
         <h3 class="mb-4 text-secondary text-center"><i class="fa-solid fa-shop"></i> KÊNH NGƯỜI BÁN</h3>
