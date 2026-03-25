@@ -231,6 +231,8 @@
                             <span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span>
                         <?php endif; ?>
                     </a>
+                    <a href="sellerDoanhThuController.php"><i class="fa-solid fa-chart-line"></i> Doanh thu & Rút tiền</a>
+
                 </div>
             </div>
 

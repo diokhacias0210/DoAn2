@@ -9,10 +9,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
     </div>
     <nav class="sidebar-nav">
-        <a href="dashboardController.php" class="sidebar-link <?= ($current_page == 'dashboardController.php') ? 'active' : '' ?>">
-            📊 <span>Tổng quan</span>
+        <a href="adminDoanhThuController.php" class="sidebar-link <?= ($current_page == 'adminDoanhThuController.php') ? 'active' : '' ?>">
+            <i class="fa-solid fa-chart-line"></i> Doanh thu & Rút tiền
         </a>
-
         <a href="adminSanPhamController.php" class="sidebar-link <?= ($current_page == 'adminSanPhamController.php') ? 'active' : '' ?>">📦 <span>Sản phẩm</span></a>
 
         <a href="adminDanhMucController.php" class="sidebar-link <?= ($current_page == 'adminDanhMucController.php') ? 'active' : '' ?>">📁 <span>Danh mục</span></a>

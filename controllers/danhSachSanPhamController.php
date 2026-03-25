@@ -8,4 +8,4 @@ $danhMucModel = new DanhMuc($conn);
 // Lấy danh sách danh mục để đổ vào dropdown
 $danhSachDanhMuc = $danhMucModel->getDanhMuc();
 
-include_once __DIR__ . '/../views/thongTinTaiKhoan.php';
+include_once __DIR__ . '/../views/danhSachSanPham.php';

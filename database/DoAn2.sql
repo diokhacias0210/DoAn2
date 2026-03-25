@@ -1,8 +1,10 @@
 DROP DATABASE IF EXISTS doan2;
-CREATE DATABASE doan2;
+CREATE DATABASE doan2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE doan2;
 
--- 1. Bảng tài khoản người dùng
+-- =============================================
+-- 1. CẤU TRÚC 27 BẢNG (GIỮ NGUYÊN CỦA BẠN - ĐÃ THÊM CỘT SODU)
+-- =============================================
 CREATE TABLE TaiKhoan ( 
     IdTaiKhoan INT(10) PRIMARY KEY AUTO_INCREMENT, 
     TenTK VARCHAR(100) NOT NULL,
@@ -14,26 +16,23 @@ CREATE TABLE TaiKhoan (
     TrangThaiBanHang ENUM('ChuaKichHoat','DangHoatDong','BiKhoa') DEFAULT 'ChuaKichHoat', 
     Avatar VARCHAR(255) DEFAULT NULL,
     ThoiGianTao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    DiemViPham INT DEFAULT 0, -- Điểm gậy cảnh cáo (1, 2, 3...)
-    HanKhoaTaiKhoan DATETIME DEFAULT NULL -- Thời gian hết hạn khóa (nếu bị khóa 7 ngày)
+    DiemViPham INT DEFAULT 0,
+    HanKhoaTaiKhoan DATETIME DEFAULT NULL
 );
--- 2. Bảng địa chỉ
+
 CREATE TABLE DiaChi (
     MaDC INT AUTO_INCREMENT PRIMARY KEY, 
     IdTaiKhoan INT(10), 
     DiaChiChiTiet VARCHAR(255) NOT NULL, 
     MacDinh BOOLEAN DEFAULT 0, 
-    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) 
-        ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 3. Bảng danh mục
 CREATE TABLE DanhMuc ( 
     MaDM INT(10) PRIMARY KEY AUTO_INCREMENT,
     TenDM VARCHAR(100)
 );
 
--- 4. Bảng hàng hóa (ĐÃ SỬA LỖI THIẾU DẤU PHẨY)
 CREATE TABLE HangHoa ( 
     MaHH INT(10) PRIMARY KEY AUTO_INCREMENT,
     IdNguoiBan INT(10) NOT NULL, 
@@ -49,11 +48,10 @@ CREATE TABLE HangHoa (
     LyDoTuChoi TEXT DEFAULT NULL, 
     MoTa LONGTEXT,
     HienThi TINYINT(1) DEFAULT 1,
-    FOREIGN KEY (MaDM) REFERENCES DanhMuc(MaDM) ON DELETE CASCADE ON UPDATE CASCADE, -- Đã thêm dấu phẩy tại đây
+    FOREIGN KEY (MaDM) REFERENCES DanhMuc(MaDM) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE 
 );
 
--- 5. Bảng yêu thích
 CREATE TABLE YeuThich (
     MaYT INT AUTO_INCREMENT PRIMARY KEY,
     IdTaiKhoan INT(10),
@@ -64,7 +62,6 @@ CREATE TABLE YeuThich (
     UNIQUE (IdTaiKhoan, MaHH) 
 );
 
--- 6. Bảng đánh giá sao
 CREATE TABLE DanhGiaSao (
     MaDG INT AUTO_INCREMENT PRIMARY KEY,
     IdTaiKhoan INT,
@@ -77,7 +74,6 @@ CREATE TABLE DanhGiaSao (
     UNIQUE (IdTaiKhoan, MaHH) 
 );
 
--- 7. Bảng bình luận
 CREATE TABLE BinhLuan ( 
     MaBL INT AUTO_INCREMENT PRIMARY KEY,
     IdTaiKhoan INT(10), 
@@ -89,7 +85,6 @@ CREATE TABLE BinhLuan (
     FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
--- 8. Bảng hình ảnh
 CREATE TABLE HinhAnh (
     IDHinhAnh INT(10) PRIMARY KEY AUTO_INCREMENT, 
     MaHH INT(10),
@@ -97,14 +92,12 @@ CREATE TABLE HinhAnh (
     URL VARCHAR(255) 
 );
 
--- 9. Bảng giỏ hàng
 CREATE TABLE GioHang ( 
     MaGH INT(10) PRIMARY KEY AUTO_INCREMENT,
     IdTaiKhoan INT(10) UNIQUE,
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
--- 10. Bảng chi tiết giỏ hàng
 CREATE TABLE ChiTietGioHang ( 
     MaCTGH INT(10) PRIMARY KEY AUTO_INCREMENT,
     MaGH INT(10),
@@ -114,7 +107,6 @@ CREATE TABLE ChiTietGioHang (
     SoLuong SMALLINT UNSIGNED
 );
 
--- 11. Bảng đơn hàng
 CREATE TABLE DonHang ( 
     MaDH INT(10) PRIMARY KEY AUTO_INCREMENT,
     IdTaiKhoan INT(10), 
@@ -132,7 +124,6 @@ CREATE TABLE DonHang (
     FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan)
 );
 
--- 12. Bảng thanh toán
 CREATE TABLE ThanhToan (
     MaTT INT AUTO_INCREMENT PRIMARY KEY,
     MaDH INT,
@@ -141,11 +132,9 @@ CREATE TABLE ThanhToan (
     NgayThanhToan DATETIME DEFAULT CURRENT_TIMESTAMP,
     PhuongThuc ENUM('Tiền mặt', 'Chuyển khoản', 'Ví điện tử', 'Thẻ ngân hàng') DEFAULT 'Tiền mặt',
     TrangThai ENUM('Thành công', 'Thất bại', 'Đang xử lý') DEFAULT 'Đang xử lý',
-    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) 
-        ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 13. Bảng chi tiết đơn hàng
 CREATE TABLE ChiTietDonHang ( 
     MaCTDH INT(10) PRIMARY KEY AUTO_INCREMENT,
     MaDH INT(10),
@@ -157,7 +146,6 @@ CREATE TABLE ChiTietDonHang (
     FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 14. Bảng lịch sử đơn hàng
 CREATE TABLE LichSuDonHang ( 
     MaLichSu INT AUTO_INCREMENT PRIMARY KEY, 
     MaDH INT,
@@ -167,7 +155,6 @@ CREATE TABLE LichSuDonHang (
     FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 15. Bảng mã giảm giá
 CREATE TABLE MaGiamGia (
     MaGG INT AUTO_INCREMENT PRIMARY KEY,
     Code VARCHAR(50) NOT NULL UNIQUE, 
@@ -180,7 +167,6 @@ CREATE TABLE MaGiamGia (
     NgayKetThuc DATETIME
 );
 
--- 16. Bảng trung gian mã giảm giá
 CREATE TABLE MaGiamGiaDanhMuc (
     MaGG INT,
     MaDM INT,
@@ -189,7 +175,6 @@ CREATE TABLE MaGiamGiaDanhMuc (
     FOREIGN KEY (MaDM) REFERENCES DanhMuc(MaDM) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 17. Bảng hồ sơ người bán
 CREATE TABLE HoSoNguoiBan (
     IdHoSo INT AUTO_INCREMENT PRIMARY KEY,
     IdTaiKhoan INT(10) NOT NULL UNIQUE,
@@ -200,10 +185,10 @@ CREATE TABLE HoSoNguoiBan (
     SoTaiKhoanNganHang VARCHAR(30),
     TenChuTaiKhoan VARCHAR(100),
     NgayDuyet DATETIME, 
+    SoDu DECIMAL(15,2) DEFAULT 0,
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
 
--- 18. Bảng thông báo
 CREATE TABLE ThongBao (
     MaTB INT AUTO_INCREMENT PRIMARY KEY,
     TieuDe VARCHAR(255) NOT NULL,
@@ -213,7 +198,6 @@ CREATE TABLE ThongBao (
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 19. Bảng thông báo người dùng
 CREATE TABLE ThongBaoNguoiDung (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     MaTB INT,
@@ -224,7 +208,6 @@ CREATE TABLE ThongBaoNguoiDung (
     FOREIGN KEY (IdNhan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
 
--- 20. Bảng phòng chat
 CREATE TABLE PhongChat (
     MaPhong INT AUTO_INCREMENT PRIMARY KEY,
     IdNguoiMua INT(10),
@@ -236,7 +219,6 @@ CREATE TABLE PhongChat (
     FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH)
 );
 
--- 21. Bảng tin nhắn
 CREATE TABLE TinNhan (
     MaTN INT AUTO_INCREMENT PRIMARY KEY,
     MaPhong INT,
@@ -248,7 +230,6 @@ CREATE TABLE TinNhan (
     FOREIGN KEY (MaPhong) REFERENCES PhongChat(MaPhong) ON DELETE CASCADE
 );
 
--- 22. Bảng banner
 CREATE TABLE Banner (
     MaBanner INT AUTO_INCREMENT PRIMARY KEY,
     TieuDe VARCHAR(255),
@@ -258,38 +239,38 @@ CREATE TABLE Banner (
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 23. Bảng báo cáo
 CREATE TABLE BaoCao (
     MaBC INT AUTO_INCREMENT PRIMARY KEY,
     IdNguoiBaoCao INT(10),
     IdDoiTuongBiBaoCao INT(10), 
     MaHH INT(10) DEFAULT NULL, 
     LoaiBaoCao ENUM('SanPham', 'NguoiBan') NOT NULL,
-    LyDoChinh VARCHAR(255) NOT NULL, -- Dropdown lý do
-    ChiTiet TEXT, -- Textarea người dùng tự ghi
+    LyDoChinh VARCHAR(255) NOT NULL,
+    ChiTiet TEXT, 
     TrangThai ENUM('ChoXuLy', 'ViPham', 'KhongViPham') DEFAULT 'ChoXuLy',
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (IdNguoiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
     FOREIGN KEY (IdDoiTuongBiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
--- 24. Bảng kháng cáo
+
 CREATE TABLE KhangCao (
     MaKC INT AUTO_INCREMENT PRIMARY KEY,
-    MaBC INT NOT NULL, -- Liên kết với báo cáo nào
-    IdNguoiKhangCao INT(10), -- Người bán
+    MaBC INT NOT NULL, 
+    IdNguoiKhangCao INT(10), 
     NoiDung TEXT NOT NULL,
     TrangThai ENUM('ChoDuyet', 'ChapNhan', 'TuChoi') DEFAULT 'ChoDuyet',
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (MaBC) REFERENCES BaoCao(MaBC) ON DELETE CASCADE,
     FOREIGN KEY (IdNguoiKhangCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
 );
+
 CREATE TABLE CauHinhHeThong (
     MaCH INT PRIMARY KEY AUTO_INCREMENT,
     TenCauHinh VARCHAR(50) UNIQUE,
     GiaTri VARCHAR(255),
     MoTa TEXT
 );
--- Tạo bảng Yêu cầu rút tiền
+
 CREATE TABLE YeuCauRutTien (
     MaYC INT PRIMARY KEY AUTO_INCREMENT,
     IdTaiKhoan INT NOT NULL,
@@ -304,7 +285,6 @@ CREATE TABLE YeuCauRutTien (
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan)
 );
 
--- Tạo bảng Biến động số dư (Lịch sử tiền vào/ra của người bán)
 CREATE TABLE BienDongSoDu (
     MaBD INT PRIMARY KEY AUTO_INCREMENT,
     IdTaiKhoan INT NOT NULL,
@@ -317,8 +297,9 @@ CREATE TABLE BienDongSoDu (
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH)
 );
+
 -- =============================================
--- INSERT DỮ LIỆU
+-- 2. INSERT DỮ LIỆU CŨ CỦA BẠN
 -- =============================================
 
 INSERT INTO CauHinhHeThong (TenCauHinh, GiaTri, MoTa) VALUES ('PhiSan', '5', 'Phí sàn phần trăm (%) thu trên mỗi đơn hàng hoàn tất');
@@ -329,17 +310,12 @@ INSERT INTO TaiKhoan (TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang) VALU
 ('quyen', 'quyen@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong'),
 ('lai', 'lai@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong'),
 ('admin', 'admin@gmail.com', '123456780', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'ChuaKichHoat'),
-('Nguyễn Văn A', 'vana@example.com', '0912345678', '123456', 0, 'ChuaKichHoat'),
-('Trần Thị B', 'thib@example.com', '0987654321', '123456', 0, 'ChuaKichHoat'),
-('Lê Văn C', 'vanc@example.com', '0901111222', '123456', 0, 'ChuaKichHoat'),
-('Phạm Thị D', 'thid@example.com', '0930304444', '123456', 0, 'ChuaKichHoat'),
-('Hoàng Văn E', 'vane@example.com', '0945555666', '123456', 0, 'ChuaKichHoat'),
-('Đỗ Thị F', 'thif@example.com', '0977778888', '123456', 0, 'ChuaKichHoat');
-
-INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet) VALUES
-(2, 'Shop Cũ Người Mới Ta', '456 Đường B, Hà Nội', '098123456789', 'MB Bank', '999999999', 'NGUYEN VAN NHA', NOW()),
-(3, 'Quyên Secondhand', '789 Đường C, Đà Nẵng', '098123456000', 'Vietcombank', '888888888', 'LE THI QUYEN', NOW()),
-(4, 'Lai Gaming Store', '321 Đường D, Cần Thơ', '098123456111', 'Techcombank', '777777777', 'PHAM VAN LAI', NOW());
+('Nguyễn Văn A', 'vana@example.com', '0912345678', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
+('Trần Thị B', 'thib@example.com', '0987654321', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
+('Lê Văn C', 'vanc@example.com', '0901111222', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
+('Phạm Thị D', 'thid@example.com', '0930304444', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
+('Hoàng Văn E', 'vane@example.com', '0945555666', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
+('Đỗ Thị F', 'thif@example.com', '0977778888', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat');
 
 INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh) VALUES
 (1, '123 Đường A, Quận 1, TP.HCM', 1),
@@ -350,15 +326,9 @@ INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh) VALUES
 (6, '987 Đường F, Quận 6, Huế', 1);
 
 INSERT INTO DanhMuc (MaDM, TenDM) VALUES 
-(1, 'Đồ gia dụng'),
-(2, 'Linh kiện PC'),
-(3, 'Máy tính'),
-(4, 'Nội thất'),
-(5, 'Quần áo'),
-(6, 'Thiết bị chơi game'),
-(7, 'Thiết bị điện tử'),
-(8, 'Chưa phân loại'),
-(9, 'Khác');
+(1, 'Đồ gia dụng'), (2, 'Linh kiện PC'), (3, 'Máy tính'),
+(4, 'Nội thất'), (5, 'Quần áo'), (6, 'Thiết bị chơi game'),
+(7, 'Thiết bị điện tử'), (8, 'Chưa phân loại'), (9, 'Khác');
 
 INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
 (1, 2, 1, 'Cây lau công nghiệp Cây lau nhà inox', 2, 120000, 150000, 'Mới', 'Còn hàng', 'DaDuyet', 'Cây lau nhà công nghiệp 45 cm...'),
@@ -444,8 +414,13 @@ INSERT INTO HinhAnh (MaHH, URL) VALUES
 (39, 'assets/images/products/39/39-1.png'),
 (40, 'assets/images/products/40/40-1.png'), (40, 'assets/images/products/40/40-2.png'), (40, 'assets/images/products/40/40-3.png');
 
-INSERT INTO MaGiamGia (Code, MoTa, GiaTri, SoLuong, TrangThai)
-VALUES 
+INSERT INTO Banner (TieuDe, HinhAnh, LienKet, TrangThai) VALUES
+('anh-qc-1', 'anh-qc-1.webp', '', 'HienThi'),
+('anh-qc-2', 'anh-qc-2.webp', '', 'HienThi'),
+('anh-qc-3', 'anh-qc-3.webp', '', 'HienThi'),
+('anh-qc-4', 'anh-qc-4.webp', '', 'HienThi');
+
+INSERT INTO MaGiamGia (Code, MoTa, GiaTri, SoLuong, TrangThai) VALUES 
 ('SALE20_DG', 'Giảm 20% cho đồ gia dụng', 20.00, 100, 'Hoạt động'),
 ('SALE20_LK', 'Giảm 20% cho linh kiện PC', 20.00, 100, 'Hoạt động'),
 ('SALE10_DT', 'Giảm 10% cho thiết bị điện tử', 10.00, 50, 'Hoạt động');
@@ -453,113 +428,220 @@ VALUES
 INSERT INTO MaGiamGiaDanhMuc (MaGG, MaDM) VALUES 
 (1, 1), (2, 2), (3, 7);
 
-INSERT INTO DanhGiaSao (IdTaiKhoan, MaHH, SoSao, TrangThai) VALUES
-(1, 1, 5, 'Hiển thị'), (2, 1, 4, 'Hiển thị'), (3, 1, 5, 'Hiển thị'), (4, 1, 4, 'Hiển thị'),
-(1, 2, 4, 'Hiển thị'), (5, 2, 5, 'Hiển thị'), (6, 2, 3, 'Hiển thị'),
-(1, 7, 5, 'Hiển thị'), (2, 7, 5, 'Hiển thị'), (3, 7, 4, 'Hiển thị'), (4, 7, 5, 'Hiển thị'), (5, 7, 5, 'Hiển thị'),
-(1, 13, 4, 'Hiển thị'), (6, 13, 4, 'Hiển thị'),
-(2, 16, 5, 'Hiển thị'), (3, 16, 5, 'Hiển thị'), (4, 16, 5, 'Hiển thị'),
-(5, 21, 4, 'Hiển thị'), (6, 21, 5, 'Hiển thị'), (1, 21, 4, 'Hiển thị'),
-(2, 28, 5, 'Hiển thị'), (3, 28, 5, 'Hiển thị'), (4, 28, 4, 'Hiển thị'),
-(5, 30, 3, 'Hiển thị'), (6, 30, 4, 'Hiển thị'),
-(1, 35, 5, 'Hiển thị'), (2, 35, 5, 'Hiển thị'), (3, 35, 5, 'Hiển thị'),
-(4, 40, 5, 'Hiển thị'), (5, 40, 4, 'Hiển thị');
+-- =============================================
+-- 3. THÊM MỚI DỮ LIỆU (CÁC BẢNG CÒN LẠI VÀ SỐ DƯ TÍNH TOÁN)
+-- =============================================
 
-INSERT INTO BinhLuan (IdTaiKhoan, MaHH, NoiDung, TrangThai) VALUES
-(1, 1, 'Cây lau chắc chắn, lau sạch, giao hàng rất nhanh.', 'Hiển thị'),
-(2, 1, 'Mặt hàng gia dụng này chất lượng hơn tôi nghĩ, rất đáng tiền!', 'Hiển thị'),
-(3, 1, 'Lau nhà nhẹ nhàng, thiết kế thông minh, không cần dùng tay vắt.', 'Hiển thị'),
-(4, 1, 'Chất liệu inox sáng bóng, dùng lâu không sợ rỉ sét.', 'Hiển thị'),
-(1, 2, 'Hộp cơm giữ nhiệt tốt, đủ dùng cho bữa trưa văn phòng.', 'Hiển thị'),
-(5, 2, 'Thiết kế 4 tầng tiện lợi, có kèm túi xách đi làm.', 'Hiển thị'),
-(6, 2, 'Giữ nhiệt được khoảng 3 tiếng, hơi ít so với quảng cáo 4 tiếng.', 'Hiển thị'),
-(1, 7, 'CPU TRAY nhưng hoạt động hoàn hảo, đã test full load 100%.', 'Hiển thị'),
-(2, 7, 'Hàng đã qua sử dụng nhưng còn rất mới, hiệu năng tuyệt vời.', 'Hiển thị'),
-(3, 7, 'Giá tốt nhất thị trường cho con chip này, nên mua ngay.', 'Hiển thị'),
-(4, 7, 'Giao hàng có bọc chống sốc kỹ, lắp vào chạy ngay, không lỗi lầm.', 'Hiển thị'),
-(5, 7, 'Làm việc và chơi game đều mượt, rất hài lòng với tốc độ xử lý.', 'Hiển thị'),
-(1, 13, 'Màn hình nội địa Nhật, màu sắc đẹp, có tích hợp loa khá ổn.', 'Hiển thị'),
-(6, 13, 'Chất lượng hình ảnh tốt, không điểm chết, dùng để code rất ok.', 'Hiển thị'),
-(2, 16, 'Bàn kim cương rất đẹp, decor phòng khách sang trọng hơn hẳn.', 'Hiển thị'),
-(3, 16, 'Mặt kính vân mây nhìn rất nghệ thuật, chân sắt vững chắc.', 'Hiển thị'),
-(4, 16, 'Lắp ráp dễ dàng, kích thước vừa phải, rất ưng ý!', 'Hiển thị'),
-(5, 21, 'Áo form oversize thoải mái, chất cotton mặc mát.', 'Hiển thị'),
-(6, 21, 'Hình in lụa rõ nét, giặt không bị bong tróc, đáng giá 5 sao.', 'Hiển thị'),
-(1, 21, 'Màu xám tiêu phối đồ rất dễ, nên có trong tủ đồ.', 'Hiển thị'),
-(2, 28, 'Biến iPhone thành máy game thực thụ, trải nghiệm rất đã.', 'Hiển thị'),
-(3, 28, 'Tay cầm nhạy, không độ trễ, chơi game AAA trên điện thoại cực đỉnh.', 'Hiển thị'),
-(4, 28, 'Giá hơi cao nhưng xứng đáng cho game thủ chuyên nghiệp.', 'Hiển thị'),
-(5, 30, 'Nút bấm hơi lỏng lẻo một chút, nhưng vẫn dùng được.', 'Hiển thị'),
-(6, 30, 'Giá rẻ, dùng tạm ổn để chơi PUBG, cải thiện được tốc độ phản xạ.', 'Hiển thị'),
-(1, 35, 'Xe siêu nhẹ, bé 3 tuổi nhà tôi tự đạp được ngay.', 'Hiển thị'),
-(2, 35, 'Bánh đúc chống móp rất bền, yên xe điều chỉnh dễ dàng.', 'Hiển thị'),
-(3, 35, 'Thiết kế đẹp, màu sắc bắt mắt, bé rất thích chiếc xe này.', 'Hiển thị'),
-(4, 40, 'Hàng chính hãng, ngậm đỡ đau họng ngay, sẽ mua lại.', 'Hiển thị'),
-(5, 40, 'Thuốc có tác dụng nhanh, vị hơi khó ngậm nhưng hiệu quả.', 'Hiển thị');
+-- Thêm Yêu Thích & Giỏ Hàng
+INSERT INTO YeuThich (IdTaiKhoan, MaHH) VALUES (6, 1), (7, 2), (8, 4), (9, 7), (10, 10);
+INSERT INTO GioHang (IdTaiKhoan) VALUES (6), (7), (8), (9);
+INSERT INTO ChiTietGioHang (MaGH, MaHH, SoLuong) VALUES (1, 3, 2), (1, 4, 1), (2, 8, 1), (3, 10, 1);
 
-INSERT INTO DonHang (IdTaiKhoan, IdNguoiBan, NgayDat, DiaChiGiao, TrangThai, TrangThaiThanhToan, GhiChu, TongTien) VALUES 
-(1, 2, '2025-01-05 09:30:00', '123 Đường A, Quận 1, TP.HCM', 'Hoàn tất', 'DaThanhToan', 'Giao giờ hành chính', 0),
-(2, 2, '2025-01-12 14:15:00', '456 Đường B, Quận 2, Hà Nội', 'Hoàn tất', 'DaThanhToan', 'Gọi trước khi giao', 0),
-(3, 2, '2025-01-25 18:20:00', '789 Đường C, Quận 3, Đà Nẵng', 'Đã hủy', 'ChuaThanhToan', 'Khách đổi ý không mua nữa', 0),
-(4, 2, '2025-02-10 10:00:00', '321 Đường D, Quận 4, Cần Thơ', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(5, 2, '2025-02-28 08:45:00', '654 Đường E, Quận 5, Hải Phòng', 'Hoàn tất', 'DaThanhToan', 'Giao cho bảo vệ', 0),
-(6, 2, '2025-03-05 11:30:00', '987 Đường F, Quận 6, Huế', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(1, 2, '2025-03-15 15:20:00', '123 Đường A, Quận 1, TP.HCM', 'Hoàn tất', 'DaThanhToan', 'Giao nhanh giúp mình', 0),
-(2, 2, '2025-04-02 09:10:00', '456 Đường B, Quận 2, Hà Nội', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(3, 2, '2025-04-20 16:50:00', '789 Đường C, Quận 3, Đà Nẵng', 'Hoàn tất', 'DaThanhToan', 'Hàng dễ vỡ xin nhẹ tay', 0),
-(4, 2, '2025-05-05 13:40:00', '321 Đường D, Quận 4, Cần Thơ', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(5, 2, '2025-05-18 10:25:00', '654 Đường E, Quận 5, Hải Phòng', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(6, 2, '2025-05-30 19:15:00', '987 Đường F, Quận 6, Huế', 'Đã hủy', 'ChuaThanhToan', 'Sai địa chỉ', 0),
-(1, 2, '2025-06-10 08:30:00', '123 Đường A, Quận 1, TP.HCM', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(2, 2, '2025-06-25 14:00:00', '456 Đường B, Quận 2, Hà Nội', 'Hoàn tất', 'DaThanhToan', 'Giao buổi chiều', 0),
-(3, 2, '2025-07-07 09:45:00', '789 Đường C, Quận 3, Đà Nẵng', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(4, 2, '2025-07-22 17:30:00', '321 Đường D, Quận 4, Cần Thơ', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(5, 2, '2025-08-05 11:15:00', '654 Đường E, Quận 5, Hải Phòng', 'Hoàn tất', 'DaThanhToan', 'Cần gấp cho con đi học', 0),
-(6, 2, '2025-08-15 15:50:00', '987 Đường F, Quận 6, Huế', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(1, 2, '2025-08-28 12:20:00', '123 Đường A, Quận 1, TP.HCM', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(2, 2, '2025-09-09 10:10:00', '456 Đường B, Quận 2, Hà Nội', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(3, 2, '2025-09-21 16:40:00', '789 Đường C, Quận 3, Đà Nẵng', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(4, 2, '2025-10-02 08:50:00', '321 Đường D, Quận 4, Cần Thơ', 'Hoàn tất', 'DaThanhToan', NULL, 0),
-(5, 2, '2025-10-10 14:30:00', '654 Đường E, Quận 5, Hải Phòng', 'Đang giao', 'DaThanhToan', 'Đang đợi shipper', 0),
-(6, 2, '2025-10-12 09:15:00', '987 Đường F, Quận 6, Huế', 'Đã xác nhận', 'ChuaThanhToan', 'Chuẩn bị đóng gói', 0),
-(1, 2, '2025-10-13 18:00:00', '123 Đường A, Quận 1, TP.HCM', 'Chờ xử lý', 'ChuaThanhToan', 'Vừa đặt xong', 0);
+-- THÊM 10 ĐƠN HÀNG (GIÁ TRỊ VÀ TÍNH TOÁN KHỚP 100%)
+-- PhiSan = 5% TongTien. TienNguoiBanNhan = TongTien - PhiSan
+INSERT INTO DonHang (MaDH, IdTaiKhoan, IdNguoiBan, DiaChiGiao, TongTien, TrangThai, TrangThaiThanhToan, PhiSan, TienNguoiBanNhan, NgayDat) VALUES
+(1, 6, 2, 'Cần Thơ', 14500000, 'Hoàn tất', 'DaThanhToan', 725000, 13775000, '2023-11-01 10:00:00'),
+(2, 7, 2, 'Cần Thơ', 4500000, 'Đang giao', 'DaThanhToan', 225000, 4275000, '2023-11-05 14:30:00'),
+(3, 8, 3, 'Hà Nội', 300000, 'Hoàn tất', 'DaThanhToan', 15000, 285000, '2023-11-10 09:15:00'),
+(4, 9, 3, 'Đà Nẵng', 220000, 'Đã hủy', 'ChuaThanhToan', 11000, 209000, '2023-11-12 16:20:00'),
+(5, 10, 4, 'Hải Phòng', 950000, 'Hoàn tất', 'DaThanhToan', 47500, 902500, '2023-11-15 08:45:00'),
+(6, 11, 4, 'HCM', 120000, 'Chờ xử lý', 'ChuaThanhToan', 6000, 114000, '2023-11-20 11:10:00'),
+(7, 6, 2, 'Cần Thơ', 350000, 'Đã xác nhận', 'DaThanhToan', 17500, 332500, '2023-11-22 19:30:00'),
+(8, 7, 3, 'Cần Thơ', 800000, 'Hoàn tất', 'DaThanhToan', 40000, 760000, '2023-11-25 15:00:00'),
+(9, 8, 4, 'Hà Nội', 450000, 'Hoàn tất', 'DaThanhToan', 22500, 427500, '2023-11-28 10:00:00'),
+(10, 9, 2, 'Đà Nẵng', 650000, 'Hoàn tất', 'DaThanhToan', 32500, 617500, '2023-12-01 14:00:00');
 
 INSERT INTO ChiTietDonHang (MaDH, MaHH, SoLuongSanPham, DonGia, GiamGia) VALUES
-(1, 1, 1, 120000, 0), (1, 2, 2, 150000, 10000),
-(2, 13, 1, 700000, 0),
-(3, 16, 1, 300000, 0),
-(4, 20, 2, 150000, 0), (4, 24, 1, 220000, 0),
-(5, 28, 1, 1800000, 50000),
-(6, 3, 5, 40000, 0),
-(7, 7, 1, 1600000, 0), (7, 11, 2, 40000, 0),
-(8, 35, 1, 950000, 20000),
-(9, 4, 1, 180000, 0),
-(10, 21, 3, 120000, 0),
-(11, 15, 1, 1400000, 0),
-(12, 19, 1, 380000, 0),
-(13, 37, 1, 900000, 0),
-(14, 8, 10, 25000, 0),
-(15, 17, 2, 60000, 0),
-(16, 25, 4, 160000, 0),
-(17, 14, 1, 1100000, 0), (17, 9, 2, 20000, 0),
-(18, 29, 2, 250000, 10000),
-(19, 31, 1, 120000, 0),
-(20, 39, 1, 500000, 0),
-(21, 38, 2, 169000, 0),
-(22, 40, 5, 39000, 0),
-(23, 10, 3, 60000, 0),
-(24, 5, 2, 35000, 0),
-(25, 7, 1, 1600000, 50000);
+(1, 1, 1, 14500000, 0), (2, 2, 1, 4500000, 0), (3, 4, 2, 150000, 0),
+(4, 5, 1, 220000, 0), (5, 7, 1, 950000, 0), (6, 8, 1, 120000, 0),
+(7, 3, 1, 350000, 0), (8, 6, 1, 800000, 0), (9, 9, 1, 450000, 0), (10, 10, 1, 650000, 0);
 
--- Cập nhật tổng tiền
-UPDATE DonHang dh
-SET TongTien = (
-    SELECT SUM(SoLuongSanPham * DonGia - GiamGia)
-    FROM ChiTietDonHang ctdh
-    WHERE ctdh.MaDH = dh.MaDH
-);
--- thêm hồ sơ người bán mẫu
-INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet) VALUES
-(6, 'A Mobile Store', '123 Hẻm 51, Xuân Khánh, Cần Thơ', '091000000001', 'TPBank', '00001234567', 'NGUYEN VAN A', NOW()),
-(7, 'Bê Boutique 2Hand', '88 Mậu Thân, An Hòa, Cần Thơ', '091000000002', 'BIDV', '123123123', 'TRAN THI B', NOW()),
-(8, 'Tiệm Sách Cũ Ông C', '45 Đường 3/2, Ninh Kiều, Cần Thơ', '091000000003', 'Agribank', '555566667777', 'LE VAN C', NOW());
+INSERT INTO ThanhToan (MaDH, MaThanhToan, SoTien, PhuongThuc, TrangThai) VALUES
+(1, 'VNPay_001', 14500000, 'Ví điện tử', 'Thành công'),
+(2, 'Bank_002', 4500000, 'Chuyển khoản', 'Thành công'),
+(3, 'COD_003', 300000, 'Tiền mặt', 'Thành công'),
+(5, 'VNPay_005', 950000, 'Ví điện tử', 'Thành công'),
+(7, 'Momo_007', 350000, 'Ví điện tử', 'Thành công'),
+(8, 'Bank_008', 800000, 'Chuyển khoản', 'Thành công'),
+(9, 'COD_009', 450000, 'Tiền mặt', 'Thành công'),
+(10, 'VNPay_010', 650000, 'Ví điện tử', 'Thành công');
+
+INSERT INTO LichSuDonHang (MaDH, TrangThai, GhiChu) VALUES 
+(1, 'Chờ xử lý', 'Khách vừa đặt'), (1, 'Hoàn tất', 'Giao hàng thành công'),
+(2, 'Đang giao', 'Shipper đã lấy hàng'), (3, 'Hoàn tất', 'Khách đã nhận');
+
+-- Thêm Đánh giá và Bình luận cho các đơn đã Hoàn tất
+INSERT INTO DanhGiaSao (IdTaiKhoan, MaHH, SoSao) VALUES (6, 1, 5), (8, 4, 4), (10, 7, 5), (7, 6, 3);
+INSERT INTO BinhLuan (IdTaiKhoan, MaHH, NoiDung) VALUES
+(6, 1, 'Điện thoại xài siêu mượt, pin trâu, shop đóng gói cẩn thận.'),
+(8, 4, 'Áo vải hơi mỏng nhưng form rộng rất đẹp, giá hợp lý.'),
+(10, 7, 'Nồi chiên dùng tốt, phím cảm ứng nhạy, nướng gà rất ngon.'),
+(7, 6, 'Đồng hồ ngoại hình còn mới nhưng pin hơi yếu, giao hàng chậm.');
+
+-- Thêm Báo cáo và Kháng cáo để Test chức năng vi phạm
+INSERT INTO BaoCao (IdNguoiBaoCao, IdDoiTuongBiBaoCao, MaHH, LoaiBaoCao, LyDoChinh, ChiTiet, TrangThai) VALUES
+(8, 3, 4, 'SanPham', 'Hàng giả/Nhái', 'Mình phát hiện áo thun này là hàng nhái, không phải Local Brand', 'ViPham'),
+(9, 4, NULL, 'NguoiBan', 'Lừa đảo', 'Shop này có thái độ phục vụ kém và bom hàng của mình', 'ChoXuLy');
+
+INSERT INTO KhangCao (MaBC, IdNguoiKhangCao, NoiDung, TrangThai) VALUES
+(1, 3, 'Chào Admin, đây là hàng chính hãng mình pass lại, có bill đính kèm trong tin nhắn.', 'ChoDuyet');
+UPDATE TaiKhoan SET DiemViPham = 1 WHERE IdTaiKhoan = 3;
+
+-- Thêm Yêu Cầu Rút Tiền và Biến động số dư (Tính khớp với tổng tiền đơn Hoàn tất)
+-- Seller 2 (Id 2): Có 2 đơn hoàn tất là DH 1 (13.775.000) + DH 10 (617.500) = 14.392.500 đ
+-- Seller 2 rút 10.000.000đ (thành công) và 2.000.000đ (đang chờ) => Số dư = 2.392.500 đ
+-- Seller 3 (Id 3): Có 2 đơn hoàn tất là DH 3 (285.000) + DH 8 (760.000) = 1.045.000 đ. Chưa rút => Số dư = 1.045.000 đ
+-- Seller 4 (Id 4): Có 2 đơn hoàn tất là DH 5 (902.500) + DH 9 (427.500) = 1.330.000 đ. Rút bị từ chối 300.000đ => Số dư = 1.330.000 đ
+
+INSERT INTO YeuCauRutTien (IdTaiKhoan, SoTien, NganHang, SoTaiKhoan, TenChuTaiKhoan, TrangThai, LyDoTuChoi) VALUES
+(2, 10000000, 'Vietcombank', '0123456789', 'NGUYEN VAN SELLER', 'DaChuyen', NULL),
+(2, 2000000, 'MB Bank', '0912345678', 'NGUYEN VAN SELLER', 'ChoDuyet', NULL),
+(4, 300000, 'Techcombank', '555666777', 'LE HOANG BAN HANG', 'TuChoi', 'Sai số tài khoản ngân hàng');
+
+INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, NoiDung, MaDH) VALUES
+(2, 'CongTienDonHang', 13775000, 13775000, 'Cộng tiền đơn hàng #1', 1),
+(2, 'CongTienDonHang', 617500, 14392500, 'Cộng tiền đơn hàng #10', 10),
+(2, 'RutTien', 10000000, 4392500, 'Rút tiền về tài khoản ngân hàng', NULL),
+(2, 'RutTien', 2000000, 2392500, 'Yêu cầu rút tiền', NULL),
+(3, 'CongTienDonHang', 285000, 285000, 'Cộng tiền đơn hàng #3', 3),
+(3, 'CongTienDonHang', 760000, 1045000, 'Cộng tiền đơn hàng #8', 8),
+(4, 'CongTienDonHang', 902500, 902500, 'Cộng tiền đơn hàng #5', 5),
+(4, 'CongTienDonHang', 427500, 1330000, 'Cộng tiền đơn hàng #9', 9),
+(4, 'RutTien', 300000, 1030000, 'Yêu cầu rút tiền', NULL),
+(4, 'HoanTien', 300000, 1330000, 'Hoàn tiền do lệnh rút bị từ chối', NULL);
+
+-- Cập nhật Số dư cho người bán khớp với logic giao dịch ở trên
+INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet, SoDu) VALUES
+(2, 'TechZone 2Hand', '123 Đường 3/2, Cần Thơ', '091000000001', 'Vietcombank', '0123456789', 'NGUYEN VAN SELLER', NOW(), 2392500),
+(3, 'Thời Trang GenZ', '456 CMT8, Cần Thơ', '091000000002', 'MB Bank', '9876543210', 'TRAN THI SHOP', NOW(), 1045000),
+(4, 'Tổng Kho Gia Dụng', '789 Nguyễn Văn Linh, Cần Thơ', '091000000003', 'TPBank', '555566667777', 'LE HOANG BAN HANG', NOW(), 1330000),
+(6, 'A Mobile Store', '123 Hẻm 51, Xuân Khánh, Cần Thơ', '091000000001', 'TPBank', '00001234567', 'NGUYEN VAN A', NOW(), 0),
+(7, 'Bê Boutique 2Hand', '88 Mậu Thân, An Hòa, Cần Thơ', '091000000002', 'BIDV', '123123123', 'TRAN THI B', NOW(), 0),
+(8, 'Tiệm Sách Cũ Ông C', '45 Đường 3/2, Ninh Kiều, Cần Thơ', '091000000003', 'Agribank', '555566667777', 'LE VAN C', NOW(), 0);
+
+-- Thêm thông báo
+INSERT INTO ThongBao (TieuDe, NoiDung, LoaiTB, NguoiGui) VALUES
+('Chào mừng đến với TwoHand', 'Chúc bạn mua bán thuận lợi trên hệ thống của chúng tôi!', 'HeThong', 1),
+('Đơn hàng đã được giao', 'Đơn hàng #1 của bạn đã được giao thành công.', 'DonHang', 1);
+INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES (1, 6, 0), (1, 7, 0), (2, 6, 0);
+USE doan2;
+
+-- =============================================
+-- 1. THÊM 20 ĐƠN HÀNG MỚI (Mã 101 đến 120 để tránh trùng)
+-- =============================================
+INSERT INTO DonHang (MaDH, IdTaiKhoan, IdNguoiBan, DiaChiGiao, TongTien, TrangThai, TrangThaiThanhToan, GhiChu, PhiSan, TienNguoiBanNhan, NgayDat) VALUES
+(101, 7, 3, '123 Cầu Giấy, Hà Nội', 1100000, 'Hoàn tất', 'DaThanhToan', 'Giao trong giờ hành chính', 55000, 1045000, '2023-12-05 09:00:00'),
+(102, 8, 4, '456 Lê Lợi, Đà Nẵng', 1800000, 'Hoàn tất', 'DaThanhToan', 'Nhờ shop bọc kỹ', 90000, 1710000, '2023-12-06 14:30:00'),
+(103, 9, 2, '789 Trần Hưng Đạo, HCM', 1600000, 'Đang giao', 'DaThanhToan', '', 80000, 1520000, '2023-12-07 10:15:00'),
+(104, 10, 3, '101 Nguyễn Văn Cừ, Cần Thơ', 140000, 'Đã xác nhận', 'ChuaThanhToan', 'Đổi địa chỉ giúp em', 7000, 133000, '2023-12-08 16:45:00'),
+(105, 11, 4, '202 Hùng Vương, Huế', 78000, 'Hoàn tất', 'DaThanhToan', '', 3900, 74100, '2023-12-09 08:20:00'),
+(106, 5, 2, '303 Phan Đình Phùng, Hải Phòng', 120000, 'Hoàn tất', 'DaThanhToan', '', 6000, 114000, '2023-12-10 11:30:00'),
+(107, 6, 3, '404 Hai Bà Trưng, Đà Lạt', 1400000, 'Chờ xử lý', 'ChuaThanhToan', 'Shop rep tin nhắn nha', 70000, 1330000, '2023-12-11 19:10:00'),
+(108, 7, 4, '505 Lý Thường Kiệt, Vũng Tàu', 169000, 'Đã hủy', 'ChuaThanhToan', 'Khách đổi ý', 0, 0, '2023-12-12 15:00:00'),
+(109, 8, 2, '606 Điện Biên Phủ, Nha Trang', 120000, 'Hoàn tất', 'DaThanhToan', 'Giao cho lễ tân', 6000, 114000, '2023-12-13 09:40:00'),
+(110, 9, 3, '707 Nguyễn Huệ, Quy Nhơn', 320000, 'Hoàn tất', 'DaThanhToan', '', 16000, 304000, '2023-12-14 13:25:00'),
+(111, 10, 4, '808 Lê Duẩn, BMT', 950000, 'Đang giao', 'DaThanhToan', 'Nhẹ tay nhé shipper', 47500, 902500, '2023-12-15 10:50:00'),
+(112, 11, 2, '909 Phạm Văn Đồng, HCM', 100000, 'Hoàn tất', 'DaThanhToan', '', 5000, 95000, '2023-12-16 08:15:00'),
+(113, 5, 3, '11A Cách Mạng Tháng 8, Cần Thơ', 380000, 'Đã xác nhận', 'ChuaThanhToan', '', 19000, 361000, '2023-12-17 17:30:00'),
+(114, 6, 4, '22B Nguyễn Trãi, Hà Nội', 350000, 'Hoàn tất', 'DaThanhToan', 'Cần gấp trong ngày', 17500, 332500, '2023-12-18 14:10:00'),
+(115, 7, 2, '33C Bạch Đằng, Đà Nẵng', 100000, 'Hoàn tất', 'DaThanhToan', '', 5000, 95000, '2023-12-19 11:20:00'),
+(116, 8, 3, '44D Trần Phú, HCM', 180000, 'Chờ xử lý', 'ChuaThanhToan', 'Có tặng kèm gì không shop', 9000, 171000, '2023-12-20 09:05:00'),
+(117, 9, 4, '55E Quang Trung, Đà Lạt', 450000, 'Đang giao', 'DaThanhToan', '', 22500, 427500, '2023-12-21 16:40:00'),
+(118, 10, 2, '66F Ngô Quyền, Huế', 300000, 'Hoàn tất', 'DaThanhToan', '', 15000, 285000, '2023-12-22 13:55:00'),
+(119, 11, 3, '77G Lê Hồng Phong, Vũng Tàu', 160000, 'Hoàn tất', 'DaThanhToan', 'Giao buổi tối', 8000, 152000, '2023-12-23 18:25:00'),
+(120, 5, 4, '88H Nguyễn Thiện Thuật, Cần Thơ', 120000, 'Đã hủy', 'ChoHoanTien', 'Mua nhầm mẫu', 0, 0, '2023-12-24 10:30:00');
+
+-- =============================================
+-- 2. CHI TIẾT 20 ĐƠN HÀNG VÀ LỊCH SỬ
+-- =============================================
+INSERT INTO ChiTietDonHang (MaDH, MaHH, SoLuongSanPham, DonGia, GiamGia) VALUES
+(101, 14, 1, 1100000, 0), (102, 28, 1, 1800000, 0), (103, 7, 1, 1600000, 0),
+(104, 22, 1, 140000, 0), (105, 40, 2, 39000, 0), (106, 6, 1, 120000, 0),
+(107, 15, 1, 1400000, 0), (108, 38, 1, 169000, 0), (109, 3, 3, 40000, 0),
+(110, 25, 2, 160000, 0), (111, 35, 1, 950000, 0), (112, 8, 4, 25000, 0),
+(113, 19, 1, 380000, 0), (114, 26, 1, 350000, 0), (115, 9, 5, 20000, 0),
+(116, 17, 3, 60000, 0), (117, 32, 1, 450000, 0), (118, 2, 2, 150000, 0),
+(119, 11, 4, 40000, 0), (120, 27, 2, 60000, 0);
+
+INSERT INTO ThanhToan (MaDH, MaThanhToan, SoTien, PhuongThuc, TrangThai) VALUES
+(101, 'MOMO_101', 1100000, 'Ví điện tử', 'Thành công'),
+(102, 'BANK_102', 1800000, 'Chuyển khoản', 'Thành công'),
+(105, 'ZALO_105', 78000, 'Ví điện tử', 'Thành công'),
+(106, 'COD_106', 120000, 'Tiền mặt', 'Thành công'),
+(109, 'BANK_109', 120000, 'Chuyển khoản', 'Thành công'),
+(110, 'MOMO_110', 320000, 'Ví điện tử', 'Thành công'),
+(112, 'COD_112', 100000, 'Tiền mặt', 'Thành công'),
+(114, 'BANK_114', 350000, 'Chuyển khoản', 'Thành công'),
+(115, 'MOMO_115', 100000, 'Ví điện tử', 'Thành công'),
+(118, 'COD_118', 300000, 'Tiền mặt', 'Thành công'),
+(119, 'BANK_119', 160000, 'Chuyển khoản', 'Thành công');
+
+-- =============================================
+-- 3. CẬP NHẬT TỰ ĐỘNG VÀO SỐ DƯ VÀ BIẾN ĐỘNG
+-- (Tính tổng tiền thực nhận của các đơn Hoàn Tất)
+-- =============================================
+-- Người bán 2 nhận: DH106, 109, 112, 115, 118 (Tổng: 703,000đ)
+UPDATE HoSoNguoiBan SET SoDu = SoDu + 703000 WHERE IdTaiKhoan = 2;
+INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, NoiDung, MaDH) VALUES
+(2, 'CongTienDonHang', 114000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=2), 'Đơn #106 hoàn tất', 106),
+(2, 'CongTienDonHang', 114000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=2), 'Đơn #109 hoàn tất', 109),
+(2, 'CongTienDonHang', 95000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=2), 'Đơn #112 hoàn tất', 112),
+(2, 'CongTienDonHang', 95000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=2), 'Đơn #115 hoàn tất', 115),
+(2, 'CongTienDonHang', 285000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=2), 'Đơn #118 hoàn tất', 118);
+
+-- Người bán 3 nhận: DH101, 110, 119 (Tổng: 1,501,000đ)
+UPDATE HoSoNguoiBan SET SoDu = SoDu + 1501000 WHERE IdTaiKhoan = 3;
+INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, NoiDung, MaDH) VALUES
+(3, 'CongTienDonHang', 1045000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=3), 'Đơn #101 hoàn tất', 101),
+(3, 'CongTienDonHang', 304000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=3), 'Đơn #110 hoàn tất', 110),
+(3, 'CongTienDonHang', 152000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=3), 'Đơn #119 hoàn tất', 119);
+
+-- Người bán 4 nhận: DH102, 105, 114 (Tổng: 2,116,600đ)
+UPDATE HoSoNguoiBan SET SoDu = SoDu + 2116600 WHERE IdTaiKhoan = 4;
+INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, NoiDung, MaDH) VALUES
+(4, 'CongTienDonHang', 1710000, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=4), 'Đơn #102 hoàn tất', 102),
+(4, 'CongTienDonHang', 74100, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=4), 'Đơn #105 hoàn tất', 105),
+(4, 'CongTienDonHang', 332500, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=4), 'Đơn #114 hoàn tất', 114);
+
+
+-- =============================================
+-- 4. THÊM ĐÁNH GIÁ (REVIEW) VÀ BÌNH LUẬN THỰC TẾ
+-- =============================================
+INSERT IGNORE INTO DanhGiaSao (IdTaiKhoan, MaHH, SoSao) VALUES
+(7, 14, 5), (8, 28, 5), (11, 40, 4), (5, 6, 4), (8, 3, 5),
+(9, 25, 5), (11, 8, 3), (6, 26, 5), (7, 9, 5), (10, 2, 4), (11, 11, 5);
+
+INSERT INTO BinhLuan (IdTaiKhoan, MaHH, NoiDung) VALUES
+(7, 14, 'Màn hình hiển thị sắc nét, tần số 100Hz lướt web cực mượt, không mỏi mắt.'),
+(8, 28, 'Tay cầm đỉnh của chóp, kết nối iPhone chơi Genshin không khác gì máy console.'),
+(11, 40, 'Viên ngậm công hiệu, ngậm 2 hôm là đỡ hẳn đau rát họng.'),
+(5, 6, 'Board mạch tháo máy nhưng hoạt động rất ổn định, đóng gói cẩn thận.'),
+(8, 3, 'Xay tỏi ớt nhanh gọn lẹ, vệ sinh cũng dễ dàng. Rất hài lòng!'),
+(9, 25, 'Quần short vải tổ ong xịn xò, mặc lên form đẹp mát mẻ, sẽ ủng hộ thêm.'),
+(11, 8, 'Dây cáp xài tốt nhưng mình mua nhầm độ dài nên hơi căng, shop hỗ trợ đổi trả nhiệt tình.'),
+(6, 26, 'Bộ chuyển đổi map phím nhạy, chơi game FPS bao phê, không bị delay.'),
+(7, 9, 'Dây nguồn ruột đồng xịn, dây dẻo mềm chứ không bị cứng đơ như hàng chợ.'),
+(10, 2, 'Laptop tuy cũ nhưng vỏ zin đẹp, pin xài được hơn 3 tiếng, đáng tiền.'),
+(11, 11, 'Quạt tản nhiệt led tản sáng đều, chạy rất êm không bị ồn ào.');
+
+
+-- =============================================
+-- 5. BÁO CÁO, KHÁNG CÁO & THÔNG BÁO HỆ THỐNG
+-- =============================================
+INSERT INTO BaoCao (MaBC, IdNguoiBaoCao, IdDoiTuongBiBaoCao, MaHH, LoaiBaoCao, LyDoChinh, ChiTiet, TrangThai, NgayTao) VALUES
+(101, 6, 4, NULL, 'NguoiBan', 'Thái độ phục vụ tệ', 'Shop này chửi khách trong tin nhắn khi mình hỏi về bảo hành.', 'ChoXuLy', '2023-12-25 10:00:00'),
+(102, 11, 3, 11, 'SanPham', 'Hàng không đúng mô tả', 'Quạt giao tới không có dây cắm led như hình ảnh quảng cáo.', 'ViPham', '2023-12-26 09:30:00'),
+(103, 5, 2, 3, 'SanPham', 'Hàng giả/Nhái', 'Nghe quảng cáo là Rep 1:1 nhưng chất âm rất tệ, check mã vạch thì ra hàng dỏm.', 'KhongViPham', '2023-12-27 14:20:00');
+
+INSERT INTO KhangCao (MaKC, MaBC, IdNguoiKhangCao, NoiDung, TrangThai) VALUES
+(101, 102, 3, 'Chào Admin, đây là lô quạt đời mới nhà sản xuất đã tích hợp sẵn dây nguồn chung với cổng 4pin PWM, mình đã chat giải thích với khách nhưng khách vẫn ngoan cố báo cáo.', 'ChoDuyet');
+
+INSERT INTO ThongBao (MaTB, TieuDe, NoiDung, LoaiTB, NguoiGui) VALUES
+(101, 'SIÊU SALE CUỐI NĂM - PHÍ SÀN GIẢM SÂU', 'Chào mừng lễ hội mua sắm, hệ thống giảm trực tiếp phí sàn xuống còn 2% cho tất cả các đơn hàng hoàn tất trong tuần này!', 'HeThong', 1),
+(102, 'Cảnh báo Ngôn từ không phù hợp', 'Chúng tôi phát hiện bạn có sử dụng từ ngữ không phù hợp trong kênh Chat. Vi phạm thêm 1 lần nữa tài khoản của bạn sẽ bị khóa!', 'ViPham', 1),
+(103, 'Yêu cầu Rút tiền đang chờ xử lý', 'Lệnh rút tiền 10.000.000đ của bạn đã được ghi nhận. Admin sẽ chuyển khoản trong vòng 24h làm việc.', 'HeThong', 1);
+
+INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES 
+(101, 2, 0), (101, 3, 0), (101, 4, 1), 
+(102, 4, 0), 
+(103, 2, 1);

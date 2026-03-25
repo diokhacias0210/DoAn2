@@ -32,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($user['VaiTro'] == 1) {
                 $_SESSION['vaitro'] = 'admin';
-                header("Location: ../admin/index.php");
+                header("Location: ../admin/controllers/adminDoanhThuController.php");
                 exit;
             } else {
                 $_SESSION['vaitro'] = 'user';
-                header("Location: trangChuController.php");
+                header("Location: ../controllers/trangChuController.php");
                 exit;
             }
         } else {

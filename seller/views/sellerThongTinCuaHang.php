@@ -160,6 +160,7 @@ if ($result && $result->num_rows > 0) {
                     <a href="sellerSanPhamController.php"><i class="fa-solid fa-box-open"></i> Quản lý sản phẩm</a>
                     <a href="sellerDonHangController.php"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
                     <a href="sellerChatController.php"><i class="fa-solid fa-comments"></i> Tin nhắn <?php if (isset($soTinNhanChuaDoc) && $soTinNhanChuaDoc > 0): ?><span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span><?php endif; ?></a>
+                    <a href="sellerDoanhThuController.php"><i class="fa-solid fa-chart-line"></i> Doanh thu & Rút tiền</a>
                 </div>
             </div>
 
