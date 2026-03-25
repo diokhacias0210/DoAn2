@@ -247,7 +247,6 @@
             }
         });
 
-        // ... (Giữ nguyên các hàm openCancelModal cũ của bạn) ...
         function openCancelModal(maDH) {
             document.getElementById('modalMaDH').value = maDH;
             document.getElementById('displayMaDH').innerText = '#' + maDH;

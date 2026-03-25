@@ -95,6 +95,18 @@
       </button>
     </div>
 
+    <div class="container text-center my-4">
+        <button onclick="batDauTimViTri()" class="btn btn-danger btn-lg" style="border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <i class="fa-solid fa-map-location-dot"></i> Tìm Cửa Hàng Gần Tôi Ngay!
+        </button>
+    </div>
+
+    <div class="container mb-5">
+        <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
+
+        <div class="row" id="danh-sach-cua-hang"></div>
+    </div>
+
     <div class="danh-muc">
       <div class="tieu-de-danh-muc">
         <h2><i class="fa-solid fa-minus"></i> DANH MỤC</h2>
@@ -280,6 +292,107 @@
   <script src="../assets/js/loadSanPham.js"></script>
   <script src="../assets/js/js.js"></script>
   <script src="../assets/js/yeuThich.js"></script>
+  <script>
+    // Hàm này chạy khi người dùng bấm nút
+    function batDauTimViTri() {
+        let statusDiv = document.getElementById('status-message');
+        let listDiv = document.getElementById('danh-sach-cua-hang');
+        
+        // Hiện thông báo đang quét, xóa kết quả cũ
+        statusDiv.style.display = 'block';
+        statusDiv.className = "alert alert-info text-center shadow-sm";
+        statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> Đang xin quyền vị trí... Vui lòng ấn "Cho phép" (Allow) trên trình duyệt.';
+        listDiv.innerHTML = ''; // Làm sạch danh sách cũ
+
+        // Gọi API HTML5 Geolocation để xin Vĩ độ/Kinh độ
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    let latNguoiMua = position.coords.latitude;
+                    let lngNguoiMua = position.coords.longitude;
+                    
+                    statusDiv.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> Đã lấy được vị trí! Đang tìm cửa hàng quanh bạn...';
+                    
+                    // Lấy được tọa độ rồi thì gửi ngầm xuống Backend
+                    goiApiTimCuaHang(latNguoiMua, lngNguoiMua);
+                },
+                function(error) {
+                    statusDiv.className = "alert alert-warning text-center shadow-sm";
+                    statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Bạn đã từ chối cung cấp vị trí hoặc thiết bị không bật GPS.';
+                }
+            );
+        } else {
+            statusDiv.className = "alert alert-danger text-center shadow-sm";
+            statusDiv.innerText = "Trình duyệt của bạn quá cũ, không hỗ trợ định vị GPS.";
+        }
+    }
+
+    // Hàm nhận tọa độ và đẩy xuống file PHP bằng Fetch API
+    function goiApiTimCuaHang(lat, lng) {
+        let formData = new FormData();
+        formData.append('lat', lat);
+        formData.append('lng', lng);
+
+        // Gọi đến file Backend chúng ta vừa tạo ở Bước 3
+        fetch('ajaxTimCuaHang.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+            let statusDiv = document.getElementById('status-message');
+            
+            if (data.status === 'success') {
+                if (data.data.length > 0) {
+                    // Nếu có cửa hàng, ẩn thông báo đi và vẽ giao diện
+                    statusDiv.style.display = 'none'; 
+                    
+                    data.data.forEach(shop => {
+                        html += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm" style="border-radius: 12px; border: none; transition: transform 0.2s;">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary" style="font-weight:bold;">
+                                            <i class="fa-solid fa-store" style="color: #ff4d4f;"></i> ${shop.TenCuaHang}
+                                        </h5>
+                                        <p class="card-text text-muted" style="font-size: 14px; margin-bottom: 10px;">
+                                            <i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <span class="badge" style="background-color: #ffe5e5; color: #ff4d4f; padding: 8px 12px; font-size: 14px;">
+                                                <i class="fa-solid fa-route"></i> Cách đây <b>${shop.KhoangCachKm} km</b>
+                                            </span>
+                                            <a href="cuaHangController.php?id=${shop.IdTaiKhoan}" class="btn btn-sm btn-outline-danger" style="border-radius: 8px;">Xem Shop</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    // Trả về mảng rỗng (Không có shop nào < 10km)
+                    statusDiv.className = "alert alert-secondary text-center shadow-sm";
+                    statusDiv.innerHTML = '<i class="fa-regular fa-face-frown"></i> Tiếc quá, không có cửa hàng nào trong bán kính 10km quanh bạn.';
+                }
+            } else {
+                // Lỗi SQL từ Backend
+                statusDiv.className = "alert alert-danger text-center shadow-sm";
+                statusDiv.innerHTML = '<i class="fa-solid fa-bug"></i> Lỗi hệ thống: ' + data.message;
+            }
+            
+            // Đổ HTML vào danh sách
+            document.getElementById('danh-sach-cua-hang').innerHTML = html;
+        })
+        .catch(err => {
+            // Lỗi sập đường truyền hoặc sai đường dẫn fetch
+            console.error('Lỗi khi fetch dữ liệu:', err);
+            let statusDiv = document.getElementById('status-message');
+            statusDiv.className = "alert alert-danger text-center shadow-sm";
+            statusDiv.innerHTML = '<i class="fa-solid fa-link-slash"></i> Đã xảy ra lỗi kết nối với máy chủ (Mở F12 -> Console để xem chi tiết).';
+        });
+    }
+</script>
 </body>
 
 </html>
