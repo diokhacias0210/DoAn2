@@ -17,6 +17,8 @@ CREATE TABLE TaiKhoan (
     Avatar VARCHAR(255) DEFAULT NULL,
     ThoiGianTao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     DiemViPham INT DEFAULT 0,
+    ViDo DECIMAL(10, 8) NULL COMMENT 'Latitude - Vĩ độ của Người Mua',
+    KinhDo DECIMAL(11, 8) NULL COMMENT 'Longitude - Kinh độ của Người Mua',
     HanKhoaTaiKhoan DATETIME DEFAULT NULL
 );
 
@@ -25,6 +27,8 @@ CREATE TABLE DiaChi (
     IdTaiKhoan INT(10), 
     DiaChiChiTiet VARCHAR(255) NOT NULL, 
     MacDinh BOOLEAN DEFAULT 0, 
+    ViDo DECIMAL(10, 8) NULL COMMENT 'Vĩ độ của địa chỉ này',
+    KinhDo DECIMAL(11, 8) NULL COMMENT 'Kinh độ của địa chỉ này',
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -180,6 +184,8 @@ CREATE TABLE HoSoNguoiBan (
     IdTaiKhoan INT(10) NOT NULL UNIQUE,
     TenCuaHang VARCHAR(100), 
     DiaChiKhoHang VARCHAR(255),
+    ViDo DECIMAL(10, 8) NULL COMMENT 'Latitude - Vĩ độ Cửa Hàng (Kho)',
+    KinhDo DECIMAL(11, 8) NULL COMMENT 'Longitude - Kinh độ Cửa Hàng (Kho)',
     SoCCCD VARCHAR(20),
     TenNganHang VARCHAR(50),
     SoTaiKhoanNganHang VARCHAR(30),

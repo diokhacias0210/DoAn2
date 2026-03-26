@@ -37,13 +37,13 @@ class TaiKhoanModel
 
     public function getDanhSachDiaChi($idUser)
     {
-        $stmt = $this->conn->prepare("SELECT MaDC, DiaChiChiTiet, MacDinh FROM DiaChi WHERE IdTaiKhoan = ?");
+        $stmt = $this->conn->prepare("SELECT MaDC, DiaChiChiTiet, MacDinh, ViDo, KinhDo FROM DiaChi WHERE IdTaiKhoan = ?");
         $stmt->bind_param("i", $idUser);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function themDiaChi($idUser, $diaChiMoi)
+    public function themDiaChi($idUser, $diaChiMoi, $viDo = null, $kinhDo = null)
     {
         $count_stmt = $this->conn->prepare("SELECT COUNT(*) as count FROM DiaChi WHERE IdTaiKhoan = ?");
         $count_stmt->bind_param("i", $idUser);
@@ -55,8 +55,10 @@ class TaiKhoanModel
         }
 
         $is_default = 0;
-        $stmt = $this->conn->prepare("INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh) VALUES (?, ?, ?)");
-        $stmt->bind_param("isi", $idUser, $diaChiMoi, $is_default);
+        // Thêm ViDo và KinhDo vào câu lệnh INSERT
+        $stmt = $this->conn->prepare("INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES (?, ?, ?, ?, ?)");
+        // Chữ isidd: i=int, s=string, i=int, d=double(Vĩ độ), d=double(Kinh độ)
+        $stmt->bind_param("isidd", $idUser, $diaChiMoi, $is_default, $viDo, $kinhDo);
         return $stmt->execute() ? "ok" : "fail";
     }
 

@@ -24,16 +24,16 @@ $sql = "SELECT
             tk.IdTaiKhoan, 
             hs.TenCuaHang, 
             hs.DiaChiKhoHang AS DiaChi, 
-            tk.ViDo, 
-            tk.KinhDo,
-           ( 6371 * acos( cos( radians($lat) ) * cos( radians( tk.ViDo ) ) 
-           * cos( radians( tk.KinhDo ) - radians($lng) ) + sin( radians($lat) ) 
-           * sin( radians( tk.ViDo ) ) ) ) AS KhoangCachKm
+            hs.ViDo, 
+            hs.KinhDo,
+           ( 6371 * acos( cos( radians($lat) ) * cos( radians( hs.ViDo ) ) 
+           * cos( radians( hs.KinhDo ) - radians($lng) ) + sin( radians($lat) ) 
+           * sin( radians( hs.ViDo ) ) ) ) AS KhoangCachKm
         FROM TaiKhoan tk
         INNER JOIN HoSoNguoiBan hs ON tk.IdTaiKhoan = hs.IdTaiKhoan
         WHERE tk.TrangThaiBanHang = 'DangHoatDong'
-          AND tk.ViDo IS NOT NULL 
-          AND tk.KinhDo IS NOT NULL
+          AND hs.ViDo IS NOT NULL 
+          AND hs.KinhDo IS NOT NULL
         HAVING KhoangCachKm <= $banKinh
         ORDER BY KhoangCachKm ASC";
 

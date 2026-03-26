@@ -7,7 +7,68 @@
     <link href="../assets/css/dangNhap.css" rel="stylesheet">
     <link href="../assets/css/color.css" rel="stylesheet">
     <link href="../assets/css/header.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <title>Đăng Ký</title>
+    
+    <style>
+        /* CSS ép buộc cho phần bản đồ không bị CSS cũ che mất */
+        .diachi-container {
+            width: 100%;
+            margin: 20px 0;
+            text-align: left;
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative;
+            z-index: 10;
+        }
+        .diachi-container label {
+            position: static !important;
+            transform: none !important;
+            color: #333 !important;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+            pointer-events: auto !important;
+        }
+        .diachi-container input[type="text"] {
+            position: static !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            height: 45px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 0 15px;
+            width: 100%;
+            color: #000;
+            background: #fff;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .diachi-container .flex-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .diachi-container button {
+            width: 90px;
+            height: 45px;
+            background-color: #ff4d4f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* Ép form đăng ký tự giãn chiều cao để chứa bản đồ */
+        .bieu-mau-tren, .bieu-mau {
+            height: auto !important;
+            min-height: 600px;
+            overflow: visible !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -55,26 +116,40 @@
                         <div class="bieu-mau-noi">
                             <input type="email" id="regEmail" name="email" placeholder=" " required value="<?= htmlspecialchars($old['email'] ?? '') ?>">
                             <label for="regEmail">Email:</label>
-
                         </div>
 
                         <div class="bieu-mau-noi">
                             <input type="text" id="regPhone" name="phone" placeholder=" " required value="<?= htmlspecialchars($old['phone'] ?? '') ?>">
-                            <label for="regPhone">Điện thoại:</label>
-
+                            <label for="regPhone">Điện thoại của bản thân:</label>
                         </div>
 
+                        <div class="diachi-container">
+                            <label>Địa chỉ & Vị trí (Kéo ghim hoặc nhập chữ) <span style="color:red;">*</span></label>
+                            
+                            <div class="flex-box">
+                                <input type="text" id="diachi" name="diachi" placeholder="Nhập địa chỉ của bạn..." value="<?php echo htmlspecialchars($old['diachi'] ?? ''); ?>">
+                                <button type="button" onclick="timViTriDangKy()">Tìm</button>
+                            </div>
+
+                            <div id="mapDangKy" style="height: 220px; width: 100%; border-radius: 8px; border: 1px solid #ddd; position: relative; z-index: 1;"></div>
+                            
+                            <input type="hidden" id="ViDo" name="ViDo">
+                            <input type="hidden" id="KinhDo" name="KinhDo">
+                            
+                            <?php if (isset($errors['diachi'])): ?>
+                                <p style="color:red; font-size:13px; margin-top:5px; font-style: italic;"><?php echo $errors['diachi']; ?></p>
+                            <?php endif; ?>
+                        </div>
                         <div class="bieu-mau-noi">
                             <input type="password" id="regPassword" name="password" placeholder=" " autocomplete="off" required>
                             <label for="regPassword">Mật khẩu:</label>
-
                         </div>
 
                         <div class="bieu-mau-noi">
                             <input type="password" id="regConfirm" name="confirm_Password" placeholder=" " required>
                             <label for="regConfirm">Nhập lại mật khẩu:</label>
-
                         </div>
+                        
                         <?php if (!empty($errors)): ?>
                             <div class="global-error-container show">
                                 <?php foreach ($errors as $error): ?>
@@ -98,7 +173,7 @@
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
                                     <div class="gsi-material-button-icon">
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;">
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
                                             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
                                             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
                                             <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
@@ -107,7 +182,6 @@
                                         </svg>
                                     </div>
                                     <span class="gsi-material-button-contents">Đăng nhập bằng Google</span>
-                                    <span style="display: none;">Đăng nhập bằng Google</span>
                                 </div>
                             </button>
                         </a>
@@ -118,27 +192,71 @@
     </div>
 
     <?php include '../includes/footer.php'; ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/js.js"></script>
+    
     <script>
+        // Xử lý ẩn thông báo lỗi
         document.addEventListener('DOMContentLoaded', function() {
-            // Chọn container lỗi tổng hợp và alert box (nếu có)
             const messages = document.querySelectorAll('.global-error-container.show, .alert-box.show');
-
             if (messages.length > 0) {
                 setTimeout(() => {
                     messages.forEach(msg => {
                         msg.classList.remove('show');
-
-                        // Xóa khỏi DOM hoặc ẩn display sau khi hiệu ứng mờ kết thúc
-                        setTimeout(() => {
-                            msg.style.display = 'none';
-                        }, 500);
+                        setTimeout(() => { msg.style.display = 'none'; }, 500);
                     });
                 }, 2000);
             }
         });
-    </script>
-    <script src="../assets/js/js.js"></script>
-</body>
 
+        // Xử lý bản đồ Leaflet
+        let mapDK, markerDK;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo bản đồ ở Cần Thơ
+            mapDK = L.map('mapDangKy').setView([10.0299, 105.7706], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapDK);
+            markerDK = L.marker([10.0299, 105.7706], {draggable: true}).addTo(mapDK);
+
+            // Xử lý lỗi bản đồ bị xám khi đặt trong form ẩn/hiện
+            setTimeout(function(){ mapDK.invalidateSize(); }, 500);
+
+            // Khi người dùng kéo thả ghim -> Cập nhật chữ trong ô địa chỉ
+            markerDK.on('dragend', function() {
+                let latlng = markerDK.getLatLng();
+                document.getElementById('ViDo').value = latlng.lat;
+                document.getElementById('KinhDo').value = latlng.lng;
+                
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.display_name) {
+                        document.getElementById('diachi').value = data.display_name;
+                    }
+                });
+            });
+        });
+
+        // Hàm tìm vị trí khi nhập địa chỉ
+        function timViTriDangKy() {
+            let dc = document.getElementById('diachi').value;
+            if(dc) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dc)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.length > 0) {
+                        mapDK.setView([data[0].lat, data[0].lon], 16);
+                        markerDK.setLatLng([data[0].lat, data[0].lon]);
+                        document.getElementById('ViDo').value = data[0].lat;
+                        document.getElementById('KinhDo').value = data[0].lon;
+                    } else {
+                        alert("Không tìm thấy địa chỉ trên bản đồ, vui lòng thử lại!");
+                    }
+                });
+            } else {
+                alert("Vui lòng nhập địa chỉ vào ô trống trước khi tìm!");
+            }
+        }
+    </script>
+</body>
 </html>

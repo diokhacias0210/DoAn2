@@ -11,6 +11,8 @@
     <link href="../assets/css/header.css" rel="stylesheet">
     <link href="../assets/css/thongTinTaiKhoan.css" rel="stylesheet">
     <link href="../assets/css/color.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -123,6 +125,25 @@
             <main class="content">
                 <h1><i class='bx bx-user'></i> TÀI KHOẢN CỦA TÔI</h1>
 
+                <?php
+                // Dùng PHP lấy tọa độ mặc định của người dùng từ CSDL (để load lần đầu)
+                $latUser = 10.0299; // Cần Thơ mặc định
+                $lngUser = 105.7706;
+
+                if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+                    $idTK = $_SESSION['IdTaiKhoan'];
+                    $sqlToaDo = "SELECT ViDo, KinhDo FROM TaiKhoan WHERE IdTaiKhoan = $idTK";
+                    $kqToaDo = $conn->query($sqlToaDo);
+                    if ($kqToaDo && $kqToaDo->num_rows > 0) {
+                        $rowToaDo = $kqToaDo->fetch_assoc();
+                        if (!empty($rowToaDo['ViDo']) && !empty($rowToaDo['KinhDo'])) {
+                            $latUser = $rowToaDo['ViDo'];
+                            $lngUser = $rowToaDo['KinhDo'];
+                        }
+                    }
+                }
+                ?>
+
                 <?php 
                 // Kiểm tra trạng thái để hiển thị nút Hủy trên menu
                 $trangThaiMenu = 'ChuaKichHoat';
@@ -179,12 +200,15 @@
                     </div>
                     <div class="form-group">
                         <label><i class='bx bx-home'></i> Địa chỉ</label>
-                        <select id="diachi-select" class="form-select">
+                        <select id="diachi-select" name="MaDC" class="form-select">
                             <?php if (empty($addresses)): ?>
                                 <option>Bạn chưa có địa chỉ nào.</option>
                             <?php else: ?>
                                 <?php foreach ($addresses as $addr): ?>
-                                    <option value="<?php echo $addr['MaDC']; ?>" <?php echo $addr['MacDinh'] ? 'selected' : ''; ?>>
+                                    <option value="<?php echo $addr['MaDC']; ?>" 
+                                            data-lat="<?php echo $addr['ViDo'] ?? ''; ?>" 
+                                            data-lng="<?php echo $addr['KinhDo'] ?? ''; ?>"
+                                            <?php echo $addr['MacDinh'] ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($addr['DiaChiChiTiet']); ?>
                                         <?php echo $addr['MacDinh'] ? ' (Mặc định)' : ''; ?>
                                     </option>
@@ -204,14 +228,23 @@
                             <button type="button" id="btn-xoa-diachi" class="delete-address">Xóa địa chỉ</button>
                         <?php endif; ?>
                     </div>
-
-                    <form id="form-them-diachi" method="POST" action="thongTinTaiKhoanController.php" style="display:none; margin-top:15px;">
+                    
+                    <form action="thongTinTaiKhoanController.php" method="POST">
                         <input type="hidden" name="action" value="them_diachi">
-                        <div class="form-group">
-                            <input type="text" name="diachi_moi" id="diachi-moi" class="form-control" placeholder="Nhập địa chỉ mới của bạn" required>
-                        </div>
-                        <button type="submit" id="luu-diachi" class="luudiachi">Lưu địa chỉ</button>
+                        
+                        <label>Nhập địa chỉ mới:</label>
+                        <input type="text" name="diachi_moi" class="form-control" placeholder="Nhập địa chỉ...">
+                        
+                        <input type="hidden" id="ViDo_moi" name="ViDo_moi">
+                        <input type="hidden" id="KinhDo_moi" name="KinhDo_moi">
+                        
+                        <button type="submit" class="btn btn-primary mt-2">Thêm địa chỉ</button>
                     </form>
+
+                    <div class="mt-4 mb-4">
+                        <h6 class="text-primary"><i class="fa-solid fa-map-location-dot"></i> Vị trí trên bản đồ</h6>
+                        <div id="mapThongTin" style="height: 300px; width: 100%; border-radius: 12px; border: 1px solid #ddd; z-index: 1;"></div>
+                    </div>
                 </div>
             </main>
         </div>
@@ -307,6 +340,106 @@
             }
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. KHỞI TẠO BẢN ĐỒ
+            let latDefault = <?= $latUser ?>;
+            let lngDefault = <?= $lngUser ?>;
+
+            let mapTT = L.map('mapThongTin').setView([latDefault, lngDefault], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapTT);
+            let markerTT = L.marker([latDefault, lngDefault], {draggable: true}).addTo(mapTT);
+            
+            // Sửa lỗi bản đồ bị xám một góc
+            setTimeout(function(){ mapTT.invalidateSize(); }, 500);
+
+            let inputDiaChiMoi = document.querySelector('input[name="diachi_moi"]'); // Ô nhập thêm địa chỉ mới (nếu có)
+            let selectDiaChi = document.getElementById('diachi-select'); // Ô Dropdown chọn địa chỉ
+
+            // 2. HÀM DỊCH CHỮ -> TỌA ĐỘ 
+            function capNhatBanDo(diaChiText) {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(diaChiText)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.length > 0) {
+                        mapTT.setView([data[0].lat, data[0].lon], 16);
+                        markerTT.setLatLng([data[0].lat, data[0].lon]);
+                        
+                        // THÊM 4 DÒNG NÀY ĐỂ LƯU TỌA ĐỘ KHI GÕ CHỮ:
+                        let viDoMoi = document.getElementById('ViDo_moi');
+                        let kinhDoMoi = document.getElementById('KinhDo_moi');
+                        if(viDoMoi) viDoMoi.value = data[0].lat;
+                        if(kinhDoMoi) kinhDoMoi.value = data[0].lon;
+                    }
+                });
+            }
+
+            // =========================================================
+            // 3. XỬ LÝ KHI NGƯỜI DÙNG THAY ĐỔI ĐỊA CHỈ TRONG Ô SELECT
+            // =========================================================
+            if (selectDiaChi) {
+                selectDiaChi.addEventListener('change', function() {
+                    // Lấy thẻ <option> đang được chọn
+                    let selectedOption = this.options[this.selectedIndex];
+                    
+                    // Lấy tọa độ từ thuộc tính data-lat, data-lng của option đó
+                    let lat = selectedOption.getAttribute('data-lat');
+                    let lng = selectedOption.getAttribute('data-lng');
+                    
+                    if (lat && lng && lat !== '' && lng !== '') {
+                        // Nếu CSDL đã có lưu tọa độ -> Bay thẳng đến đó luôn (rất nhanh)
+                        mapTT.setView([lat, lng], 16);
+                        markerTT.setLatLng([lat, lng]);
+                    } else {
+                        // Nếu địa chỉ cũ chưa có tọa độ -> Lấy chữ gửi API dịch ra tọa độ
+                        // Lọc bỏ chữ " (Mặc định)" để tìm kiếm cho chính xác
+                        let text = selectedOption.text.replace('(Mặc định)', '').trim();
+                        if(text !== 'Bạn chưa có địa chỉ nào.') {
+                            capNhatBanDo(text);
+                        }
+                    }
+                });
+
+                // Tự động kích hoạt sự kiện change 1 lần lúc vừa load web để map nhảy đến địa chỉ Mặc định ban đầu
+                selectDiaChi.dispatchEvent(new Event('change'));
+            }
+
+            // =========================================================
+            // 4. XỬ LÝ THÊM ĐỊA CHỈ MỚI (DÀNH CHO FORM THÊM)
+            // =========================================================
+            // Khi gõ chữ vào ô thêm địa chỉ mới
+            if(inputDiaChiMoi) {
+                let typingTimer;
+                inputDiaChiMoi.addEventListener('keyup', function() {
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => {
+                        if(this.value.trim() !== '') capNhatBanDo(this.value);
+                    }, 1000); 
+                });
+            }
+
+            // Khi người dùng KÉO ghim bản đồ -> Dịch ngược ra chữ và lưu tọa độ ẩn
+            markerTT.on('dragend', function() {
+                let latlng = markerTT.getLatLng();
+                
+                // Lưu tọa độ vào 2 ô ẩn để Submit (Thêm địa chỉ)
+                let viDoMoi = document.getElementById('ViDo_moi');
+                let kinhDoMoi = document.getElementById('KinhDo_moi');
+                if(viDoMoi) viDoMoi.value = latlng.lat;
+                if(kinhDoMoi) kinhDoMoi.value = latlng.lng;
+
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.display_name && inputDiaChiMoi) {
+                        inputDiaChiMoi.value = data.display_name;
+                    }
+                });
+            });
+        });
+    </script>
+    ```
 </body>
 
 </html>

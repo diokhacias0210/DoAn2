@@ -38,16 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $soTaiKhoan = $_POST['SoTaiKhoanNganHang'] ?? '';
         $tenChuTaiKhoan = $_POST['TenChuTaiKhoan'] ?? '';
 
-        // XỬ LÝ NHẬN TỌA ĐỘ TỪ BẢN ĐỒ
-        $viDo = !empty($_POST['ViDo']) ? (float)$_POST['ViDo'] : 'NULL';
-        $kinhDo = !empty($_POST['KinhDo']) ? (float)$_POST['KinhDo'] : 'NULL';
+        // XỬ LÝ NHẬN TỌA ĐỘ TỪ BẢN ĐỒ (Sử dụng null thay vì 'NULL' để tương thích với bind_param)
+        $viDo = !empty($_POST['ViDo']) ? (float)$_POST['ViDo'] : null;
+        $kinhDo = !empty($_POST['KinhDo']) ? (float)$_POST['KinhDo'] : null;
 
-        // Gọi model thực hiện lưu thông tin cơ bản
-        $model->kichHoat($idUser, $tenCuaHang, $soCCCD, $diaChiKhoHang, $tenNganHang, $soTaiKhoan, $tenChuTaiKhoan);
-        
-        // Cập nhật tọa độ vào bảng TaiKhoan
-        $sqlUpdateToaDo = "UPDATE TaiKhoan SET ViDo = $viDo, KinhDo = $kinhDo WHERE IdTaiKhoan = $idUser";
-        $conn->query($sqlUpdateToaDo); 
+        // Gọi model thực hiện lưu thông tin cơ bản VÀ tọa độ cùng lúc
+        $model->kichHoat($idUser, $tenCuaHang, $soCCCD, $diaChiKhoHang, $tenNganHang, $soTaiKhoan, $tenChuTaiKhoan, $viDo, $kinhDo);
                 
         // Chuyển hướng sang trang Seller sau khi lưu thành công
         header("Location: ../seller/controllers/sellerThongTinController.php");

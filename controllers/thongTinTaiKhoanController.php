@@ -19,7 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     if ($action === 'them_diachi') {
-        $result = $model->themDiaChi($idUser, trim($_POST['diachi_moi']));
+        $diaChiMoi = trim($_POST['diachi_moi']);
+        $viDoMoi = !empty($_POST['ViDo_moi']) ? (float)$_POST['ViDo_moi'] : null;
+        $kinhDoMoi = !empty($_POST['KinhDo_moi']) ? (float)$_POST['KinhDo_moi'] : null;
+
+        // Gọi model và truyền đủ 4 tham số (Id, Tên địa chỉ, Vĩ độ, Kinh độ)
+        $result = $model->themDiaChi($idUser, $diaChiMoi, $viDoMoi, $kinhDoMoi);
+
         // Kiểm tra xem có yêu cầu chuyển hướng về thanh toán không
         $redirect = $_POST['redirect'] ?? '';
         if ($result === "max") {

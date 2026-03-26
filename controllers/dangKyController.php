@@ -17,10 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm_Password = $_POST['confirm_Password'] ?? '';
 
+    // THÊM: Lấy dữ liệu địa chỉ và tọa độ
+    $diachi = trim($_POST['diachi'] ?? '');
+    $vido = !empty($_POST['ViDo']) ? (float)$_POST['ViDo'] : null;
+    $kinhdo = !empty($_POST['KinhDo']) ? (float)$_POST['KinhDo'] : null;
+
     // Giữ lại giá trị cũ để hiển thị lại trên form nếu lỗi
     $old['tentk'] = $tentk;
     $old['email'] = $email;
     $old['phone'] = $phone;
+    $old['diachi'] = $diachi;
+    // $old['ViDo'] = $vido;
+    // $old['KinhDo'] = $kinhdo;
 
 
     if (empty($tentk)) {
@@ -47,18 +55,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['email'] = 'Email đã được sử dụng.';
         }
     }
+    // THÊM: Check lỗi địa chỉ
+    if (empty($diachi)) {
+        $errors['diachi'] = 'Vui lòng chọn địa chỉ trên bản đồ.';
+    }
 
-    // Thêm tài khoản m
     if (!$errors) {
-        // Model sẽ tự động hash mật khẩu
-        if ($dangKyModel->themTaiKhoan($tentk, $email, $phone, $password)) {
-            $success = "Đăng ký thành công! Bạn có thể đăng nhập.";
-            $old = [];
-            header("Location: dangNhapController.php");
-        } else {
-            $errors['general'] = "Có lỗi xảy ra. Vui lòng thử lại.";
+        if ($dangKyModel->emailDaTonTai($email)) {
+            $errors['email'] = 'Email đã được sử dụng.';
         }
     }
+
+    if (!$errors) {
+        // GỌI HÀM VỚI CÁC BIẾN MỚI
+        if ($dangKyModel->themTaiKhoan($tentk, $email, $phone, $password, $vido, $kinhdo, $diachi)) {
+            $_SESSION['message'] = '<div class="alert alert-success">Đăng ký thành công! Hãy đăng nhập.</div>';
+            header("Location: ../controllers/dangNhapController.php");
+            exit;
+        } else {
+            $errors['general'] = 'Đã xảy ra lỗi hệ thống, vui lòng thử lại.';
+        }
+    }
+
+    // // Thêm tài khoản m
+    // if (!$errors) {
+    //     // Model sẽ tự động hash mật khẩu
+    //     if ($dangKyModel->themTaiKhoan($tentk, $email, $phone, $password)) {
+    //         $success = "Đăng ký thành công! Bạn có thể đăng nhập.";
+    //         $old = [];
+    //         header("Location: dangNhapController.php");
+    //     } else {
+    //         $errors['general'] = "Có lỗi xảy ra. Vui lòng thử lại.";
+    //     }
+    // }
 }
 
 include_once __DIR__ . '/../views/dangKy.php';
