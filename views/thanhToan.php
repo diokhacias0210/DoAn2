@@ -11,6 +11,8 @@
     <link href="../assets/css/header.css" rel="stylesheet">
     <link href="../assets/css/thanhToan.css" rel="stylesheet">
     <link href="../assets/css/color.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .alert {
             padding: 12px 20px;
@@ -118,7 +120,10 @@
                             <select id="address-select" name="DiaChiGiao" required style="flex: 1;">
                                 <?php if (count($all_addresses) > 0): ?>
                                     <?php foreach ($all_addresses as $addr): ?>
-                                        <option value="<?= htmlspecialchars($addr['DiaChiChiTiet']) ?>" <?= $addr['MacDinh'] == 1 ? 'selected' : '' ?>>
+                                        <option value="<?= htmlspecialchars($addr['DiaChiChiTiet']) ?>" 
+                                                data-lat="<?= $addr['ViDo'] ?? '' ?>" 
+                                                data-lng="<?= $addr['KinhDo'] ?? '' ?>"
+                                                <?= $addr['MacDinh'] == 1 ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($addr['DiaChiChiTiet']) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -129,6 +134,10 @@
                                 <i class="fa-solid fa-plus"></i> Thêm địa chỉ mới
                             </button>
                         </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 style="color: var(--bs-pink); font-size: 14px;"><i class="fa-solid fa-map-location-dot"></i> Vị trí nhận hàng:</h6>
+                        <div id="mapThanhToan" style="height: 250px; width: 100%; border-radius: 8px; border: 1px solid #ddd; z-index: 1;"></div>
                     </div>
                 </div>
             </div>
@@ -227,7 +236,7 @@
     </div>
     <!-- form thêm địa chỉ -->
     <div class="modal fade" id="addAddressModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg"> 
             <div class="modal-content">
                 <form method="POST" action="../controllers/thongTinTaiKhoanController.php">
                     <div class="modal-header">
@@ -236,12 +245,23 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="action" value="them_diachi">
+                        
                         <input type="hidden" name="redirect" value="thanhtoan">
 
                         <div class="mb-3">
-                            <label class="form-label">Địa chỉ chi tiết:</label>
-                            <input type="text" name="diachi_moi" class="form-control" autocomplete="off" placeholder="Số nhà, tên đường, phường/xã..." required>
-                            <div class="form-text text-muted">Bạn có thể lưu tối đa 5 địa chỉ.</div>
+                            <label class="form-label fw-bold">Địa chỉ & Vị trí (Kéo ghim hoặc nhập chữ) <span style="color:red;">*</span></label>
+                            
+                            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                                <input type="text" id="diachi_moi" name="diachi_moi" class="form-control" autocomplete="off" placeholder="Nhập số nhà, tên đường, phường/xã..." required>
+                                <!-- <button type="button" class="btn btn-secondary" onclick="timViTriModal()">Tìm</button> -->
+                            </div>
+
+                            <div id="mapModal" style="height: 250px; width: 100%; border-radius: 8px; border: 1px solid #ddd; z-index: 1;"></div>
+                            
+                            <input type="hidden" id="ViDo_moi" name="ViDo_moi">
+                            <input type="hidden" id="KinhDo_moi" name="KinhDo_moi">
+                            
+                            <div class="form-text text-muted mt-2">Bạn có thể lưu tối đa 5 địa chỉ.</div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -342,6 +362,134 @@
                 setTimeout(() => sessionAlert.remove(), 500);
             }, 5000);
         }
+    </script>
+
+    <script>
+        // XỬ LÝ BẢN ĐỒ CHÍNH TRÊN TRANG THANH TOÁN (mapThanhToan)
+        let mapThanhToan, markerThanhToan;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Khởi tạo bản đồ thanh toán (Mặc định ở Cần Thơ)
+            mapThanhToan = L.map('mapThanhToan').setView([10.0299, 105.7706], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapThanhToan);
+            markerThanhToan = L.marker([10.0299, 105.7706]).addTo(mapThanhToan);
+
+            let addressSelect = document.getElementById('address-select');
+
+            // 2. Hàm xử lý cập nhật bản đồ theo địa chỉ
+            function capNhatBanDoThanhToan() {
+                if (!addressSelect) return;
+                
+                let selectedOption = addressSelect.options[addressSelect.selectedIndex];
+                if (!selectedOption) return;
+
+                let lat = selectedOption.getAttribute('data-lat');
+                let lng = selectedOption.getAttribute('data-lng');
+
+                if (lat && lng && lat !== '' && lng !== '') {
+                    // Nếu địa chỉ trong Database CÓ sẵn tọa độ -> Nhảy ngay lập tức
+                    mapThanhToan.setView([lat, lng], 16);
+                    markerThanhToan.setLatLng([lat, lng]);
+                } else {
+                    // Nếu địa chỉ KHÔNG có tọa độ -> Dịch từ chữ sang tọa độ
+                    let text = selectedOption.text.trim();
+                    if(text !== '') {
+                        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(text)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.length > 0) {
+                                mapThanhToan.setView([data[0].lat, data[0].lon], 16);
+                                markerThanhToan.setLatLng([data[0].lat, data[0].lon]);
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (addressSelect) {
+                // 3. Lắng nghe sự kiện khi người dùng click chọn địa chỉ khác
+                addressSelect.addEventListener('change', capNhatBanDoThanhToan);
+                
+                // 4. Tự động chạy một lần khi vừa vào trang để map nhảy tới địa chỉ Mặc định
+                setTimeout(function() {
+                    mapThanhToan.invalidateSize(); // Fix lỗi khung xám
+                    capNhatBanDoThanhToan();
+                }, 500);
+            }
+        });
+    </script>
+
+    <script>
+        // Xử lý bản đồ Leaflet trong Modal
+        let mapModal, markerModal;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo bản đồ
+            mapModal = L.map('mapModal').setView([10.0299, 105.7706], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapModal);
+            markerModal = L.marker([10.0299, 105.7706], {draggable: true}).addTo(mapModal);
+
+            // CỰC KỲ QUAN TRỌNG: Fix lỗi bản đồ bị xám khi nằm trong Modal của Bootstrap
+            const addAddressModal = document.getElementById('addAddressModal');
+            addAddressModal.addEventListener('shown.bs.modal', function () {
+                setTimeout(function() {
+                    mapModal.invalidateSize();
+                }, 100); // Đợi modal mở xong mới render map
+            });
+
+            let inputDiaChiMoi = document.getElementById('diachi_moi');
+            let viDoMoi = document.getElementById('ViDo_moi');
+            let kinhDoMoi = document.getElementById('KinhDo_moi');
+
+            // 1. Khi kéo ghim trên bản đồ
+            markerModal.on('dragend', function() {
+                let latlng = markerModal.getLatLng();
+                viDoMoi.value = latlng.lat;
+                kinhDoMoi.value = latlng.lng;
+                
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.display_name) {
+                        inputDiaChiMoi.value = data.display_name;
+                    }
+                });
+            });
+
+            // 2. Hàm dịch chữ thành Tọa độ
+            function timViTriBando(text) {
+                 fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(text)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.length > 0) {
+                        mapModal.setView([data[0].lat, data[0].lon], 16);
+                        markerModal.setLatLng([data[0].lat, data[0].lon]);
+                        viDoMoi.value = data[0].lat;
+                        kinhDoMoi.value = data[0].lon;
+                    }
+                });
+            }
+
+            // 3. Gõ chữ tự động tìm (sau 1 giây)
+            let typingTimer;
+            inputDiaChiMoi.addEventListener('keyup', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(() => {
+                    if(this.value.trim() !== '') {
+                        timViTriBando(this.value);
+                    }
+                }, 1000); 
+            });
+            
+            // 4. Gắn hàm cho nút "Tìm"
+            window.timViTriModal = function() {
+                let text = inputDiaChiMoi.value;
+                if(text) {
+                    timViTriBando(text);
+                } else {
+                    alert("Vui lòng nhập địa chỉ vào ô trống trước khi tìm!");
+                }
+            }
+        });
     </script>
 </body>
 

@@ -229,7 +229,7 @@
                         <?php endif; ?>
                     </div>
                     
-                    <form action="thongTinTaiKhoanController.php" method="POST">
+                    <form id="form-them-diachi" action="thongTinTaiKhoanController.php" method="POST" style="display: none; margin-top: 15px;">
                         <input type="hidden" name="action" value="them_diachi">
                         
                         <label>Nhập địa chỉ mới:</label>
@@ -238,7 +238,7 @@
                         <input type="hidden" id="ViDo_moi" name="ViDo_moi">
                         <input type="hidden" id="KinhDo_moi" name="KinhDo_moi">
                         
-                        <button type="submit" class="btn btn-primary mt-2">Thêm địa chỉ</button>
+                        <button type="submit" class="btn btn-primary mt-2">Lưu địa chỉ</button>
                     </form>
 
                     <div class="mt-4 mb-4">
