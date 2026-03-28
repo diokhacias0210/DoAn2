@@ -55,9 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['email'] = 'Email đã được sử dụng.';
         }
     }
-    // THÊM: Check lỗi địa chỉ
+
+    // THÊM: Check lỗi địa chỉ và tọa độ (Bắt buộc phải có cả 2)
     if (empty($diachi)) {
-        $errors['diachi'] = 'Vui lòng chọn địa chỉ trên bản đồ.';
+        $errors['diachi'] = 'Vui lòng nhập địa chỉ của bạn.';
+    } elseif (empty($vido) || empty($kinhdo)) {
+        $errors['diachi'] = 'Vui lòng nhấn nút "Tìm" hoặc kéo ghim trên bản đồ để xác nhận vị trí.';
     }
 
     if (!$errors) {

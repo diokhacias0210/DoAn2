@@ -127,7 +127,7 @@
                             <label>Địa chỉ & Vị trí (Kéo ghim hoặc nhập chữ) <span style="color:red;">*</span></label>
                             
                             <div class="flex-box">
-                                <input type="text" id="diachi" name="diachi" placeholder="Nhập địa chỉ của bạn..." value="<?php echo htmlspecialchars($old['diachi'] ?? ''); ?>">
+                                <input type="text" id="diachi" name="diachi" placeholder="Nhập địa chỉ của bạn..." value="<?php echo htmlspecialchars($old['diachi'] ?? ''); ?>" required>
                                 <button type="button" onclick="timViTriDangKy()">Tìm</button>
                             </div>
 
@@ -255,6 +255,35 @@
                 });
             } else {
                 alert("Vui lòng nhập địa chỉ vào ô trống trước khi tìm!");
+            }
+
+            // TỰ ĐỘNG TÌM VỊ TRÍ SAU KHI NGƯỜI DÙNG GÕ XONG (1 GIÂY)
+            let inputDiaChiDangKy = document.getElementById('diachi');
+            let typingTimerDK; // Biến đếm thời gian
+            let thoiGianCho = 1000; // Đợi 1 giây (1000ms) sau khi ngừng gõ mới tìm
+
+            if (inputDiaChiDangKy) {
+                // Khi người dùng bắt đầu gõ phím
+                inputDiaChiDangKy.addEventListener('keyup', function() {
+                    // Xóa bộ đếm cũ nếu họ vẫn đang gõ liên tục
+                    clearTimeout(typingTimerDK);
+                    
+                    // Bắt đầu đếm lại từ đầu
+                    typingTimerDK = setTimeout(() => {
+                        let text = this.value.trim();
+                        if (text !== '') {
+                            // Gọi lại chính hàm tìm vị trí bạn đã viết ở trên
+                            timViTriDangKy(); 
+                        }
+                    }, thoiGianCho);
+                });
+
+                // Nếu người dùng copy-paste bằng chuột (không dùng phím)
+                inputDiaChiDangKy.addEventListener('change', function() {
+                    if (this.value.trim() !== '') {
+                        timViTriDangKy();
+                    }
+                });
             }
         }
     </script>
