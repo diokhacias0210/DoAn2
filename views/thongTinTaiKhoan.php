@@ -1,4 +1,3 @@
-thông tin tài khoản ai làm cho gọn lại
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -74,8 +73,8 @@ thông tin tài khoản ai làm cho gọn lại
                             </a>
                         </li>
                         <li>
-                            <?php 
-                            $trangThai = 'ChuaKichHoat'; 
+                            <?php
+                            $trangThai = 'ChuaKichHoat';
                             if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
                                 $idUser_check = (int)$_SESSION['IdTaiKhoan'];
                                 $sql_check = "SELECT TrangThaiBanHang FROM TaiKhoan WHERE IdTaiKhoan = $idUser_check";
@@ -84,7 +83,7 @@ thông tin tài khoản ai làm cho gọn lại
                                     $trangThai = $res_check->fetch_assoc()['TrangThaiBanHang'];
                                 }
                             }
-                            if ($trangThai === 'DangHoatDong'): 
+                            if ($trangThai === 'DangHoatDong'):
                             ?>
                                 <a href="../seller/controllers/sellerSanPhamController.php" class="btn btn-warning">
                                     <i class="fa-solid fa-store"></i> Kênh người bán
@@ -108,7 +107,7 @@ thông tin tài khoản ai làm cho gọn lại
                 <h1><i class='bx bx-user'></i> TÀI KHOẢN CỦA TÔI</h1>
 
                 <?php
-                $latUser = 10.0299; 
+                $latUser = 10.0299;
                 $lngUser = 105.7706;
 
                 if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
@@ -133,7 +132,7 @@ thông tin tài khoản ai làm cho gọn lại
                         $trangThaiMenu = $res_menu->fetch_assoc()['TrangThaiBanHang'];
                     }
                 }
-                if ($trangThaiMenu === 'DangHoatDong'): 
+                if ($trangThaiMenu === 'DangHoatDong'):
                 ?>
                     <li>
                         <a href="#" onclick="xacNhanHuyBanHang(); return false;" style="color: #dc3545;">
@@ -182,17 +181,17 @@ thông tin tài khoản ai làm cho gọn lại
                                     <option value="">Bạn chưa có địa chỉ nào.</option>
                                 <?php else: ?>
                                     <?php foreach ($addresses as $addr): ?>
-                                        <option value="<?php echo $addr['MaDC']; ?>" 
-                                                data-lat="<?php echo $addr['ViDo'] ?? ''; ?>" 
-                                                data-lng="<?php echo $addr['KinhDo'] ?? ''; ?>"
-                                                <?php echo $addr['MacDinh'] ? 'selected' : ''; ?>>
+                                        <option value="<?php echo $addr['MaDC']; ?>"
+                                            data-lat="<?php echo $addr['ViDo'] ?? ''; ?>"
+                                            data-lng="<?php echo $addr['KinhDo'] ?? ''; ?>"
+                                            <?php echo $addr['MacDinh'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($addr['DiaChiChiTiet']); ?>
                                             <?php echo $addr['MacDinh'] ? ' (Mặc định)' : ''; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-                            
+
                             <button type="button" class="btn btn-outline-primary text-nowrap" onclick="bamNutDatMacDinh()">
                                 Đặt làm mặc định
                             </button>
@@ -210,16 +209,16 @@ thông tin tài khoản ai làm cho gọn lại
                             <button type="button" id="btn-xoa-diachi" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i> Xóa địa chỉ</button>
                         <?php endif; ?>
                     </div>
-                    
+
                     <form id="form-them-diachi" action="thongTinTaiKhoanController.php" method="POST" style="display: none; margin-top: 15px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
                         <input type="hidden" name="action" value="them_diachi">
-                        
+
                         <label class="fw-bold mb-2">Nhập địa chỉ mới (Vui lòng chọn trên bản đồ hoặc gõ vào đây):</label>
                         <input type="text" name="diachi_moi" class="form-control" placeholder="Nhập địa chỉ...">
-                        
+
                         <input type="hidden" id="ViDo_moi" name="ViDo_moi">
                         <input type="hidden" id="KinhDo_moi" name="KinhDo_moi">
-                        
+
                         <button type="submit" class="btn btn-primary mt-3">Lưu địa chỉ</button>
                     </form>
 
@@ -234,13 +233,13 @@ thông tin tài khoản ai làm cho gọn lại
 
     <?php include '../includes/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // HÀM XỬ LÝ ĐẶT ĐỊA CHỈ MẶC ĐỊNH
         function bamNutDatMacDinh() {
             let selectTag = document.getElementById('diachi-select');
             let maDC = selectTag.value;
-            
+
             if (!maDC) {
                 alert("Vui lòng chọn một địa chỉ!");
                 return;
@@ -248,7 +247,7 @@ thông tin tài khoản ai làm cho gọn lại
 
             let form = document.createElement('form');
             form.method = 'POST';
-            form.action = 'thongTinTaiKhoanController.php'; 
+            form.action = 'thongTinTaiKhoanController.php';
 
             let actionInput = document.createElement('input');
             actionInput.type = 'hidden';
@@ -333,14 +332,14 @@ thông tin tài khoản ai làm cho gọn lại
             const btnHuy = document.getElementById('btn-huy-kich-hoat');
 
             if (btnMoForm) {
-                btnMoForm.addEventListener('click', function () {
+                btnMoForm.addEventListener('click', function() {
                     formKichHoat.style.display = 'block';
-                    btnMoForm.style.display = 'none'; 
+                    btnMoForm.style.display = 'none';
                 });
             }
 
             if (btnHuy) {
-                btnHuy.addEventListener('click', function () {
+                btnHuy.addEventListener('click', function() {
                     formKichHoat.style.display = 'none';
                     btnMoForm.style.display = 'inline-block';
                 });
@@ -352,27 +351,31 @@ thông tin tài khoản ai làm cho gọn lại
 
             let mapTT = L.map('mapThongTin').setView([latDefault, lngDefault], 16);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapTT);
-            let markerTT = L.marker([latDefault, lngDefault], {draggable: true}).addTo(mapTT);
-            
-            setTimeout(function(){ mapTT.invalidateSize(); }, 500);
+            let markerTT = L.marker([latDefault, lngDefault], {
+                draggable: true
+            }).addTo(mapTT);
+
+            setTimeout(function() {
+                mapTT.invalidateSize();
+            }, 500);
 
             let inputDiaChiMoi = document.querySelector('input[name="diachi_moi"]');
-            let selectDiaChi = document.getElementById('diachi-select'); 
+            let selectDiaChi = document.getElementById('diachi-select');
 
             function capNhatBanDo(diaChiText) {
                 fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(diaChiText)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if(data.length > 0) {
-                        mapTT.setView([data[0].lat, data[0].lon], 16);
-                        markerTT.setLatLng([data[0].lat, data[0].lon]);
-                        
-                        let viDoMoi = document.getElementById('ViDo_moi');
-                        let kinhDoMoi = document.getElementById('KinhDo_moi');
-                        if(viDoMoi) viDoMoi.value = data[0].lat;
-                        if(kinhDoMoi) kinhDoMoi.value = data[0].lon;
-                    }
-                });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            mapTT.setView([data[0].lat, data[0].lon], 16);
+                            markerTT.setLatLng([data[0].lat, data[0].lon]);
+
+                            let viDoMoi = document.getElementById('ViDo_moi');
+                            let kinhDoMoi = document.getElementById('KinhDo_moi');
+                            if (viDoMoi) viDoMoi.value = data[0].lat;
+                            if (kinhDoMoi) kinhDoMoi.value = data[0].lon;
+                        }
+                    });
             }
 
             if (selectDiaChi) {
@@ -380,13 +383,13 @@ thông tin tài khoản ai làm cho gọn lại
                     let selectedOption = this.options[this.selectedIndex];
                     let lat = selectedOption.getAttribute('data-lat');
                     let lng = selectedOption.getAttribute('data-lng');
-                    
+
                     if (lat && lng && lat !== '' && lng !== '') {
                         mapTT.setView([lat, lng], 16);
                         markerTT.setLatLng([lat, lng]);
                     } else {
                         let text = selectedOption.text.replace('(Mặc định)', '').trim();
-                        if(text !== 'Bạn chưa có địa chỉ nào.') {
+                        if (text !== 'Bạn chưa có địa chỉ nào.') {
                             capNhatBanDo(text);
                         }
                     }
@@ -394,33 +397,34 @@ thông tin tài khoản ai làm cho gọn lại
                 selectDiaChi.dispatchEvent(new Event('change'));
             }
 
-            if(inputDiaChiMoi) {
+            if (inputDiaChiMoi) {
                 let typingTimer;
                 inputDiaChiMoi.addEventListener('keyup', function() {
                     clearTimeout(typingTimer);
                     typingTimer = setTimeout(() => {
-                        if(this.value.trim() !== '') capNhatBanDo(this.value);
-                    }, 1000); 
+                        if (this.value.trim() !== '') capNhatBanDo(this.value);
+                    }, 1000);
                 });
             }
 
             markerTT.on('dragend', function() {
                 let latlng = markerTT.getLatLng();
-                
+
                 let viDoMoi = document.getElementById('ViDo_moi');
                 let kinhDoMoi = document.getElementById('KinhDo_moi');
-                if(viDoMoi) viDoMoi.value = latlng.lat;
-                if(kinhDoMoi) kinhDoMoi.value = latlng.lng;
+                if (viDoMoi) viDoMoi.value = latlng.lat;
+                if (kinhDoMoi) kinhDoMoi.value = latlng.lng;
 
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
-                .then(res => res.json())
-                .then(data => {
-                    if(data && data.display_name && inputDiaChiMoi) {
-                        inputDiaChiMoi.value = data.display_name;
-                    }
-                });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.display_name && inputDiaChiMoi) {
+                            inputDiaChiMoi.value = data.display_name;
+                        }
+                    });
             });
         });
     </script>
 </body>
+
 </html>
