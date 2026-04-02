@@ -56,7 +56,7 @@
 
   <?php include '../includes/header.php'; ?>
 
-  <div class="giua-trang">
+  < class="giua-trang">
     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="true" data-bs-touch="true">
       <div class="carousel-indicators">
         <?php if (!empty($danhSachBanner)): ?>
@@ -128,80 +128,10 @@
         <h2><i class="fa-solid fa-minus"></i> GẦN BẠN NHẤT (GỢI Ý)</h2>
       </div>
 
-      <div class="horizontal-scroll-wrapper mt-3">
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top">
-              <img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Bàn học gỗ cao su lắp ráp <br><small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn 2.5km</small></div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.2</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham">
-                  <span class="gia-giam">150.000đ</span>
-                </div>
-              </div>
-            </div>
+      <div class="horizontal-scroll-wrapper mt-3" id="danh-sach-sp-gan-nhat">
+          <div class="w-100 text-center text-muted py-4">
+              <div class="spinner-border spinner-border-sm text-danger" role="status"></div> Đang tìm sản phẩm quanh bạn...
           </div>
-        </a>
-
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top">
-              <img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Màn hình PC Dell 24 inch cũ <br><small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn 3.1km</small></div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>5.0</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham">
-                  <span class="gia-giam">1.200.000đ</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top"><img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Bàn phím cơ cũ <br><small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn 4.0km</small></div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.5</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham"><span class="gia-giam">300.000đ</span></div>
-              </div>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top"><img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Chuột Logitech <br><small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn 5.0km</small></div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.8</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham"><span class="gia-giam">200.000đ</span></div>
-              </div>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top"><img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Loa Bluetooth Sony <br><small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn 6.5km</small></div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.9</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham"><span class="gia-giam">450.000đ</span></div>
-              </div>
-            </div>
-          </div>
-        </a>
       </div>
     </div>
 
@@ -432,6 +362,7 @@
                     statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
                     
                     goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
+                    goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
                 },
                 function(error) {
                     // TH 2: KHÔNG CÓ GPS -> CHUYỂN SANG ĐỊA CHỈ MẶC ĐỊNH
@@ -441,6 +372,7 @@
                         statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
                         
                         goiApiTimCuaHang(latDuPhong, lngDuPhong);
+                        goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
                     } else {
                         // TH 3: KHÔNG CÓ GPS, CŨNG CHƯA CÓ ĐỊA CHỈ MẶC ĐỊNH
                         statusDiv.className = 'alert alert-warning text-center small shadow-sm';
@@ -454,6 +386,7 @@
                 statusDiv.className = 'alert alert-info text-center small shadow-sm';
                 statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
                 goiApiTimCuaHang(latDuPhong, lngDuPhong);
+                goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
             } else {
                 statusDiv.className = 'alert alert-warning text-center small shadow-sm';
                 statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
@@ -509,6 +442,73 @@
             
             // Đổ HTML hiển thị danh sách
             listDiv.innerHTML = html;
+        });
+    }
+
+    function goiApiTimSanPhamGanNhat(lat, lng) {
+        let formData = new FormData();
+        formData.append('lat', lat);
+        formData.append('lng', lng);
+
+        fetch('ajaxTimSanPhamGanNhat.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            let container = document.getElementById('danh-sach-sp-gan-nhat');
+            if (!container) return;
+
+            let html = '';
+            
+            if (data.status === 'success' && data.data.length > 0) {
+                // 1. Vòng lặp in ra tối đa 20 sản phẩm như bình thường
+                data.data.forEach(sp => {
+                    html += `
+                        <a href="chiTietSanPhamController.php?id=${sp.MaHH}" class="product-link">
+                          <div class="product-item">
+                            <div class="product-item-top">
+                              <img src="../${sp.HinhAnh}" alt="${sp.TenHH}" style="height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                              <div class="tieude-sanpham">${sp.TenHH} <br>
+                                  <small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn ${sp.KhoangCachKm}km</small>
+                              </div>
+                              <p class="text-muted small mb-2"><i class="fa-solid fa-store"></i> ${sp.TenCuaHang}</p>
+                              <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot"></i> ${sp.DiaChi}</p>
+                            </div>
+                            <div class="product-item-bottom">
+                              <div class="gia-rating">
+                                <div class="rating"><span>5.0</span><i class="fa-solid fa-star"></i></div>
+                                <div class="gia-san-pham">
+                                  <span class="gia-giam">${sp.GiaFormat}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                    `;
+                });
+
+                // 2. SAU KHI IN XONG, THÊM THẺ "XEM TẤT CẢ" VÀO CUỐI CÙNG
+                // Mình set link tạm là sanPhamGanBanController.php nhé
+                html += `
+                    <a href="sanPhamGanBanController.php?lat=${lat}&lng=${lng}" class="product-link" style="display: flex; align-items: center; justify-content: center; min-width: 160px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-decoration: none; border: 1px dashed #dc3545; margin-right: 15px;">
+                        <div class="text-center text-danger p-3">
+                            <i class="fa-solid fa-circle-arrow-right fa-3x mb-3"></i>
+                            <h6 class="mb-0 fw-bold">Xem tất cả<br>sản phẩm gần đây</h6>
+                        </div>
+                    </a>
+                `;
+
+            } else {
+                html = `<div class="w-100 text-center text-muted py-4"><i class="fa-regular fa-face-frown"></i> Chưa có sản phẩm nào được bán gần bạn.</div>`;
+            }
+            
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy sản phẩm:', error);
+            let container = document.getElementById('danh-sach-sp-gan-nhat');
+            if(container) container.innerHTML = `<div class="w-100 text-center text-danger py-4">Lỗi kết nối máy chủ!</div>`;
         });
     }
   </script>
