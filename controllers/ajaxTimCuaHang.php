@@ -1,16 +1,19 @@
 <?php
-
-
-// Import file kết nối CSDL (Đảm bảo đường dẫn này đúng với cấu trúc dự án của bạn)
+session_start(); // Đảm bảo đã khởi tạo session
 require_once __DIR__ . '/../includes/ketnoi.php';
 
-// Đặt header trả về dữ liệu dạng JSON để Javascript đọc được
 header('Content-Type: application/json; charset=utf-8');
+
+// KIỂM TRA: Nếu không có session thì không cho phép lấy dữ liệu cửa hàng
+if (!isset($_SESSION['IdTaiKhoan'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Vui lòng đăng nhập để sử dụng tính năng này.']);
+    exit;
+}
 
 // Nhận tọa độ từ JS (Trang Chủ) gửi lên qua phương thức POST
 $lat = isset($_POST['lat']) ? (float)$_POST['lat'] : 0;
 $lng = isset($_POST['lng']) ? (float)$_POST['lng'] : 0;
-$banKinh = 10000; // Giới hạn tìm kiếm: 10 km (Bạn có thể tăng lên 50, 100 tùy ý để test)
+$banKinh = 10000; // Giới hạn tìm kiếm: 10 km 
 
 // Nếu không nhận được tọa độ hợp lệ thì báo lỗi luôn, không truy vấn CSDL
 if ($lat == 0 || $lng == 0) {
@@ -18,8 +21,7 @@ if ($lat == 0 || $lng == 0) {
     exit;
 }
 
-// CÂU LỆNH SQL SỬ DỤNG CÔNG THỨC HAVERSINE ĐỂ TÍNH KHOẢNG CÁCH
-// CÂU LỆNH SQL SỬ DỤNG JOIN ĐỂ LẤY DỮ LIỆU TỪ 2 BẢNG
+// CÂU LỆNH SQL SỬ DỤNG CÔNG THỨC HAVERSINE ĐỂ TÍNH KHOẢNG CÁCH GIỮA TỌA ĐỘ NGƯỜI DÙNG VÀ CÁC CỬA HÀNG TRONG BẢN ĐỒ
 $sql = "SELECT 
             tk.IdTaiKhoan, 
             hs.TenCuaHang, 
@@ -55,6 +57,9 @@ if ($result) {
     }
 } else {
     // Trả về lỗi nếu câu lệnh SQL bị sai
-    echo json_encode(['status' => 'error', 'message' => 'Lỗi truy vấn CSDL: ' . $conn->error]);
+    echo json_encode([
+        'status' => 'success',
+        'data' => $danhSachCuaHang // Mảng này chứa các shop kèm theo biến KhoangCachKm
+    ]);
 }
 ?>

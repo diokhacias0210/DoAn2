@@ -95,11 +95,11 @@
       </button>
     </div>
 
-    <div class="container text-center my-4">
+    <!-- <div class="container text-center my-4">
         <button onclick="batDauTimViTri()" class="btn btn-danger btn-lg" style="border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <i class="fa-solid fa-map-location-dot"></i> Tìm Cửa Hàng Gần Tôi Ngay!
+            <i class="fa-solid fa-map-location-dot"></i>Cửa Hàng Gần Bạn
         </button>
-    </div>
+    </div> -->
 
     <div class="container mb-5">
         <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
@@ -292,7 +292,7 @@
   <script src="../assets/js/loadSanPham.js"></script>
   <script src="../assets/js/js.js"></script>
   <script src="../assets/js/yeuThich.js"></script>
-  <script>
+  <!-- <script>
     // Hàm này chạy khi người dùng bấm nút
     function batDauTimViTri() {
         let statusDiv = document.getElementById('status-message');
@@ -316,9 +316,20 @@
                     // Lấy được tọa độ rồi thì gửi ngầm xuống Backend
                     goiApiTimCuaHang(latNguoiMua, lngNguoiMua);
                 },
+                // ĐOẠN GỢI Ý (Sửa lại dựa trên code của bạn):
                 function(error) {
-                    statusDiv.className = "alert alert-warning text-center shadow-sm";
-                    statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Bạn đã từ chối cung cấp vị trí hoặc thiết bị không bật GPS.';
+                    console.warn("GPS bị từ chối, đang chuyển sang địa chỉ đã đăng ký...");
+                    
+                    // Thay vì báo lỗi, hãy gọi hàm lấy vị trí từ Database (PHP truyền xuống)
+                    let latDuPhong = <?php echo $userLat; ?>; 
+                    let lngDuPhong = <?php echo $userLng; ?>;
+
+                    if (latDuPhong != 0) {
+                        goiApiTimCuaHang(latDuPhong, lngDuPhong); 
+                        statusDiv.innerHTML = "Đang hiện cửa hàng dựa trên địa chỉ đăng ký của bạn.";
+                    } else {
+                        statusDiv.innerHTML = "Vui lòng bật định vị hoặc đăng nhập để xem cửa hàng gần nhất.";
+                    }
                 }
             );
         } else {
@@ -392,7 +403,126 @@
             statusDiv.innerHTML = '<i class="fa-solid fa-link-slash"></i> Đã xảy ra lỗi kết nối với máy chủ (Mở F12 -> Console để xem chi tiết).';
         });
     }
-</script>
+</script> -->
+  <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
+  <script>
+    // Tọa độ dự phòng lấy từ địa chỉ mặc định trong Database (PHP truyền sang)
+    var latDuPhong = <?php echo $userLat ? $userLat : 0; ?>;
+    var lngDuPhong = <?php echo $userLng ? $userLng : 0; ?>;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Chỉ chạy khi có session
+        requestLocation();
+    });
+
+    function requestLocation() {
+        let statusDiv = document.getElementById('status-message');
+        if (!statusDiv) return;
+
+        statusDiv.style.display = 'block';
+        statusDiv.className = 'alert alert-info text-center small';
+        statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Đang xác định vị trí...';
+
+        // NẾU TRÌNH DUYỆT HỖ TRỢ GPS
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    // TH 1: LẤY ĐƯỢC GPS
+                    statusDiv.className = 'alert alert-success text-center small shadow-sm';
+                    statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
+                    
+                    goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
+                },
+                function(error) {
+                    // TH 2: KHÔNG CÓ GPS -> CHUYỂN SANG ĐỊA CHỈ MẶC ĐỊNH
+                    if (latDuPhong != 0 && lngDuPhong != 0) {
+                        statusDiv.className = 'alert alert-info text-center small shadow-sm';
+                        // Đã sửa lại câu thông báo ở đây cho rõ ràng:
+                        statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+                        
+                        goiApiTimCuaHang(latDuPhong, lngDuPhong);
+                    } else {
+                        // TH 3: KHÔNG CÓ GPS, CŨNG CHƯA CÓ ĐỊA CHỈ MẶC ĐỊNH
+                        statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+                        statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng bật GPS hoặc thiết lập địa chỉ mặc định để tìm cửa hàng.';
+                    }
+                }
+            );
+        } else {
+            // NẾU TRÌNH DUYỆT QUÁ CŨ KHÔNG HỖ TRỢ GPS
+            if (latDuPhong != 0 && lngDuPhong != 0) {
+                statusDiv.className = 'alert alert-info text-center small shadow-sm';
+                statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+                goiApiTimCuaHang(latDuPhong, lngDuPhong);
+            } else {
+                statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
+            }
+        }
+    }
+
+    function goiApiTimCuaHang(lat, lng) {
+        let formData = new FormData();
+        formData.append('lat', lat);
+        formData.append('lng', lng);
+
+        fetch('ajaxTimCuaHang.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+            let statusDiv = document.getElementById('status-message');
+            let listDiv = document.getElementById('danh-sach-cua-hang');
+            
+            if (data.status === 'success') {
+                if (data.data.length > 0) {
+                    // QUAN TRỌNG: Đã xóa dòng statusDiv.style.display = 'none'; 
+                    // Để thông báo (GPS hay Địa chỉ nhà) luôn hiển thị trên màn hình
+                    
+                    data.data.forEach(shop => {
+                        html += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm border-0" style="border-radius: 12px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary"><b>${shop.TenCuaHang}</b></h5>
+                                        <p class="card-text text-muted small"><i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-light text-danger">Cách: ${shop.KhoangCachKm} km</span>
+                                            <a href="cuaHangController.php?id=${shop.IdTaiKhoan}" class="btn btn-sm btn-outline-danger">Xem</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    // Nếu không có shop nào, đổi thông báo thành màu xám
+                    statusDiv.className = "alert alert-secondary text-center shadow-sm";
+                    statusDiv.innerHTML = '<i class="fa-regular fa-face-frown"></i> Không có cửa hàng nào trong bán kính 10km quanh vị trí này.';
+                }
+            } else {
+                // Nếu lỗi code PHP
+                statusDiv.className = "alert alert-danger text-center shadow-sm";
+                statusDiv.innerHTML = '<i class="fa-solid fa-bug"></i> Lỗi hệ thống: ' + data.message;
+            }
+            
+            // Đổ HTML hiển thị danh sách
+            listDiv.innerHTML = html;
+        });
+    }
+  </script>
+  <?php else: ?>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          let statusDiv = document.getElementById('status-message');
+          if (statusDiv) {
+              statusDiv.className = "alert alert-light text-center border";
+              statusDiv.innerHTML = '<i class="fa-solid fa-user-lock"></i> <a href="dangNhapController.php">Đăng nhập</a> để xem các cửa hàng gần bạn nhất.';
+          }
+      });
+  </script>
+  <?php endif; ?>
 </body>
 
 </html>

@@ -14,7 +14,7 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 $idUser = $_SESSION['IdTaiKhoan'];
 $message = '';
 
-// XỬ LÝ LOGIC POST (Thêm / Xóa địa chỉ)
+// XỬ LÝ LOGIC POST (Thêm / Xóa / Đặt mặc định địa chỉ)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
@@ -23,10 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $viDoMoi = !empty($_POST['ViDo_moi']) ? (float)$_POST['ViDo_moi'] : null;
         $kinhDoMoi = !empty($_POST['KinhDo_moi']) ? (float)$_POST['KinhDo_moi'] : null;
 
-        // Gọi model và truyền đủ 4 tham số (Id, Tên địa chỉ, Vĩ độ, Kinh độ)
         $result = $model->themDiaChi($idUser, $diaChiMoi, $viDoMoi, $kinhDoMoi);
 
-        // Kiểm tra xem có yêu cầu chuyển hướng về thanh toán không
         $redirect = $_POST['redirect'] ?? '';
         if ($result === "max") {
             $_SESSION['message'] = '<div class="alert alert-danger">Bạn chỉ có thể thêm tối đa 5 địa chỉ.</div>';
@@ -36,13 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $_SESSION['message'] = '<div class="alert alert-warning">Thêm địa chỉ thất bại.</div>';
         }
 
-        // ĐIỀU HƯỚNG
         if ($redirect === 'thanhtoan') {
-            header("Location: thanhToanController.php"); // Quay lại trang thanh toán
+            header("Location: thanhToanController.php"); 
         } else {
-            header("Location: thongTinTaiKhoanController.php"); // Quay lại trang tài khoản
+            header("Location: thongTinTaiKhoanController.php"); 
         }
         exit;
+
     } elseif ($action === 'xoa_diachi') {
         $result = $model->xoaDiaChi($idUser, (int)$_POST['MaDC_xoa']);
         if ($result === "default") {
@@ -53,6 +51,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } else {
             $message = '<div class="alert alert-danger">Lỗi khi xóa hoặc địa chỉ không tồn tại.</div>';
         }
+        
+    } elseif ($action === 'dat_mac_dinh') {
+        $maDC = (int)$_POST['MaDC'];
+        
+        // Gọi hàm bên model
+        if ($model->setDiaChiMacDinh($idUser, $maDC)) {
+            header("Location: thongTinTaiKhoanController.php?status=set_default_success");
+        } else {
+            $_SESSION['message'] = '<div class="alert alert-danger">Có lỗi xảy ra khi đặt địa chỉ mặc định.</div>';
+            header("Location: thongTinTaiKhoanController.php");
+        }
+        exit;
     }
 }
 
@@ -62,6 +72,9 @@ if (isset($_GET['status'])) {
         $message = '<div class="alert alert-success">Đã thêm địa chỉ mới thành công!</div>';
     } elseif ($_GET['status'] === 'delete_success') {
         $message = '<div class="alert alert-success">Đã xóa địa chỉ thành công!</div>';
+    } elseif ($_GET['status'] === 'set_default_success') {
+        // Thông báo khi đặt mặc định thành công
+        $message = '<div class="alert alert-success">Đã thay đổi địa chỉ mặc định thành công!</div>';
     }
 }
 

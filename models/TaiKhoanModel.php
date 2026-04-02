@@ -35,6 +35,7 @@ class TaiKhoanModel
         return $result->fetch_assoc();
     }
 
+    // hàm để bỏ trạng thái mặc định của các địa chỉ cũ và thiết lập địa chỉ mới là mặc định
     public function getDanhSachDiaChi($idUser)
     {
         $stmt = $this->conn->prepare("SELECT MaDC, DiaChiChiTiet, MacDinh, ViDo, KinhDo FROM DiaChi WHERE IdTaiKhoan = ?");
@@ -76,5 +77,35 @@ class TaiKhoanModel
         $delete = $this->conn->prepare("DELETE FROM DiaChi WHERE MaDC = ?");
         $delete->bind_param("i", $maDC);
         return $delete->execute() ? "ok" : "fail";
+    }
+ 
+    public function setDiaChiMacDinh($idUser, $maDC)
+    {
+        $this->conn->begin_transaction();
+        try {
+            // 1. Chuyển tất cả địa chỉ của user này về KHÔNG mặc định (MacDinh = 0)
+            $stmt1 = $this->conn->prepare("UPDATE DiaChi SET MacDinh = 0 WHERE IdTaiKhoan = ?");
+            $stmt1->bind_param("i", $idUser);
+            $stmt1->execute();
+
+            // 2. Chuyển địa chỉ được chọn thành mặc định (MacDinh = 1)
+            $stmt2 = $this->conn->prepare("UPDATE DiaChi SET MacDinh = 1 WHERE MaDC = ? AND IdTaiKhoan = ?");
+            $stmt2->bind_param("ii", $maDC, $idUser);
+            $stmt2->execute();
+
+            $this->conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            return false;
+        }
+    }
+    
+    public function getDiaChiMacDinh($idUser) {
+        $stmt = $this->conn->prepare("SELECT ViDo, KinhDo, DiaChiChiTiet FROM DiaChi WHERE IdTaiKhoan = ? AND MacDinh = 1 LIMIT 1");
+        $stmt->bind_param("i", $idUser);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc(); // Trả về 1 dòng duy nhất hoặc null
     }
 }
