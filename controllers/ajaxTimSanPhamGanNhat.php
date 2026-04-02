@@ -20,6 +20,9 @@ if ($lat == 0 || $lng == 0) {
 
 // SQL MỚI: Rút trích tối đa 2 sản phẩm mỗi cửa hàng để đảm bảo đa dạng
 // SQL MỚI CẬP NHẬT: Ưu tiên đa dạng shop trước, nếu thiếu sẽ tự động bù sản phẩm khác vào cho đủ 20
+// Lấy ID của người đang dùng app
+$idHienTai = $_SESSION['IdTaiKhoan'];
+
 $sql = "WITH RankedProducts AS (
             SELECT 
                 hh.MaHH, 
@@ -31,7 +34,6 @@ $sql = "WITH RankedProducts AS (
                 ( 6371 * acos( cos( radians($lat) ) * cos( radians( hs.ViDo ) ) 
                 * cos( radians( hs.KinhDo ) - radians($lng) ) + sin( radians($lat) ) 
                 * sin( radians( hs.ViDo ) ) ) ) AS KhoangCachKm,
-                -- Vẫn đếm thứ tự sản phẩm của từng cửa hàng
                 ROW_NUMBER() OVER(PARTITION BY hs.IdTaiKhoan ORDER BY hh.MaHH DESC) as rn
             FROM HangHoa hh
             INNER JOIN HoSoNguoiBan hs ON hh.IdNguoiBan = hs.IdTaiKhoan
@@ -41,19 +43,15 @@ $sql = "WITH RankedProducts AS (
               AND hh.HienThi = 1
               AND hs.ViDo IS NOT NULL 
               AND hs.KinhDo IS NOT NULL
+              AND hs.IdTaiKhoan != $idHienTai -- ĐÂY LÀ DÒNG MỚI THÊM: Không lấy sản phẩm của mình
         )
         SELECT * FROM RankedProducts 
         WHERE KhoangCachKm <= $banKinh 
-        -- ĐÃ XÓA ĐIỀU KIỆN 'rn <= 2' Ở ĐÂY ĐỂ KHÔNG BỊ MẤT DỮ LIỆU
-        
         ORDER BY 
-            -- Thuật toán linh hoạt: 
-            -- Nhóm 0: Lấy tối đa 2 sản phẩm đầu của tất cả các shop (Ưu tiên nhất)
-            -- Nhóm 1: Các sản phẩm thứ 3, 4, 5... của các shop (Chỉ được xuất hiện nếu Nhóm 0 không đủ 20 cái)
             CASE WHEN rn <= 2 THEN 0 ELSE 1 END ASC, 
-            KhoangCachKm ASC,  -- Cùng nhóm thì shop nào gần hơn xếp trước
-            MaHH DESC          -- Cuối cùng là ưu tiên sản phẩm mới đăng
-        LIMIT 20";             
+            KhoangCachKm ASC,  
+            MaHH DESC          
+        LIMIT 20";            
 
 $result = $conn->query($sql);
 $data = [];

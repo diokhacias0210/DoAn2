@@ -26,8 +26,10 @@ if ($lat == 0 || $lng == 0) {
 
 $danhSachSanPham = [];
 
+// ... code ở trên giữ nguyên ...
 if ($lat != 0 && $lng != 0) {
-    // Lấy toàn bộ sản phẩm gần đây (Không bị giới hạn 2 sản phẩm/cửa hàng nữa)
+    $idHienTai = $_SESSION['IdTaiKhoan']; // Lấy ID
+
     $sql = "SELECT 
                 hh.MaHH, 
                 hh.TenHH, 
@@ -45,9 +47,11 @@ if ($lat != 0 && $lng != 0) {
               AND hh.HienThi = 1
               AND hs.ViDo IS NOT NULL 
               AND hs.KinhDo IS NOT NULL
+              AND hs.IdTaiKhoan != $idHienTai -- ĐÂY LÀ DÒNG MỚI THÊM
             HAVING KhoangCachKm <= $banKinh
             ORDER BY KhoangCachKm ASC, hh.MaHH DESC
-            LIMIT 100"; // Tạm thời lấy 100 sản phẩm gần nhất
+            LIMIT 100";
+
 
     $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {

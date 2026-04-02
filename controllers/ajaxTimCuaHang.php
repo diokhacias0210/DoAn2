@@ -22,6 +22,9 @@ if ($lat == 0 || $lng == 0) {
 }
 
 // CÂU LỆNH SQL SỬ DỤNG CÔNG THỨC HAVERSINE ĐỂ TÍNH KHOẢNG CÁCH GIỮA TỌA ĐỘ NGƯỜI DÙNG VÀ CÁC CỬA HÀNG TRONG BẢN ĐỒ
+// Lấy ID của người đang dùng app
+$idHienTai = $_SESSION['IdTaiKhoan'];
+
 $sql = "SELECT 
             tk.IdTaiKhoan, 
             hs.TenCuaHang, 
@@ -36,6 +39,7 @@ $sql = "SELECT
         WHERE tk.TrangThaiBanHang = 'DangHoatDong'
           AND hs.ViDo IS NOT NULL 
           AND hs.KinhDo IS NOT NULL
+          AND tk.IdTaiKhoan != $idHienTai  -- ĐÂY LÀ DÒNG MỚI THÊM: Loại bỏ cửa hàng của chính mình
         HAVING KhoangCachKm <= $banKinh
         ORDER BY KhoangCachKm ASC";
 
