@@ -50,6 +50,13 @@ if ($maHH <= 0) {
                 $yeuThichModel = new YeuThichModel($conn);
                 // Gọi hàm kiểm tra từ model (đã tạo ở bài trước)
                 $daYeuThich = $yeuThichModel->kiemTraYeuThich($_SESSION['IdTaiKhoan'], $maHH);
+
+                // --- CODE TRACKING AI (1 ĐIỂM - LƯỚT XEM) ---
+                $idTaiKhoanAI = $_SESSION['IdTaiKhoan'];
+                $sqlTrackView = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
+                                 VALUES ($idTaiKhoanAI, $maHH, 1) 
+                                 ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 1)";
+                $conn->query($sqlTrackView);
             }
         }
     } catch (Exception $e) {

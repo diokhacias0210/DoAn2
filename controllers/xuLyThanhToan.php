@@ -85,6 +85,15 @@ try {
             // Trừ tồn kho
             $stmt_update_stock->bind_param("ii", $item['SoLuong'], $item['MaHH']);
             $stmt_update_stock->execute();
+
+            // --- BẮT ĐẦU: CODE TRACKING AI (5 ĐIỂM - CHỐT MUA) ---
+            $maHhAI = $item['MaHH'];
+            $sqlTrackBuy = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
+                            VALUES ($idUser, $maHhAI, 5) 
+                            ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 5)";
+            $conn->query($sqlTrackBuy);
+            // --- KẾT THÚC: CODE TRACKING AI ---
+            // =========================================================
         }
         $stmt_detail->close();
         $stmt_update_stock->close();

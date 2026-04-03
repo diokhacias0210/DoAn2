@@ -141,7 +141,11 @@ switch ($action) {
             $stmt_insert->execute();
             $stmt_insert->close();
         }
-
+        // --- CODE TRACKING AI (3 ĐIỂM - THÊM GIỎ) ---
+        $sqlTrackCart = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
+                         VALUES ($idUser, $maHH, 3) 
+                         ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 3)";
+        $conn->query($sqlTrackCart);
         json_success(null, 'Đã thêm sản phẩm vào giỏ hàng!');
         break;
 

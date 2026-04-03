@@ -303,7 +303,12 @@ CREATE TABLE BienDongSoDu (
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH)
 );
-
+CREATE TABLE HanhVi_AI (
+    IdTaiKhoan int(11) NOT NULL,
+    MaHH int(11) NOT NULL,
+    Diem int(11) NOT NULL,
+    PRIMARY KEY (IdTaiKhoan, MaHH)
+);
 -- =============================================
 -- 2. INSERT DỮ LIỆU CŨ CỦA BẠN
 -- =============================================
