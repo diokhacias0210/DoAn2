@@ -10,7 +10,7 @@ if (isset($_POST['mahh']) && isset($_SESSION['IdTaiKhoan'])) {
     // Điều này giúp Python hiểu là user đã tương tác, từ đó loại món đồ này ra khỏi gợi ý lần sau
     $sql = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
             VALUES ($idUser, $mahh, 1) 
-            ON DUPLICATE KEY UPDATE Diem = 'Ẩn'";
+            ON DUPLICATE KEY UPDATE Diem = 'Diem'";
 
     $conn->query($sql);
     echo json_encode(['status' => 'success']);
