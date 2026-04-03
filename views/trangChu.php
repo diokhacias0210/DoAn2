@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -43,11 +42,53 @@
       flex: 0 0 auto;
       width: 250px;
       scroll-snap-align: start;
+      text-decoration: none;
+      /* Tránh gạch chân text */
+      position: relative;
     }
 
     .horizontal-scroll-wrapper .product-item {
       height: 100%;
       min-height: 320px;
+      position: relative;
+    }
+
+    /* Nút X bỏ qua (Custom để đè lên ảnh) */
+    .btn-bo-qua {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 20;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      transition: 0.2s;
+    }
+
+    .btn-bo-qua:hover {
+      background-color: #dc3545;
+      color: #fff;
+    }
+
+    /* Nhãn % phù hợp */
+    .badge-match {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 20;
+      background-color: #e91e63;
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
@@ -56,34 +97,34 @@
 
   <?php include '../includes/header.php'; ?>
 
-  < class="giua-trang">
+  <div class="giua-trang">
     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="true" data-bs-touch="true">
       <div class="carousel-indicators">
         <?php if (!empty($danhSachBanner)): ?>
-            <?php foreach ($danhSachBanner as $index => $banner): ?>
-                <button type="button" 
-                        data-bs-target="#carouselExampleAutoplaying" 
-                        data-bs-slide-to="<?= $index ?>" 
-                        class="<?= $index === 0 ? 'active' : '' ?>" 
-                        aria-current="<?= $index === 0 ? 'true' : 'false' ?>">
-                </button>
-            <?php endforeach; ?>
+          <?php foreach ($danhSachBanner as $index => $banner): ?>
+            <button type="button"
+              data-bs-target="#carouselExampleAutoplaying"
+              data-bs-slide-to="<?= $index ?>"
+              class="<?= $index === 0 ? 'active' : '' ?>"
+              aria-current="<?= $index === 0 ? 'true' : 'false' ?>">
+            </button>
+          <?php endforeach; ?>
         <?php endif; ?>
       </div>
 
       <div class="carousel-inner">
         <?php if (!empty($danhSachBanner)): ?>
-            <?php foreach ($danhSachBanner as $index => $banner): ?>
-                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                  <img src="../assets/images/banners/<?= htmlspecialchars($banner['HinhAnh']) ?>" 
-                       class="d-block w-100" 
-                       alt="<?= htmlspecialchars($banner['TieuDe']) ?>">
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="carousel-item active">
-              <img src="../assets/images/placeholder.png" class="d-block w-100" alt="Mặc định">
+          <?php foreach ($danhSachBanner as $index => $banner): ?>
+            <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+              <img src="../assets/images/banners/<?= htmlspecialchars($banner['HinhAnh']) ?>"
+                class="d-block w-100"
+                alt="<?= htmlspecialchars($banner['TieuDe']) ?>">
             </div>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <div class="carousel-item active">
+            <img src="../assets/images/placeholder.png" class="d-block w-100" alt="Mặc định">
+          </div>
         <?php endif; ?>
       </div>
 
@@ -95,16 +136,9 @@
       </button>
     </div>
 
-    <!-- <div class="container text-center my-4">
-        <button onclick="batDauTimViTri()" class="btn btn-danger btn-lg" style="border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <i class="fa-solid fa-map-location-dot"></i>Cửa Hàng Gần Bạn
-        </button>
-    </div> -->
-
     <div class="container mb-5">
-        <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
-
-        <div class="row" id="danh-sach-cua-hang"></div>
+      <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
+      <div class="row" id="danh-sach-cua-hang"></div>
     </div>
 
     <div class="danh-muc">
@@ -129,9 +163,9 @@
       </div>
 
       <div class="horizontal-scroll-wrapper mt-3" id="danh-sach-sp-gan-nhat">
-          <div class="w-100 text-center text-muted py-4">
-              <div class="spinner-border spinner-border-sm text-danger" role="status"></div> Đang tìm sản phẩm quanh bạn...
-          </div>
+        <div class="w-100 text-center text-muted py-4">
+          <div class="spinner-border spinner-border-sm text-danger" role="status"></div> Đang tìm sản phẩm quanh bạn...
+        </div>
       </div>
     </div>
 
@@ -141,61 +175,107 @@
       </div>
 
       <div class="horizontal-scroll-wrapper mt-3">
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top">
-              <img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Sách Đắc Nhân Tâm (Bìa cứng)</div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.8</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham">
-                  <span class="gia-giam">50.000đ</span>
+        <?php
+        $hasRecommendations = false;
+        if (isset($_SESSION['IdTaiKhoan'])) {
+          $idKhachHang = $_SESSION['IdTaiKhoan'];
+
+          // Dùng 127.0.0.1 thay cho localhost để không bị lỗi trên XAMPP
+          $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=8";
+
+          // SỬ DỤNG CURL ĐỂ KẾT NỐI SIÊU ỔN ĐỊNH
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $api_url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_TIMEOUT, 3); // Đợi tối đa 3 giây
+          $response = curl_exec($ch);
+          curl_close($ch);
+
+          if ($response) {
+            $goi_y_list = json_decode($response, true);
+
+            if (!empty($goi_y_list) && !isset($goi_y_list['error'])) {
+              $hasRecommendations = true;
+              $ids = array_column($goi_y_list, 'id');
+              $ids_string = implode(',', $ids);
+
+              // Truy vấn DB lấy thông tin
+              $sql_ai = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
+                               FROM HangHoa hh WHERE MaHH IN ($ids_string) 
+                               ORDER BY FIELD(MaHH, $ids_string)";
+              $result_ai = $conn->query($sql_ai);
+
+              $sanphams = [];
+              while ($row = $result_ai->fetch_assoc()) {
+                $sanphams[$row['MaHH']] = $row;
+              }
+
+              // Vẽ các thẻ sản phẩm
+              foreach ($goi_y_list as $item) {
+                $sp = $sanphams[$item['id']] ?? null;
+                if (!$sp) continue;
+
+                // XỬ LÝ NHÃN (HIỆN TRENDING CHO COLD START, % CHO AI MATCH)
+                if (isset($item['reason']) && $item['reason'] == 'Trending') {
+                  $badgeHtml = '<div class="badge-match" style="background:#fd7e14;"><i class="fa-solid fa-fire"></i> Đang thịnh hành</div>';
+                } else {
+                  $badgeHtml = '<div class="badge-match">Phù hợp ' . $item['match'] . '%</div>';
+                }
+        ?>
+                <a href="chiTietSanPhamController.php?id=<?= $sp['MaHH'] ?>" class="product-link">
+                  <button class="btn-bo-qua shadow" onclick="boQuaSanPham(<?= $sp['MaHH'] ?>, this, event)" title="Bỏ qua / Không thích">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+
+                  <?= $badgeHtml ?>
+
+                  <div class="product-item">
+                    <div class="product-item-top">
+                      <img src="../<?= $sp['Anh'] ?? 'assets/images/placeholder.png' ?>" alt="<?= htmlspecialchars($sp['TenHH']) ?>" style="height: 180px; object-fit:cover;">
+                      <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
+                    </div>
+                    <div class="product-item-bottom">
+                      <div class="gia-rating">
+                        <div class="rating"><span>5.0</span><i class="fa-solid fa-star"></i></div>
+                        <div class="gia-san-pham">
+                          <span class="gia-giam"><?= number_format($sp['Gia'], 0, ',', '.') ?>đ</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+            <?php
+              }
+            }
+          }
+        }
+
+        // Nếu khách chưa đăng nhập HOẶC AI không có dữ liệu để gợi ý -> Hiện các sản phẩm mới nhất làm mặc định
+        if (!$hasRecommendations) {
+          $sql_new = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
+                        FROM HangHoa hh WHERE TrangThaiDuyet = 'DaDuyet' ORDER BY NgayThem DESC LIMIT 8";
+          $result_new = $conn->query($sql_new);
+          while ($sp = $result_new->fetch_assoc()) {
+            ?>
+            <a href="chiTietSanPhamController.php?id=<?= $sp['MaHH'] ?>" class="product-link">
+              <div class="badge-match" style="background:#28a745;">Mới nhất</div>
+              <div class="product-item">
+                <div class="product-item-top">
+                  <img src="../<?= $sp['Anh'] ?? 'assets/images/placeholder.png' ?>" style="height: 180px; object-fit:cover;">
+                  <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
+                </div>
+                <div class="product-item-bottom">
+                  <div class="gia-rating">
+                    <div class="rating"><span>-</span><i class="fa-solid fa-star text-muted"></i></div>
+                    <div class="gia-san-pham"><span class="gia-giam"><?= number_format($sp['Gia'], 0, ',', '.') ?>đ</span></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top"><img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Tiểu thuyết Mắt Biếc</div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.9</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham"><span class="gia-giam">80.000đ</span></div>
-              </div>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top"><img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Sách Nhà Giả Kim</div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>5.0</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham"><span class="gia-giam">60.000đ</span></div>
-              </div>
-            </div>
-          </div>
-        </a>
-        <a href="#" class="product-link">
-          <div class="product-item">
-            <div class="product-item-top"><img src="../assets/images/placeholder.png" alt="sp">
-              <div class="tieude-sanpham">Truyện Harry Potter</div>
-            </div>
-            <div class="product-item-bottom">
-              <div class="gia-rating">
-                <div class="rating"><span>4.7</span><i class="fa-solid fa-star"></i></div>
-                <div class="gia-san-pham"><span class="gia-giam">150.000đ</span></div>
-              </div>
-            </div>
-          </div>
-        </a>
+            </a>
+        <?php
+          }
+        }
+        ?>
       </div>
     </div>
 
@@ -222,130 +302,34 @@
   <script src="../assets/js/loadSanPham.js"></script>
   <script src="../assets/js/js.js"></script>
   <script src="../assets/js/yeuThich.js"></script>
-  <!-- <script>
-    // Hàm này chạy khi người dùng bấm nút
-    function batDauTimViTri() {
-        let statusDiv = document.getElementById('status-message');
-        let listDiv = document.getElementById('danh-sach-cua-hang');
-        
-        // Hiện thông báo đang quét, xóa kết quả cũ
-        statusDiv.style.display = 'block';
-        statusDiv.className = "alert alert-info text-center shadow-sm";
-        statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info me-2" role="status"></div> Đang xin quyền vị trí... Vui lòng ấn "Cho phép" (Allow) trên trình duyệt.';
-        listDiv.innerHTML = ''; // Làm sạch danh sách cũ
 
-        // Gọi API HTML5 Geolocation để xin Vĩ độ/Kinh độ
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    let latNguoiMua = position.coords.latitude;
-                    let lngNguoiMua = position.coords.longitude;
-                    
-                    statusDiv.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> Đã lấy được vị trí! Đang tìm cửa hàng quanh bạn...';
-                    
-                    // Lấy được tọa độ rồi thì gửi ngầm xuống Backend
-                    goiApiTimCuaHang(latNguoiMua, lngNguoiMua);
-                },
-                // ĐOẠN GỢI Ý (Sửa lại dựa trên code của bạn):
-                function(error) {
-                    console.warn("GPS bị từ chối, đang chuyển sang địa chỉ đã đăng ký...");
-                    
-                    // Thay vì báo lỗi, hãy gọi hàm lấy vị trí từ Database (PHP truyền xuống)
-                    let latDuPhong = <?php echo $userLat; ?>; 
-                    let lngDuPhong = <?php echo $userLng; ?>;
-
-                    if (latDuPhong != 0) {
-                        goiApiTimCuaHang(latDuPhong, lngDuPhong); 
-                        statusDiv.innerHTML = "Đang hiện cửa hàng dựa trên địa chỉ đăng ký của bạn.";
-                    } else {
-                        statusDiv.innerHTML = "Vui lòng bật định vị hoặc đăng nhập để xem cửa hàng gần nhất.";
-                    }
-                }
-            );
-        } else {
-            statusDiv.className = "alert alert-danger text-center shadow-sm";
-            statusDiv.innerText = "Trình duyệt của bạn quá cũ, không hỗ trợ định vị GPS.";
-        }
-    }
-
-    // Hàm nhận tọa độ và đẩy xuống file PHP bằng Fetch API
-    function goiApiTimCuaHang(lat, lng) {
-        let formData = new FormData();
-        formData.append('lat', lat);
-        formData.append('lng', lng);
-
-        // Gọi đến file Backend chúng ta vừa tạo ở Bước 3
-        fetch('ajaxTimCuaHang.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            let html = '';
-            let statusDiv = document.getElementById('status-message');
-            
-            if (data.status === 'success') {
-                if (data.data.length > 0) {
-                    // Nếu có cửa hàng, ẩn thông báo đi và vẽ giao diện
-                    statusDiv.style.display = 'none'; 
-                    
-                    data.data.forEach(shop => {
-                        html += `
-                            <div class="col-md-4 mb-4">
-                                <div class="card h-100 shadow-sm" style="border-radius: 12px; border: none; transition: transform 0.2s;">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-primary" style="font-weight:bold;">
-                                            <i class="fa-solid fa-store" style="color: #ff4d4f;"></i> ${shop.TenCuaHang}
-                                        </h5>
-                                        <p class="card-text text-muted" style="font-size: 14px; margin-bottom: 10px;">
-                                            <i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}
-                                        </p>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <span class="badge" style="background-color: #ffe5e5; color: #ff4d4f; padding: 8px 12px; font-size: 14px;">
-                                                <i class="fa-solid fa-route"></i> Cách đây <b>${shop.KhoangCachKm} km</b>
-                                            </span>
-                                            <a href="cuaHangController.php?id=${shop.IdTaiKhoan}" class="btn btn-sm btn-outline-danger" style="border-radius: 8px;">Xem Shop</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    // Trả về mảng rỗng (Không có shop nào < 10km)
-                    statusDiv.className = "alert alert-secondary text-center shadow-sm";
-                    statusDiv.innerHTML = '<i class="fa-regular fa-face-frown"></i> Tiếc quá, không có cửa hàng nào trong bán kính 10km quanh bạn.';
-                }
-            } else {
-                // Lỗi SQL từ Backend
-                statusDiv.className = "alert alert-danger text-center shadow-sm";
-                statusDiv.innerHTML = '<i class="fa-solid fa-bug"></i> Lỗi hệ thống: ' + data.message;
-            }
-            
-            // Đổ HTML vào danh sách
-            document.getElementById('danh-sach-cua-hang').innerHTML = html;
-        })
-        .catch(err => {
-            // Lỗi sập đường truyền hoặc sai đường dẫn fetch
-            console.error('Lỗi khi fetch dữ liệu:', err);
-            let statusDiv = document.getElementById('status-message');
-            statusDiv.className = "alert alert-danger text-center shadow-sm";
-            statusDiv.innerHTML = '<i class="fa-solid fa-link-slash"></i> Đã xảy ra lỗi kết nối với máy chủ (Mở F12 -> Console để xem chi tiết).';
-        });
-    }
-</script> -->
-  <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
   <script>
-    // Tọa độ dự phòng lấy từ địa chỉ mặc định trong Database (PHP truyền sang)
-    var latDuPhong = <?php echo $userLat ? $userLat : 0; ?>;
-    var lngDuPhong = <?php echo $userLng ? $userLng : 0; ?>;
+    // --- HÀM XỬ LÝ NÚT X (BỎ QUA) Ở PHẦN GỢI Ý ---
+    function boQuaSanPham(mahh, btnElement, event) {
+      event.preventDefault(); // Ngăn thẻ <a> chuyển hướng trang
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Chỉ chạy khi có session
+      // Ẩn mượt mà thẻ sản phẩm này
+      $(btnElement).closest('.product-link').fadeOut(300);
+
+      // Gửi AJAX ngầm về Server để ghi nhận 1 sao (đã tương tác) -> Lần sau Python sẽ lọc bỏ
+      $.post('boQuaGoiY.php', {
+        mahh: mahh
+      }, function(response) {
+        console.log("Đã loại bỏ sản phẩm ID: " + mahh + " khỏi gợi ý.");
+      });
+    }
+  </script>
+
+  <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
+    <script>
+      var latDuPhong = <?= $userLat ? $userLat : 0; ?>;
+      var lngDuPhong = <?= $userLng ? $userLng : 0; ?>;
+
+      document.addEventListener("DOMContentLoaded", function() {
         requestLocation();
-    });
+      });
 
-    function requestLocation() {
+      function requestLocation() {
         let statusDiv = document.getElementById('status-message');
         if (!statusDiv) return;
 
@@ -353,48 +337,40 @@
         statusDiv.className = 'alert alert-info text-center small';
         statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Đang xác định vị trí...';
 
-        // NẾU TRÌNH DUYỆT HỖ TRỢ GPS
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    // TH 1: LẤY ĐƯỢC GPS
-                    statusDiv.className = 'alert alert-success text-center small shadow-sm';
-                    statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
-                    
-                    goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
-                    goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
-                },
-                function(error) {
-                    // TH 2: KHÔNG CÓ GPS -> CHUYỂN SANG ĐỊA CHỈ MẶC ĐỊNH
-                    if (latDuPhong != 0 && lngDuPhong != 0) {
-                        statusDiv.className = 'alert alert-info text-center small shadow-sm';
-                        // Đã sửa lại câu thông báo ở đây cho rõ ràng:
-                        statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
-                        
-                        goiApiTimCuaHang(latDuPhong, lngDuPhong);
-                        goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
-                    } else {
-                        // TH 3: KHÔNG CÓ GPS, CŨNG CHƯA CÓ ĐỊA CHỈ MẶC ĐỊNH
-                        statusDiv.className = 'alert alert-warning text-center small shadow-sm';
-                        statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng bật GPS hoặc thiết lập địa chỉ mặc định để tìm cửa hàng.';
-                    }
-                }
-            );
-        } else {
-            // NẾU TRÌNH DUYỆT QUÁ CŨ KHÔNG HỖ TRỢ GPS
-            if (latDuPhong != 0 && lngDuPhong != 0) {
+          navigator.geolocation.getCurrentPosition(
+            function(position) {
+              statusDiv.className = 'alert alert-success text-center small shadow-sm';
+              statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
+              goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
+              goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
+            },
+            function(error) {
+              if (latDuPhong != 0 && lngDuPhong != 0) {
                 statusDiv.className = 'alert alert-info text-center small shadow-sm';
                 statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
                 goiApiTimCuaHang(latDuPhong, lngDuPhong);
                 goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
-            } else {
+              } else {
                 statusDiv.className = 'alert alert-warning text-center small shadow-sm';
-                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
+                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng bật GPS hoặc thiết lập địa chỉ mặc định để tìm cửa hàng.';
+              }
             }
+          );
+        } else {
+          if (latDuPhong != 0 && lngDuPhong != 0) {
+            statusDiv.className = 'alert alert-info text-center small shadow-sm';
+            statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+            goiApiTimCuaHang(latDuPhong, lngDuPhong);
+            goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
+          } else {
+            statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+            statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
+          }
         }
-    }
+      }
 
-    function goiApiTimCuaHang(lat, lng) {
+      function goiApiTimCuaHang(lat, lng) {
         let formData = new FormData();
         formData.append('lat', lat);
         formData.append('lng', lng);
@@ -402,20 +378,17 @@
         fetch('ajaxTimCuaHang.php', {
             method: 'POST',
             body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
+          })
+          .then(res => res.json())
+          .then(data => {
             let html = '';
             let statusDiv = document.getElementById('status-message');
             let listDiv = document.getElementById('danh-sach-cua-hang');
-            
+
             if (data.status === 'success') {
-                if (data.data.length > 0) {
-                    // QUAN TRỌNG: Đã xóa dòng statusDiv.style.display = 'none'; 
-                    // Để thông báo (GPS hay Địa chỉ nhà) luôn hiển thị trên màn hình
-                    
-                    data.data.forEach(shop => {
-                        html += `
+              if (data.data.length > 0) {
+                data.data.forEach(shop => {
+                  html += `
                             <div class="col-md-4 mb-4">
                                 <div class="card h-100 shadow-sm border-0" style="border-radius: 12px;">
                                     <div class="card-body">
@@ -428,24 +401,25 @@
                                     </div>
                                 </div>
                             </div>`;
-                    });
-                } else {
-                    // Nếu không có shop nào, đổi thông báo thành màu xám
-                    statusDiv.className = "alert alert-secondary text-center shadow-sm";
-                    statusDiv.innerHTML = '<i class="fa-regular fa-face-frown"></i> Không có cửa hàng nào trong bán kính 10km quanh vị trí này.';
-                }
+                });
+              } else {
+                statusDiv.className = "alert alert-secondary text-center shadow-sm";
+                statusDiv.innerHTML = '<i class="fa-regular fa-face-frown"></i> Không có cửa hàng nào trong bán kính 10km quanh vị trí này.';
+              }
             } else {
-                // Nếu lỗi code PHP
-                statusDiv.className = "alert alert-danger text-center shadow-sm";
-                statusDiv.innerHTML = '<i class="fa-solid fa-bug"></i> Lỗi hệ thống: ' + data.message;
+              statusDiv.className = "alert alert-danger text-center shadow-sm";
+              statusDiv.innerHTML = '<i class="fa-solid fa-bug"></i> Lỗi hệ thống: ' + data.message;
             }
-            
-            // Đổ HTML hiển thị danh sách
             listDiv.innerHTML = html;
-        });
-    }
+          })
+          .catch(err => {
+            let statusDiv = document.getElementById('status-message');
+            statusDiv.className = "alert alert-danger text-center shadow-sm";
+            statusDiv.innerHTML = '<i class="fa-solid fa-link-slash"></i> Đã xảy ra lỗi kết nối với máy chủ.';
+          });
+      }
 
-    function goiApiTimSanPhamGanNhat(lat, lng) {
+      function goiApiTimSanPhamGanNhat(lat, lng) {
         let formData = new FormData();
         formData.append('lat', lat);
         formData.append('lng', lng);
@@ -453,18 +427,16 @@
         fetch('ajaxTimSanPhamGanNhat.php', {
             method: 'POST',
             body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
+          })
+          .then(res => res.json())
+          .then(data => {
             let container = document.getElementById('danh-sach-sp-gan-nhat');
             if (!container) return;
 
             let html = '';
-            
             if (data.status === 'success' && data.data.length > 0) {
-                // 1. Vòng lặp in ra tối đa 20 sản phẩm như bình thường
-                data.data.forEach(sp => {
-                    html += `
+              data.data.forEach(sp => {
+                html += `
                         <a href="chiTietSanPhamController.php?id=${sp.MaHH}" class="product-link">
                           <div class="product-item">
                             <div class="product-item-top">
@@ -486,11 +458,8 @@
                           </div>
                         </a>
                     `;
-                });
-
-                // 2. SAU KHI IN XONG, THÊM THẺ "XEM TẤT CẢ" VÀO CUỐI CÙNG
-                // Mình set link tạm là sanPhamGanBanController.php nhé
-                html += `
+              });
+              html += `
                     <a href="sanPhamGanBanController.php?lat=${lat}&lng=${lng}" class="product-link" style="display: flex; align-items: center; justify-content: center; min-width: 160px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-decoration: none; border: 1px dashed #dc3545; margin-right: 15px;">
                         <div class="text-center text-danger p-3">
                             <i class="fa-solid fa-circle-arrow-right fa-3x mb-3"></i>
@@ -498,30 +467,28 @@
                         </div>
                     </a>
                 `;
-
             } else {
-                html = `<div class="w-100 text-center text-muted py-4"><i class="fa-regular fa-face-frown"></i> Chưa có sản phẩm nào được bán gần bạn.</div>`;
+              html = `<div class="w-100 text-center text-muted py-4"><i class="fa-regular fa-face-frown"></i> Chưa có sản phẩm nào được bán gần bạn.</div>`;
             }
-            
             container.innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Lỗi khi lấy sản phẩm:', error);
+          })
+          .catch(error => {
             let container = document.getElementById('danh-sach-sp-gan-nhat');
-            if(container) container.innerHTML = `<div class="w-100 text-center text-danger py-4">Lỗi kết nối máy chủ!</div>`;
-        });
-    }
-  </script>
+            if (container) container.innerHTML = `<div class="w-100 text-center text-danger py-4">Lỗi kết nối máy chủ!</div>`;
+          });
+      }
+    </script>
   <?php else: ?>
-  <script>
+    <script>
       document.addEventListener("DOMContentLoaded", function() {
-          let statusDiv = document.getElementById('status-message');
-          if (statusDiv) {
-              statusDiv.className = "alert alert-light text-center border";
-              statusDiv.innerHTML = '<i class="fa-solid fa-user-lock"></i> <a href="dangNhapController.php">Đăng nhập</a> để xem các cửa hàng gần bạn nhất.';
-          }
+        let statusDiv = document.getElementById('status-message');
+        if (statusDiv) {
+          statusDiv.style.display = "block";
+          statusDiv.className = "alert alert-light text-center border shadow-sm";
+          statusDiv.innerHTML = '<i class="fa-solid fa-user-lock text-danger"></i> <a href="dangNhapController.php" class="text-danger fw-bold text-decoration-none">Đăng nhập</a> để xem gợi ý các cửa hàng gần bạn nhất.';
+        }
       });
-  </script>
+    </script>
   <?php endif; ?>
 </body>
 
