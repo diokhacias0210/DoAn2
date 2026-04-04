@@ -453,6 +453,7 @@
                           <div class="product-item">
                             <div class="product-item-top">
                               <img src="../${sp.HinhAnh}" alt="${sp.TenHH}" style="height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                              <br>
                               ${sp.TenHH}
                               <div class="tieude-sanpham">
                                   <small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn ${sp.KhoangCachKm}km</small>
