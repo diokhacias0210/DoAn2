@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> 2ea7a49a744717b3c131750c85e601179d2ea219
 <!DOCTYPE html>
 <html lang="vi">
 

@@ -315,26 +315,26 @@ CREATE TABLE HanhVi_AI (
 
 INSERT INTO CauHinhHeThong (TenCauHinh, GiaTri, MoTa) VALUES ('PhiSan', '5', 'Phí sàn phần trăm (%) thu trên mỗi đơn hàng hoàn tất');
 
-INSERT INTO TaiKhoan (TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang) VALUES
-('kha', 'vtchoangkha@gmail.com', '0913420982', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
-('nha', 'nha@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong'),
-('quyen', 'quyen@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong'),
-('lai', 'lai@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong'),
-('admin', 'admin@gmail.com', '123456780', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'ChuaKichHoat'),
-('Nguyễn Văn A', 'vana@example.com', '0912345678', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
-('Trần Thị B', 'thib@example.com', '0987654321', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
-('Lê Văn C', 'vanc@example.com', '0901111222', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
-('Phạm Thị D', 'thid@example.com', '0930304444', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
-('Hoàng Văn E', 'vane@example.com', '0945555666', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat'),
-('Đỗ Thị F', 'thif@example.com', '0977778888', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat');
+INSERT INTO TaiKhoan (TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang, ViDo, KinhDo) VALUES
+('kha', 'vtchoangkha@gmail.com', '0913420982', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.038753, 105.782455),
+('nha', 'nha@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.041234, 105.785678),
+('quyen', 'quyen@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.035432, 105.780123),
+('lai', 'lai@gmail.com', '123456789', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.029939, 105.770615),
+('admin', 'admin@gmail.com', '123456780', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 10.030588, 105.787429),
+('Nguyễn Văn A', 'vana@example.com', '0912345678', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.026723, 105.776615),
+('Trần Thị B', 'thib@example.com', '0987654321', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.056123, 105.748521),
+('Lê Văn C', 'vanc@example.com', '0901111222', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat', 9.996111, 105.753333),
+('Phạm Thị D', 'thid@example.com', '0930304444', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat', 10.015234, 105.760123),
+('Hoàng Văn E', 'vane@example.com', '0945555666', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat', 10.048914, 105.768841),
+('Đỗ Thị F', 'thif@example.com', '0977778888', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'ChuaKichHoat', 10.038914, 105.778841);
 
-INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh) VALUES
-(1, '123 Đường A, Quận 1, TP.HCM', 1),
-(2, '456 Đường B, Quận 2, Hà Nội', 1),
-(3, '789 Đường C, Quận 3, Đà Nẵng', 1),
-(4, '321 Đường D, Quận 4, Cần Thơ', 1),
-(5, '654 Đường E, Quận 5, Hải Phòng', 1),
-(6, '987 Đường F, Quận 6, Huế', 1);
+INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES
+(1, 'Hẻm 59 Xô Viết Nghệ Tĩnh, Phường An Cư, Quận Ninh Kiều, Thành phố Cần Thơ', 1, 10.038753, 105.782455),
+(2, 'Vincom Hùng Vương, Số 2 Hùng Vương, Phường Thới Bình, Quận Ninh Kiều, Thành phố Cần Thơ', 1, 10.041234, 105.785678),
+(3, 'Công viên Lưu Hữu Phước, Đại lộ Hòa Bình, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ', 1, 10.035432, 105.780123),
+(4, 'Đại học Cần Thơ Khu II, Đường 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ', 1, 10.029939, 105.770615),
+(5, 'Bến Ninh Kiều, Đường Hai Bà Trưng, Phường Tân An, Quận Ninh Kiều, Thành phố Cần Thơ', 1, 10.030588, 105.787429),
+(6, 'Vincom Xuân Khánh, 209 Đường 30/4, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ', 1, 10.026723, 105.776615);
 
 INSERT INTO DanhMuc (MaDM, TenDM) VALUES 
 (1, 'Đồ gia dụng'), (2, 'Linh kiện PC'), (3, 'Máy tính'),
@@ -522,13 +522,13 @@ INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, Noi
 (4, 'HoanTien', 300000, 1330000, 'Hoàn tiền do lệnh rút bị từ chối', NULL);
 
 -- Cập nhật Số dư cho người bán khớp với logic giao dịch ở trên
-INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet, SoDu) VALUES
-(2, 'TechZone 2Hand', '123 Đường 3/2, Cần Thơ', '091000000001', 'Vietcombank', '0123456789', 'NGUYEN VAN SELLER', NOW(), 2392500),
-(3, 'Thời Trang GenZ', '456 CMT8, Cần Thơ', '091000000002', 'MB Bank', '9876543210', 'TRAN THI SHOP', NOW(), 1045000),
-(4, 'Tổng Kho Gia Dụng', '789 Nguyễn Văn Linh, Cần Thơ', '091000000003', 'TPBank', '555566667777', 'LE HOANG BAN HANG', NOW(), 1330000),
-(6, 'A Mobile Store', '123 Hẻm 51, Xuân Khánh, Cần Thơ', '091000000001', 'TPBank', '00001234567', 'NGUYEN VAN A', NOW(), 0),
-(7, 'Bê Boutique 2Hand', '88 Mậu Thân, An Hòa, Cần Thơ', '091000000002', 'BIDV', '123123123', 'TRAN THI B', NOW(), 0),
-(8, 'Tiệm Sách Cũ Ông C', '45 Đường 3/2, Ninh Kiều, Cần Thơ', '091000000003', 'Agribank', '555566667777', 'LE VAN C', NOW(), 0);
+INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, SoCCCD, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, NgayDuyet, SoDu, ViDo, KinhDo) VALUES
+(2, 'TechZone 2Hand', '123 Đường 3/2, Cần Thơ', '091000000001', 'Vietcombank', '0123456789', 'NGUYEN VAN SELLER', NOW(), 2392500, 10.032111, 105.781222),
+(3, 'Thời Trang GenZ', '456 CMT8, Cần Thơ', '091000000002', 'MB Bank', '9876543210', 'TRAN THI SHOP', NOW(), 1045000, 10.038888, 105.775555),
+(4, 'Tổng Kho Gia Dụng', '789 Nguyễn Văn Linh, Cần Thơ', '091000000003', 'TPBank', '555566667777', 'LE HOANG BAN HANG', NOW(), 1330000, 10.025555, 105.768888),
+(6, 'A Mobile Store', '123 Hẻm 51, Xuân Khánh, Cần Thơ', '091000000001', 'TPBank', '00001234567', 'NGUYEN VAN A', NOW(), 0, 10.030111, 105.771111),
+(7, 'Bê Boutique 2Hand', '88 Mậu Thân, An Hòa, Cần Thơ', '091000000002', 'BIDV', '123123123', 'TRAN THI B', NOW(), 0, 10.060222, 105.750333),
+(8, 'Tiệm Sách Cũ Ông C', '45 Đường 3/2, Ninh Kiều, Cần Thơ', '091000000003', 'Agribank', '555566667777', 'LE VAN C', NOW(), 0, 9.991222, 105.755444);
 
 -- Thêm thông báo
 INSERT INTO ThongBao (TieuDe, NoiDung, LoaiTB, NguoiGui) VALUES

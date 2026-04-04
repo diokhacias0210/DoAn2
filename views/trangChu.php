@@ -40,7 +40,7 @@
     /* Chiều rộng thẻ khi cuộn ngang ở trang chủ */
     .horizontal-scroll-wrapper .product-link {
       flex: 0 0 auto;
-      width: 250px;
+      width: 280px;
       scroll-snap-align: start;
       text-decoration: none;
       /* Tránh gạch chân text */
@@ -49,7 +49,7 @@
 
     .horizontal-scroll-wrapper .product-item {
       height: 100%;
-      min-height: 320px;
+      min-height: 120px;
       position: relative;
     }
 
@@ -136,9 +136,17 @@
       </button>
     </div>
 
-    <div class="container mb-5">
-      <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
-      <div class="row" id="danh-sach-cua-hang"></div>
+    <div class="san-pham-moi">
+      <div class="tieu-de-san-pham">
+        <h2><i class="fa-solid fa-minus"></i> CỬA HÀNG GẦN BẠN</h2>
+      </div>
+      
+      <div class="container-fluid mt-3">
+        <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
+      </div>
+
+      <div class="horizontal-scroll-wrapper mt-2" id="danh-sach-cua-hang">
+         </div>
     </div>
 
     <div class="danh-muc">
@@ -164,7 +172,7 @@
 
       <div class="horizontal-scroll-wrapper mt-3" id="danh-sach-sp-gan-nhat">
         <div class="w-100 text-center text-muted py-4">
-          <div class="spinner-border spinner-border-sm text-danger" role="status"></div> Đang tìm sản phẩm quanh bạn...
+          <div class="spinner-border spinner-border-sm text-danger" role="status"></div> 
         </div>
       </div>
     </div>
@@ -389,18 +397,22 @@
               if (data.data.length > 0) {
                 data.data.forEach(shop => {
                   html += `
-                            <div class="col-md-4 mb-4">
-                                <div class="card h-100 shadow-sm border-0" style="border-radius: 12px;">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-primary"><b>${shop.TenCuaHang}</b></h5>
-                                        <p class="card-text text-muted small"><i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="badge bg-light text-danger">Cách: ${shop.KhoangCachKm} km</span>
-                                            <a href="cuaHangController.php?id=${shop.IdTaiKhoan}" class="btn btn-sm btn-outline-danger">Xem</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
+                    <a href="cuaHangController.php?id=${shop.IdTaiKhoan}" class="product-link">
+                        <div class="product-item p-3 d-flex flex-column justify-content-between h-100" style="border: 1px solid #eee; background: #fff; border-radius: 12px;">
+                            <div>
+                                <h5 class="text-primary text-truncate mb-2" title="${shop.TenCuaHang}">
+                                    <i class="fa-solid fa-store"></i> <b>${shop.TenCuaHang}</b>
+                                </h5>
+                                <p class="text-muted small mb-0" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                    <i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}
+                                </p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-2" style="border-top: 1px dashed #ddd;">
+                                <span class="badge bg-light text-danger fw-bold"><i class="fa-solid fa-route"></i> ${shop.KhoangCachKm} km</span>
+                                <span class="btn btn-sm btn-outline-danger" style="font-size: 12px;">Ghé thăm</span>
+                            </div>
+                        </div>
+                    </a>`;
                 });
               } else {
                 statusDiv.className = "alert alert-secondary text-center shadow-sm";
@@ -441,11 +453,11 @@
                           <div class="product-item">
                             <div class="product-item-top">
                               <img src="../${sp.HinhAnh}" alt="${sp.TenHH}" style="height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
-                              <div class="tieude-sanpham">${sp.TenHH} <br>
+                              ${sp.TenHH}
+                              <div class="tieude-sanpham">
                                   <small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn ${sp.KhoangCachKm}km</small>
                               </div>
                               <p class="text-muted small mb-2"><i class="fa-solid fa-store"></i> ${sp.TenCuaHang}</p>
-                              <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot"></i> ${sp.DiaChi}</p>
                             </div>
                             <div class="product-item-bottom">
                               <div class="gia-rating">

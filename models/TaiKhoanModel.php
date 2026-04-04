@@ -19,7 +19,11 @@ class TaiKhoanModel
 
     public function getUserById($id)
     {
-        $stmt = $this->conn->prepare("SELECT TenTK, Email, Sdt FROM TaiKhoan WHERE IdTaiKhoan = ?");
+        // Thêm LEFT JOIN để lấy kèm địa chỉ mặc định
+        $stmt = $this->conn->prepare("SELECT tk.TenTK, tk.Email, tk.Sdt, dc.DiaChiChiTiet 
+                                      FROM TaiKhoan tk 
+                                      LEFT JOIN DiaChi dc ON tk.IdTaiKhoan = dc.IdTaiKhoan AND dc.MacDinh = 1 
+                                      WHERE tk.IdTaiKhoan = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
@@ -28,7 +32,11 @@ class TaiKhoanModel
     }
     public function getThongTin($idUser)
     {
-        $stmt = $this->conn->prepare("SELECT TenTK, Email, Sdt FROM TaiKhoan WHERE IdTaiKhoan = ?");
+        // Tương tự, lấy thêm thông tin địa chỉ để hiển thị ở phần Thông tin tài khoản
+        $stmt = $this->conn->prepare("SELECT tk.TenTK, tk.Email, tk.Sdt, dc.DiaChiChiTiet 
+                                      FROM TaiKhoan tk 
+                                      LEFT JOIN DiaChi dc ON tk.IdTaiKhoan = dc.IdTaiKhoan AND dc.MacDinh = 1 
+                                      WHERE tk.IdTaiKhoan = ?");
         $stmt->bind_param("i", $idUser);
         $stmt->execute();
         $result = $stmt->get_result();
