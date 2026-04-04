@@ -48,7 +48,6 @@
 
                 <div class="mb-4">
                     <h2 class="m-0 text-dark fw-bold"><i class="fa-solid fa-users text-success"></i> Quản lý Người dùng</h2>
-                    <p class="text-muted mt-1">Tìm kiếm, lọc và quản lý trạng thái hoạt động của thành viên.</p>
                 </div>
 
                 <div class="card border-0 shadow-sm mb-4">
@@ -159,18 +158,58 @@
                 </div>
 
                 <?php if (isset($total_pages) && $total_pages > 1): ?>
+                    <?php
+                    // Bổ sung đoạn khai báo biến URL bị thiếu để giữ lại bộ lọc khi chuyển trang
+                    $kw = isset($keyword) ? $keyword : '';
+                    $vt = isset($filter_vaitro) ? $filter_vaitro : '';
+                    $tt = isset($filter_trangthai) ? $filter_trangthai : '';
+                    $url_params = "&search=" . urlencode($kw) . "&vaitro=" . $vt . "&trangthai=" . $tt;
+                    ?>
                     <nav class="mt-4">
                         <ul class="pagination justify-content-center">
                             <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?page=<?= $page - 1 ?>&search=<?= urlencode($keyword) ?>&vaitro=<?= $filter_vaitro ?>&trangthai=<?= $filter_trangthai ?>">« Trước</a>
+                                <a class="page-link" href="adminNguoiDungController.php?page=<?= $page - 1 ?><?= $url_params ?>">« Trước</a>
                             </li>
-                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+
+                            <?php
+                            // LÔ-GIC TÍNH TOÁN HIỂN THỊ TRANG RÚT GỌN
+                            $adjacents = 2; // Số trang hiển thị 2 bên của trang hiện tại
+                            $start_page = max(2, $page - $adjacents);
+                            $end_page = min($total_pages - 1, $page + $adjacents);
+
+                            // Điều chỉnh nếu đang ở sát đầu hoặc sát cuối để luôn giữ đủ 5 ô
+                            if ($page <= 3) {
+                                $end_page = min(5, $total_pages - 1);
+                            }
+                            if ($page >= $total_pages - 2) {
+                                $start_page = max(2, $total_pages - 4);
+                            }
+                            ?>
+
+                            <li class="page-item <?= ($page == 1) ? 'active' : '' ?>">
+                                <a class="page-link" href="adminNguoiDungController.php?page=1<?= $url_params ?>">1</a>
+                            </li>
+
+                            <?php if ($start_page > 2): ?>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <?php endif; ?>
+
+                            <?php for ($i = $start_page; $i <= $end_page; $i++): ?>
                                 <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                                    <a class="page-link" href="?page=<?= $i ?>&search=<?= urlencode($keyword) ?>&vaitro=<?= $filter_vaitro ?>&trangthai=<?= $filter_trangthai ?>"><?= $i ?></a>
+                                    <a class="page-link" href="adminNguoiDungController.php?page=<?= $i ?><?= $url_params ?>"><?= $i ?></a>
                                 </li>
                             <?php endfor; ?>
+
+                            <?php if ($end_page < $total_pages - 1): ?>
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            <?php endif; ?>
+
+                            <li class="page-item <?= ($page == $total_pages) ? 'active' : '' ?>">
+                                <a class="page-link" href="adminNguoiDungController.php?page=<?= $total_pages ?><?= $url_params ?>"><?= $total_pages ?></a>
+                            </li>
+
                             <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                                <a class="page-link" href="?page=<?= $page + 1 ?>&search=<?= urlencode($keyword) ?>&vaitro=<?= $filter_vaitro ?>&trangthai=<?= $filter_trangthai ?>">Sau »</a>
+                                <a class="page-link" href="adminNguoiDungController.php?page=<?= $page + 1 ?><?= $url_params ?>">Sau »</a>
                             </li>
                         </ul>
                     </nav>
