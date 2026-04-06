@@ -29,7 +29,11 @@
                     <div class="image-gallery">
                         <div class="main-image">
                             <?php if (!empty($hinhAnhs)): ?>
-                                <img id="product-image" src="../<?php echo $hinhAnhs[0]['URL']; ?>" alt="<?php echo htmlspecialchars($chiTiet['TenHH']); ?>">
+                                <?php 
+                                    $anhMain = $hinhAnhs[0]['URL'];
+                                    $imgSrcMain = (strpos($anhMain, 'http') === 0) ? $anhMain : '../' . $anhMain; 
+                                ?>
+                                <img id="product-image" src="<?php echo $imgSrcMain; ?>" alt="<?php echo htmlspecialchars($chiTiet['TenHH']); ?>">
                             <?php else: ?>
                                 <img id="product-image" src="../assets/images/placeholder.png" alt="Không có ảnh">
                             <?php endif; ?>
@@ -37,7 +41,11 @@
                         <div class="thumbnail-images">
                             <?php if (!empty($hinhAnhs)): ?>
                                 <?php foreach ($hinhAnhs as $index => $img): ?>
-                                    <img src="../<?php echo $img['URL']; ?>"
+                                    <?php 
+                                        $anhThumb = $img['URL'];
+                                        $imgSrcThumb = (strpos($anhThumb, 'http') === 0) ? $anhThumb : '../' . $anhThumb; 
+                                    ?>
+                                    <img src="<?php echo $imgSrcThumb; ?>"
                                         alt="ảnh <?php echo $index + 1; ?>"
                                         class="thumbnail <?php echo $index === 0 ? 'active' : ''; ?>">
                                 <?php endforeach; ?>

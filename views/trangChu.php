@@ -239,7 +239,12 @@
 
                   <div class="product-item">
                     <div class="product-item-top">
-                      <img src="../<?= $sp['Anh'] ?? 'assets/images/placeholder.png' ?>" alt="<?= htmlspecialchars($sp['TenHH']) ?>" style="height: 180px; object-fit:cover;">
+                      <?php
+                          // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
+                          $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
+                          $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
+                      ?>
+                      <img src="<?= $duongDanAnh ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
                       <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
                     </div>
                     <div class="product-item-bottom">
@@ -269,7 +274,12 @@
               <div class="badge-match" style="background:#28a745;">Mới nhất</div>
               <div class="product-item">
                 <div class="product-item-top">
-                  <img src="../<?= $sp['Anh'] ?? 'assets/images/placeholder.png' ?>" style="height: 180px; object-fit:cover;">
+                  <?php
+                      // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
+                      $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
+                      $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
+                  ?>
+                  <img src="<?= $duongDanAnh ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
                   <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
                 </div>
                 <div class="product-item-bottom">
@@ -448,21 +458,27 @@
             let html = '';
             if (data.status === 'success' && data.data.length > 0) {
               data.data.forEach(sp => {
+                
+                // === ĐÂY LÀ ĐOẠN QUAN TRỌNG NHẤT ĐỂ XỬ LÝ ẢNH ===
+                let hinhAnhURL = sp.HinhAnh ? sp.HinhAnh : 'assets/images/placeholder.png';
+                let imgSrc = hinhAnhURL.startsWith('http') ? hinhAnhURL : '../' + hinhAnhURL;
+                // ===============================================
+
                 html += `
                         <a href="chiTietSanPhamController.php?id=${sp.MaHH}" class="product-link">
                           <div class="product-item">
                             <div class="product-item-top">
-                              <img src="../${sp.HinhAnh}" alt="${sp.TenHH}" style="height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
-                              <br>
-                              ${sp.TenHH}
-                              <div class="tieude-sanpham">
+                              <img src="${imgSrc}" alt="${sp.TenHH}" style="height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                              
+                              <div class="tieude-sanpham">${sp.TenHH}</div>
+                              <div>
                                   <small class="text-success"><i class="fa-solid fa-location-arrow"></i> Cách bạn ${sp.KhoangCachKm}km</small>
                               </div>
                               <p class="text-muted small mb-2"><i class="fa-solid fa-store"></i> ${sp.TenCuaHang}</p>
                             </div>
                             <div class="product-item-bottom">
                               <div class="gia-rating">
-                                <div class="rating"><span>5.0</span><i class="fa-solid fa-star"></i></div>
+                                <div class="rating"><span>5.0</span><i class="fa-solid fa-star text-warning"></i></div>
                                 <div class="gia-san-pham">
                                   <span class="gia-giam">${sp.GiaFormat}</span>
                                 </div>

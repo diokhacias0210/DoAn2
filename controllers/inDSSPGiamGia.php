@@ -13,10 +13,16 @@ if (!empty($danhSachSanPham)) {
     } else {
       $url = 'assets/images/placeholder.png';
     }
+    
+    // --- XỬ LÝ ĐƯỜNG DẪN ẢNH THÔNG MINH ---
+    $imgSrc = (strpos($url, 'http') === 0) ? $url : '../' . $url;
+    // --------------------------------------
+
     $tenHH = htmlspecialchars($sp['TenHH']);
     $rating = $sp['Rating'];
     $gia = number_format($sp['Gia'], 0, ',', '.');
     $soLuong = $sp['SoLuongHH'];
+    
     // Kiểm tra hết hàng
     $hetHang = $soLuong == 0;
     $productClass = $hetHang ? "<div class='product-item het-hang' style='background: rgba(0, 0, 0, 0.1);'>" : "<div class='product-item'>";
@@ -30,7 +36,7 @@ if (!empty($danhSachSanPham)) {
         <a href='chiTietSanPhamController.php?id={$maHH}' class='product-link'>
           {$productClass}
             <div class='product-item-top'>
-              <img src='../{$url}' alt='{$tenHH}' loading='lazy'>
+              <img src='{$imgSrc}' alt='{$tenHH}' loading='lazy' style='height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;'>
               {$badgeHetHang}
               <div class='tieude-sanpham'>{$tenHH}</div>
             </div>
@@ -50,6 +56,6 @@ if (!empty($danhSachSanPham)) {
         </a>";
   }
 } else {
-  echo "<p>Chưa có sản phẩm giảm giá nào.</p>";
+  echo "<div class='w-100 text-center text-muted py-4'><i class='fa-regular fa-face-frown'></i> Hiện tại không có sản phẩm giảm giá nào.</div>";
 }
-$conn->close();
+?>

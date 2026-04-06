@@ -15,6 +15,10 @@ if (!empty($danhSachSanPham)) {
       $url = 'assets/images/placeholder.png';
     }
 
+    // --- XỬ LÝ ĐƯỜNG DẪN ẢNH THÔNG MINH ---
+    $imgSrc = (strpos($url, 'http') === 0) ? $url : '../' . $url;
+    // --------------------------------------
+
     $tenHH = htmlspecialchars($sp['TenHH']);
     $rating = $sp['Rating'];
     $gia = number_format($sp['Gia'], 0, ',', '.');
@@ -41,7 +45,7 @@ if (!empty($danhSachSanPham)) {
         <a href='chiTietSanPhamController.php?id={$maHH}' class='product-link'>
           {$productClass}
             <div class='product-item-top'>
-              <img src='../{$url}' alt='{$tenHH}' loading='lazy'>
+              <img src='{$imgSrc}' alt='{$tenHH}' loading='lazy' style='height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;'>
               {$badgeHetHang}
               <div class='tieude-sanpham'>{$tenHH}</div>  
             </div>
@@ -49,7 +53,7 @@ if (!empty($danhSachSanPham)) {
               <div class='gia-rating'>
                 <div class='rating'>
                   <i class='fa-solid fa-star'></i>
-                  <span>{$rating}</span>  
+                  <span>{$rating}</span>
                 </div>
                 <div class='gia-san-pham'>
                   {$giaHienThi}
@@ -60,6 +64,6 @@ if (!empty($danhSachSanPham)) {
         </a>";
   }
 } else {
-  echo "<p>Chưa có sản phẩm nào.</p>";
+  echo "<div class='w-100 text-center text-muted py-4'><i class='fa-regular fa-face-frown'></i> Hiện tại không có sản phẩm mới nào.</div>";
 }
-$conn->close();
+?>

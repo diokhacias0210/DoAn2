@@ -29,15 +29,10 @@ function createProductHTML(product) {
     const hetHang = product.SoLuongHH === 0;
     const productClass = hetHang ? "<div class='product-item het-hang' style='background: rgba(0, 0, 0, 0.1);'>" : "<div class='product-item'>";
     
-    // Kiểm tra nếu product.URL tồn tại và không rỗng
-    let imageSrc = '';
-    if (product.URL && product.URL.trim() !== '') {
-        // Giữ nguyên logic cũ: thêm ../ phía trước
-        imageSrc = `${product.URL}`; 
-    } else {
-        // Đường dẫn ảnh mặc định (bạn cần đảm bảo file này tồn tại)
-        imageSrc = 'assets/images/placeholder.png'; 
-    }
+    // XỬ LÝ ẢNH THÔNG MINH
+    let rawURL = (product.URL && product.URL.trim() !== '') ? product.URL : 'assets/images/placeholder.png';
+    // Nếu link bắt đầu bằng http thì giữ nguyên, nếu không (ảnh trong máy) thì mới thêm ../
+    let finalImgSrc = rawURL.startsWith('http') ? rawURL : '../' + rawURL;
 
     if (product.GiaTri && product.GiaTri > 0) {
         const giaGiam = product.Gia - (product.Gia * (product.GiaTri / 100));
@@ -58,7 +53,7 @@ function createProductHTML(product) {
         <a href='chiTietSanPhamController.php?id=${product.MaHH}' class='product-link'>
           ${productClass}
             <div class='product-item-top'>
-              <img src='../${imageSrc}' alt='${product.TenHH}' loading='lazy'>
+              <img src='${finalImgSrc}' alt='${product.TenHH}' loading='lazy'>
               ${badgeHetHang}
               <div class='tieude-sanpham'>${product.TenHH}</div>
             </div>

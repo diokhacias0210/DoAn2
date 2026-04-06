@@ -665,24 +665,33 @@ INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES
 
 
 -- =====================================================================
+-- 0. DỌN DẸP DỮ LIỆU LỖI CŨ (Tránh bị trùng ID)
+-- =====================================================================
+SET FOREIGN_KEY_CHECKS = 0; -- Tạm tắt kiểm tra khóa ngoại để xóa cho sạch
+DELETE FROM HinhAnh WHERE MaHH BETWEEN 101 AND 150;
+DELETE FROM HangHoa WHERE IdNguoiBan BETWEEN 101 AND 110;
+DELETE FROM DiaChi WHERE IdTaiKhoan BETWEEN 101 AND 110;
+DELETE FROM HoSoNguoiBan WHERE IdTaiKhoan BETWEEN 101 AND 110;
+DELETE FROM TaiKhoan WHERE IdTaiKhoan BETWEEN 101 AND 110;
+SET FOREIGN_KEY_CHECKS = 1; -- Bật lại khóa ngoại
+
+-- =====================================================================
 -- 1. THÊM 10 TÀI KHOẢN NGƯỜI BÁN (ID: 101 -> 110)
--- Bảng TaiKhoan cần thêm tọa độ nhà riêng cho người bán (Mình đặt trùng với Cửa hàng cho tiện test)
 -- =====================================================================
 INSERT INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang, ViDo, KinhDo) VALUES
-(101, 'shop_hanoi', 'hanoi@gmail.com', '0901000101', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 21.028511, 105.804817),
-(102, 'shop_haiphong', 'haiphong@gmail.com', '0901000102', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 20.844911, 106.688084),
-(103, 'shop_quangninh', 'quangninh@gmail.com', '0901000103', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 20.950453, 107.073361),
-(104, 'shop_hue', 'hue@gmail.com', '0901000104', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 16.463713, 107.593782),
-(105, 'shop_danang', 'danang@gmail.com', '0901000105', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 16.068341, 108.223849),
-(106, 'shop_nhatrang', 'nhatrang@gmail.com', '0901000106', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 12.238791, 109.196749),
-(107, 'shop_dalat', 'dalat@gmail.com', '0901000107', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 11.940419, 108.438313),
-(108, 'shop_hcm', 'hcm@gmail.com', '0901000108', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.773234, 106.700984),
-(109, 'shop_vungtau', 'vungtau@gmail.com', '0901000109', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.345990, 107.094260),
-(110, 'shop_camau', 'camau@gmail.com', '0901000110', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 9.176900, 105.150000);
+(101, 'shop_hanoi', 'hanoi@gmail.com', '0901000101', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 21.028511, 105.804817),
+(102, 'shop_haiphong', 'haiphong@gmail.com', '0901000102', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 20.844911, 106.688084),
+(103, 'shop_quangninh', 'quangninh@gmail.com', '0901000103', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 20.950453, 107.073361),
+(104, 'shop_hue', 'hue@gmail.com', '0901000104', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 16.463713, 107.593782),
+(105, 'shop_danang', 'danang@gmail.com', '0901000105', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 16.068341, 108.223849),
+(106, 'shop_nhatrang', 'nhatrang@gmail.com', '0901000106', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 12.238791, 109.196749),
+(107, 'shop_dalat', 'dalat@gmail.com', '0901000107', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 11.940419, 108.438313),
+(108, 'shop_hcm', 'hcm@gmail.com', '0901000108', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 10.773234, 106.700984),
+(109, 'shop_vungtau', 'vungtau@gmail.com', '0901000109', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 10.345990, 107.094260),
+(110, 'shop_camau', 'camau@gmail.com', '0901000110', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 9.176900, 105.150000);
 
 -- =====================================================================
 -- 2. THÊM TỌA ĐỘ VÀO BẢNG HoSoNguoiBan (Kho Hàng)
--- Tọa độ khớp với Tài Khoản để tính năng bản đồ và vị trí hoạt động hoàn hảo
 -- =====================================================================
 INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, ViDo, KinhDo, NgayDuyet, SoDu) VALUES
 (101, 'Hà Nội 2Hand Store', '1 Kim Mã, Ba Đình, Hà Nội', 21.028511, 105.804817, NOW(), 0),
@@ -697,7 +706,7 @@ INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, ViDo, KinhDo, N
 (110, 'Cà Mau Fashion', '1 Trần Hưng Đạo, Phường 5, Cà Mau', 9.176900, 105.150000, NOW(), 0);
 
 -- =====================================================================
--- 3. THÊM TỌA ĐỘ VÀO BẢNG DiaChi (Sổ Địa Chỉ Mặc Định)
+-- 3. THÊM TỌA ĐỘ VÀO BẢNG DiaChi (Sổ Địa Chỉ)
 -- =====================================================================
 INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES
 (101, '1 Kim Mã, Ba Đình, Hà Nội', 1, 21.028511, 105.804817),
@@ -712,76 +721,120 @@ INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES
 (110, '1 Trần Hưng Đạo, Phường 5, Cà Mau', 1, 9.176900, 105.150000);
 
 -- =====================================================================
--- 4. THÊM 50 SẢN PHẨM (Vào Bảng HangHoa)
--- Tích hợp đúng trường TinhTrangHang, ChatLuongHang, TrangThaiDuyet
+-- 4. THÊM 50 SẢN PHẨM VÀO BẢNG HangHoa (Gắn với người bán)
 -- =====================================================================
-INSERT INTO HangHoa (IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES
--- Cửa hàng 101 (Hà Nội - Quần áo: MaDM 5)
-(101, 5, 'Áo khoác dạ nam dáng dài', 10, 250000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo khoác dạ lót lông cừu ấm áp'),
-(101, 5, 'Giày Oxford Vintage', 5, 350000, 450000, 'Mới', 'Còn hàng', 'DaDuyet', 'Giày da bò thật, size 42'),
-(101, 5, 'Mũ nồi họa tiết caro', 8, 80000, 120000, 'Mới', 'Còn hàng', 'DaDuyet', 'Phong cách thu đông cực chất'),
-(101, 5, 'Khăn choàng cổ len', 15, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Len đan tay thủ công'),
-(101, 5, 'Túi xách da retro', 2, 190000, 250000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Túi chéo da mềm'),
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES
+(101, 101, 5, 'Áo khoác dạ nam dáng dài', 10, 250000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo khoác dạ lót lông cừu ấm áp'),
+(102, 101, 5, 'Giày Oxford Vintage', 5, 350000, 450000, 'Mới', 'Còn hàng', 'DaDuyet', 'Giày da bò thật, size 42'),
+(103, 101, 5, 'Mũ nồi họa tiết caro', 8, 80000, 120000, 'Mới', 'Còn hàng', 'DaDuyet', 'Phong cách thu đông cực chất'),
+(104, 101, 5, 'Khăn choàng cổ len', 15, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Len đan tay thủ công'),
+(105, 101, 5, 'Túi xách da retro', 2, 190000, 250000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Túi chéo da mềm'),
 
--- Cửa hàng 102 (Hải Phòng - Linh kiện PC: MaDM 2)
-(102, 2, 'Bàn phím cơ cũ Blue Switch', 3, 190000, 250000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bàn phím cơ gõ êm'),
-(102, 2, 'Chuột Gaming Logitech', 5, 150000, 200000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Chuột dùng lướt, ngoại hình đẹp'),
-(102, 2, 'Tai nghe chụp tai LED', 8, 200000, 280000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tai nghe âm thanh vòm 7.1'),
-(102, 2, 'Lót chuột cỡ lớn', 12, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Lót chuột phong cảnh anime'),
-(102, 2, 'Giá đỡ tai nghe hợp kim', 4, 70000, 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Chắc chắn, thiết kế hầm hố'),
+(106, 102, 2, 'Bàn phím cơ cũ Blue Switch', 3, 190000, 250000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bàn phím cơ gõ êm'),
+(107, 102, 2, 'Chuột Gaming Logitech', 5, 150000, 200000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Chuột dùng lướt, ngoại hình đẹp'),
+(108, 102, 2, 'Tai nghe chụp tai LED', 8, 200000, 280000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tai nghe âm thanh vòm 7.1'),
+(109, 102, 2, 'Lót chuột cỡ lớn', 12, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Lót chuột phong cảnh anime'),
+(110, 102, 2, 'Giá đỡ tai nghe hợp kim', 4, 70000, 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Chắc chắn, thiết kế hầm hố'),
 
--- Cửa hàng 103 (Quảng Ninh - Đồ gia dụng: MaDM 1)
-(103, 1, 'Bếp từ đơn Kangaroo', 2, 330000, 450000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bếp từ nấu lẩu siêu tốc'),
-(103, 1, 'Ấm đun nước siêu tốc', 6, 90000, 130000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ấm inox 1.8L'),
-(103, 1, 'Quạt để bàn mini', 10, 140000, 190000, 'Mới', 'Còn hàng', 'DaDuyet', 'Quạt sạc pin tích điện'),
-(103, 1, 'Nồi cơm điện nắp gài', 3, 210000, 300000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Nồi nấu cơm chín đều, không dính'),
-(103, 1, 'Bàn ủi khô Philips', 5, 160000, 210000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bàn là nhiệt độ cao, mặt chống dính'),
+(111, 103, 1, 'Bếp từ đơn Kangaroo', 2, 330000, 450000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bếp từ nấu lẩu siêu tốc'),
+(112, 103, 1, 'Ấm đun nước siêu tốc', 6, 90000, 130000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ấm inox 1.8L'),
+(113, 103, 1, 'Quạt để bàn mini', 10, 140000, 190000, 'Mới', 'Còn hàng', 'DaDuyet', 'Quạt sạc pin tích điện'),
+(114, 103, 1, 'Nồi cơm điện nắp gài', 3, 210000, 300000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Nồi nấu cơm chín đều, không dính'),
+(115, 103, 1, 'Bàn ủi khô Philips', 5, 160000, 210000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bàn là nhiệt độ cao, mặt chống dính'),
 
--- Cửa hàng 104 (Huế - Quần áo: MaDM 5)
-(104, 5, 'Áo dài lụa tơ tằm', 2, 420000, 600000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo dài mềm mại thướt tha'),
-(104, 5, 'Guốc mộc điêu khắc', 4, 150000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Guốc đẽo tay thủ công xứ Huế'),
-(104, 5, 'Nón lá bài thơ sen', 10, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nón lá in chìm thơ Huế'),
-(104, 5, 'Khăn lụa quàng vai', 6, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Khăn lụa mỏng dạo phố'),
-(104, 5, 'Túi cói đan tay', 3, 165000, 220000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Túi xách tay đan cói vintage'),
+(116, 104, 5, 'Áo dài lụa tơ tằm', 2, 420000, 600000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo dài mềm mại thướt tha'),
+(117, 104, 5, 'Guốc mộc điêu khắc', 4, 150000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Guốc đẽo tay thủ công xứ Huế'),
+(118, 104, 5, 'Nón lá bài thơ sen', 10, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nón lá in chìm thơ Huế'),
+(119, 104, 5, 'Khăn lụa quàng vai', 6, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Khăn lụa mỏng dạo phố'),
+(120, 104, 5, 'Túi cói đan tay', 3, 165000, 220000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Túi xách tay đan cói vintage'),
 
--- Cửa hàng 105 (Đà Nẵng - Quần áo: MaDM 5)
-(105, 5, 'Váy hoa nhí đi biển', 7, 130000, 190000, 'Mới', 'Còn hàng', 'DaDuyet', 'Váy voan mềm mại dạo biển'),
-(105, 5, 'Mũ rộng vành chống nắng', 12, 60000, 90000, 'Mới', 'Còn hàng', 'DaDuyet', 'Mũ đi biển mùa hè'),
-(105, 5, 'Sơ mi đũi nam cộc tay', 8, 140000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sơ mi vải đũi mát rượi'),
-(105, 5, 'Quần short kaki túi hộp', 6, 110000, 150000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Quần đùi đi chơi thoải mái'),
-(105, 5, 'Dép sandal da bò thật', 4, 260000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sandal da nam'),
+(121, 105, 5, 'Váy hoa nhí đi biển', 7, 130000, 190000, 'Mới', 'Còn hàng', 'DaDuyet', 'Váy voan mềm mại dạo biển'),
+(122, 105, 5, 'Mũ rộng vành chống nắng', 12, 60000, 90000, 'Mới', 'Còn hàng', 'DaDuyet', 'Mũ đi biển mùa hè'),
+(123, 105, 5, 'Sơ mi đũi nam cộc tay', 8, 140000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sơ mi vải đũi mát rượi'),
+(124, 105, 5, 'Quần short kaki túi hộp', 6, 110000, 150000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Quần đùi đi chơi thoải mái'),
+(125, 105, 5, 'Dép sandal da bò thật', 4, 260000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sandal da nam'),
 
--- Cửa hàng 106 (Nha Trang - Thiết bị điện tử: MaDM 7)
-(106, 7, 'Máy ảnh kĩ thuật số cũ', 1, 850000, 1200000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Máy ảnh compact bỏ túi'),
-(106, 7, 'Sạc dự phòng 10000mAh', 8, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sạc siêu nhỏ gọn'),
-(106, 7, 'Loa Bluetooth mini', 5, 180000, 250000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Loa âm bass sâu, chống nước nhẹ'),
-(106, 7, 'Cáp sạc đa năng 3 đầu', 20, 30000, 50000, 'Mới', 'Còn hàng', 'DaDuyet', 'Cáp dây dù siêu bền'),
-(106, 7, 'Tai nghe Bluetooth True Wireless', 6, 250000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tai nghe cảm ứng, pin 5 tiếng'),
+(126, 106, 7, 'Máy ảnh kĩ thuật số cũ', 1, 850000, 1200000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Máy ảnh compact bỏ túi'),
+(127, 106, 7, 'Sạc dự phòng 10000mAh', 8, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sạc siêu nhỏ gọn'),
+(128, 106, 7, 'Loa Bluetooth mini', 5, 180000, 250000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Loa âm bass sâu, chống nước nhẹ'),
+(129, 106, 7, 'Cáp sạc đa năng 3 đầu', 20, 30000, 50000, 'Mới', 'Còn hàng', 'DaDuyet', 'Cáp dây dù siêu bền'),
+(130, 106, 7, 'Tai nghe True Wireless', 6, 250000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tai nghe cảm ứng, pin 5 tiếng'),
 
--- Cửa hàng 107 (Đà Lạt - Quần áo: MaDM 5)
-(107, 5, 'Áo len măng tô dài', 3, 260000, 350000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Áo len dày dặn phong cách Hàn Quốc'),
-(107, 5, 'Mũ len quả bông xinh', 10, 55000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Mũ len đan tay thủ công'),
-(107, 5, 'Găng tay da lót nỉ ấm', 8, 90000, 130000, 'Mới', 'Còn hàng', 'DaDuyet', 'Găng tay đi xe máy mùa đông'),
-(107, 5, 'Bốt da lộn cổ thấp', 4, 280000, 390000, 'Mới', 'Còn hàng', 'DaDuyet', 'Giày boots êm chân'),
-(107, 5, 'Áo thun giữ nhiệt cổ lọ', 15, 110000, 160000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo giữ nhiệt vải thun ôm sát'),
+(131, 107, 5, 'Áo len măng tô dài', 3, 260000, 350000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Áo len dày dặn phong cách Hàn Quốc'),
+(132, 107, 5, 'Mũ len quả bông xinh', 10, 55000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Mũ len đan tay thủ công'),
+(133, 107, 5, 'Găng tay da lót nỉ ấm', 8, 90000, 130000, 'Mới', 'Còn hàng', 'DaDuyet', 'Găng tay đi xe máy mùa đông'),
+(134, 107, 5, 'Bốt da lộn cổ thấp', 4, 280000, 390000, 'Mới', 'Còn hàng', 'DaDuyet', 'Giày boots êm chân'),
+(135, 107, 5, 'Áo thun giữ nhiệt cổ lọ', 15, 110000, 160000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo giữ nhiệt vải thun ôm sát'),
 
--- Cửa hàng 108 (TP.HCM - Nội thất: MaDM 4)
-(108, 4, 'Bàn xếp gỗ thông', 5, 150000, 220000, 'Mới', 'Còn hàng', 'DaDuyet', 'Bàn gấp gọn uống trà, làm việc'),
-(108, 4, 'Ghế lười hạt xốp mini', 2, 280000, 400000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Ghế thư giãn đọc sách'),
-(108, 4, 'Gương soi toàn thân viền gỗ', 3, 350000, 450000, 'Mới', 'Còn hàng', 'DaDuyet', 'Gương décor phòng xinh xắn'),
-(108, 4, 'Khung tranh treo tường', 10, 40000, 70000, 'Mới', 'Còn hàng', 'DaDuyet', 'Khung ảnh A4 viền đen'),
-(108, 4, 'Kệ sách mini để bàn', 8, 95000, 140000, 'Mới', 'Còn hàng', 'DaDuyet', 'Kệ đựng tài liệu văn phòng'),
+(136, 108, 4, 'Bàn xếp gỗ thông', 5, 150000, 220000, 'Mới', 'Còn hàng', 'DaDuyet', 'Bàn gấp gọn uống trà, làm việc'),
+(137, 108, 4, 'Ghế lười hạt xốp mini', 2, 280000, 400000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Ghế thư giãn đọc sách'),
+(138, 108, 4, 'Gương soi toàn thân', 3, 350000, 450000, 'Mới', 'Còn hàng', 'DaDuyet', 'Gương décor phòng xinh xắn'),
+(139, 108, 4, 'Khung tranh treo tường', 10, 40000, 70000, 'Mới', 'Còn hàng', 'DaDuyet', 'Khung ảnh A4 viền đen'),
+(140, 108, 4, 'Kệ sách mini để bàn', 8, 95000, 140000, 'Mới', 'Còn hàng', 'DaDuyet', 'Kệ đựng tài liệu văn phòng'),
 
--- Cửa hàng 109 (Vũng Tàu - Thiết bị chơi game: MaDM 6)
-(109, 6, 'Máy chơi game cầm tay cổ điển', 4, 180000, 250000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tích hợp 400 game nes 8 bit'),
-(109, 6, 'Tay cầm PS4 cũ', 2, 450000, 600000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Nút bấm nảy, analog không trôi'),
-(109, 6, 'Bao đựng Nintendo Switch', 5, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Túi chống sốc game'),
-(109, 6, 'Đĩa game PS4 ngẫu nhiên', 3, 200000, 300000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Đĩa xước nhẹ vẫn cài tốt'),
-(109, 6, 'Bộ Nút bấm chơi PUBG', 15, 30000, 50000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nút cơ hỗ trợ bắn chuẩn'),
+(141, 109, 6, 'Máy chơi game cầm tay', 4, 180000, 250000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tích hợp 400 game nes 8 bit'),
+(142, 109, 6, 'Tay cầm PS4 cũ', 2, 450000, 600000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Nút bấm nảy, analog không trôi'),
+(143, 109, 6, 'Bao đựng Nintendo Switch', 5, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Túi chống sốc game'),
+(144, 109, 6, 'Đĩa game PS4 ngẫu nhiên', 3, 200000, 300000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Đĩa xước nhẹ vẫn cài tốt'),
+(145, 109, 6, 'Bộ Nút bấm chơi PUBG', 15, 30000, 50000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nút cơ hỗ trợ bắn chuẩn'),
 
--- Cửa hàng 110 (Cà Mau - Khác: MaDM 9)
-(110, 9, 'Nón tai bèo bộ đội', 10, 45000, 60000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nón đi rừng, câu cá chắn nắng'),
-(110, 9, 'Võng dù 2 lớp', 6, 110000, 150000, 'Mới', 'Còn hàng', 'DaDuyet', 'Võng dã ngoại siêu bền'),
-(110, 9, 'Đèn pin siêu sáng', 8, 150000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Đèn sạc pin chống nước'),
-(110, 9, 'Áo mưa cánh dơi loại dày', 12, 70000, 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo mưa có kính che đèn xe'),
-(110, 9, 'Balo phượt 50L', 3, 220000, 300000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Balo to đựng nhiều đồ, nhiều ngăn');
+(146, 110, 9, 'Nón tai bèo bộ đội', 10, 45000, 60000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nón đi rừng, câu cá chắn nắng'),
+(147, 110, 9, 'Võng dù 2 lớp', 6, 110000, 150000, 'Mới', 'Còn hàng', 'DaDuyet', 'Võng dã ngoại siêu bền'),
+(148, 110, 9, 'Đèn pin siêu sáng', 8, 150000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Đèn sạc pin chống nước'),
+(149, 110, 9, 'Áo mưa cánh dơi', 12, 70000, 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo mưa có kính che đèn xe'),
+(150, 110, 9, 'Balo phượt 50L', 3, 220000, 300000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Balo to đựng nhiều đồ, nhiều ngăn');
+
+-- =====================================================================
+-- 5. THÊM ẢNH VÀO BẢNG HinhAnh (Gắn với Sản phẩm)
+-- =====================================================================
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(101, 'https://placehold.co/500x500/E53935/white?text=Ao+Khoac+Da'),
+(102, 'https://placehold.co/500x500/E53935/white?text=Giay+Oxford'),
+(103, 'https://placehold.co/500x500/E53935/white?text=Mu+Noi+Caro'),
+(104, 'https://placehold.co/500x500/E53935/white?text=Khan+Choang+Len'),
+(105, 'https://placehold.co/500x500/E53935/white?text=Tui+Xach+Retro'),
+(106, 'https://placehold.co/500x500/1E88E5/white?text=Ban+Phim+Co'),
+(107, 'https://placehold.co/500x500/1E88E5/white?text=Chuot+Gaming'),
+(108, 'https://placehold.co/500x500/1E88E5/white?text=Tai+Nghe+LED'),
+(109, 'https://placehold.co/500x500/1E88E5/white?text=Lot+Chuot+Lon'),
+(110, 'https://placehold.co/500x500/1E88E5/white?text=Gia+Do+Tai+Nghe'),
+(111, 'https://placehold.co/500x500/43A047/white?text=Bep+Tu+Don'),
+(112, 'https://placehold.co/500x500/43A047/white?text=Am+Sieu+Toc'),
+(113, 'https://placehold.co/500x500/43A047/white?text=Quat+Mini'),
+(114, 'https://placehold.co/500x500/43A047/white?text=Noi+Com+Dien'),
+(115, 'https://placehold.co/500x500/43A047/white?text=Ban+Ui+Kho'),
+(116, 'https://placehold.co/500x500/8E24AA/white?text=Ao+Dai+Lua'),
+(117, 'https://placehold.co/500x500/8E24AA/white?text=Guoc+Moc'),
+(118, 'https://placehold.co/500x500/8E24AA/white?text=Non+La+Hue'),
+(119, 'https://placehold.co/500x500/8E24AA/white?text=Khan+Lua'),
+(120, 'https://placehold.co/500x500/8E24AA/white?text=Tui+Coi'),
+(121, 'https://placehold.co/500x500/F4511E/white?text=Vay+Hoa+Nhi'),
+(122, 'https://placehold.co/500x500/F4511E/white?text=Mu+Rong+Vanh'),
+(123, 'https://placehold.co/500x500/F4511E/white?text=So+Mi+Dui'),
+(124, 'https://placehold.co/500x500/F4511E/white?text=Quan+Short'),
+(125, 'https://placehold.co/500x500/F4511E/white?text=Sandal+Da'),
+(126, 'https://placehold.co/500x500/00ACC1/white?text=May+Anh+Cu'),
+(127, 'https://placehold.co/500x500/00ACC1/white?text=Sac+Du+Phong'),
+(128, 'https://placehold.co/500x500/00ACC1/white?text=Loa+Bluetooth'),
+(129, 'https://placehold.co/500x500/00ACC1/white?text=Cap+Sac'),
+(130, 'https://placehold.co/500x500/00ACC1/white?text=Tai+Nghe+TWS'),
+(131, 'https://placehold.co/500x500/D81B60/white?text=Ao+Len+Dai'),
+(132, 'https://placehold.co/500x500/D81B60/white?text=Mu+Len'),
+(133, 'https://placehold.co/500x500/D81B60/white?text=Gang+Tay+Da'),
+(134, 'https://placehold.co/500x500/D81B60/white?text=Boots+Da'),
+(135, 'https://placehold.co/500x500/D81B60/white?text=Ao+Giu+Nhiet'),
+(136, 'https://placehold.co/500x500/3949AB/white?text=Ban+Go+Thong'),
+(137, 'https://placehold.co/500x500/3949AB/white?text=Ghe+Luoi'),
+(138, 'https://placehold.co/500x500/3949AB/white?text=Guong+Soi'),
+(139, 'https://placehold.co/500x500/3949AB/white?text=Khung+Tranh'),
+(140, 'https://placehold.co/500x500/3949AB/white?text=Ke+Sach+Mini'),
+(141, 'https://placehold.co/500x500/00897B/white?text=May+Game'),
+(142, 'https://placehold.co/500x500/00897B/white?text=Tay+Cam+PS4'),
+(143, 'https://placehold.co/500x500/00897B/white?text=Tui+Switch'),
+(144, 'https://placehold.co/500x500/00897B/white?text=Dia+Game+PS4'),
+(145, 'https://placehold.co/500x500/00897B/white?text=Nut+Bam+PUBG'),
+(146, 'https://placehold.co/500x500/6D4C41/white?text=Non+Tai+Beo'),
+(147, 'https://placehold.co/500x500/6D4C41/white?text=Vong+Du'),
+(148, 'https://placehold.co/500x500/6D4C41/white?text=Den+Pin'),
+(149, 'https://placehold.co/500x500/6D4C41/white?text=Ao+Mua'),
+(150, 'https://placehold.co/500x500/6D4C41/white?text=Balo+Phuot');

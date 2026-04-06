@@ -28,10 +28,15 @@
                 </div>
             <?php else: ?>
                 <div class="loai-san-pham-moi">
-                    <?php foreach ($danhSachYeuThich as $sp):
+                   <?php foreach ($danhSachYeuThich as $sp):
                         $maHH = $sp['MaHH'];
                         $tenHH = htmlspecialchars($sp['TenHH']);
-                        $anhDaiDien = !empty($sp['AnhDaiDien']) ? '../' . $sp['AnhDaiDien'] : '../assets/images/placeholder.png';
+                        
+                        // --- XỬ LÝ ẢNH THÔNG MINH ---
+                        $url = !empty($sp['AnhDaiDien']) ? $sp['AnhDaiDien'] : 'assets/images/placeholder.png';
+                        $anhDaiDien = (strpos($url, 'http') === 0) ? $url : '../' . $url;
+                        // ----------------------------
+                        
                         $rating = $sp['Rating'] ?? 0; // Lấy rating từ model
 
                         // Xử lý giá
@@ -48,7 +53,7 @@
                         <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
                             <div class="product-item">
                                 <div class="product-item-top">
-                                    <img src="<?= $anhDaiDien ?>" alt="<?= $tenHH ?>" loading="lazy">
+                                    <img src="<?= $anhDaiDien ?>" alt="<?= $tenHH ?>" loading="lazy" style="height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
 
                                     <button class="nut-bo-yeu-thich"
                                         onclick="event.preventDefault(); removeFavorite(this, <?= $maHH ?>);"

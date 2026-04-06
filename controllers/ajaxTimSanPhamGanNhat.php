@@ -28,9 +28,9 @@ $sql = "WITH RankedProducts AS (
                 hh.MaHH, 
                 hh.TenHH, 
                 hh.Gia, 
+                (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) AS HinhAnh,
                 hs.TenCuaHang, 
                 hs.IdTaiKhoan AS IdNguoiBan,
-                (SELECT URL FROM HinhAnh WHERE MaHH = hh.MaHH LIMIT 1) AS HinhAnh,
                 ( 6371 * acos( cos( radians($lat) ) * cos( radians( hs.ViDo ) ) 
                 * cos( radians( hs.KinhDo ) - radians($lng) ) + sin( radians($lat) ) 
                 * sin( radians( hs.ViDo ) ) ) ) AS KhoangCachKm,
@@ -43,7 +43,7 @@ $sql = "WITH RankedProducts AS (
               AND hh.HienThi = 1
               AND hs.ViDo IS NOT NULL 
               AND hs.KinhDo IS NOT NULL
-              AND hs.IdTaiKhoan != $idHienTai -- ĐÂY LÀ DÒNG MỚI THÊM: Không lấy sản phẩm của mình
+              AND hs.IdTaiKhoan != $idHienTai
         )
         SELECT * FROM RankedProducts 
         WHERE KhoangCachKm <= $banKinh 
@@ -51,7 +51,7 @@ $sql = "WITH RankedProducts AS (
             CASE WHEN rn <= 2 THEN 0 ELSE 1 END ASC, 
             KhoangCachKm ASC,  
             MaHH DESC          
-        LIMIT 20";            
+        LIMIT 20";  
 
 $result = $conn->query($sql);
 $data = [];
