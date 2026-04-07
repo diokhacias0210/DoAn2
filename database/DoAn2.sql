@@ -653,11 +653,12 @@ INSERT INTO ThongBao (MaTB, TieuDe, NoiDung, LoaiTB, NguoiGui) VALUES
 (103, 'Yêu cầu Rút tiền đang chờ xử lý', 'Lệnh rút tiền 10.000.000đ của bạn đã được ghi nhận. Admin sẽ chuyển khoản trong vòng 24h làm việc.', 'HeThong', 1);
 
 INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES 
-(101, 2, 0), (101, 3, 0), (101, 4, 1), 
+(101, 2, 0), (101,  3, 0), (101, 4, 1), 
 (102, 4, 0), 
 (103, 2, 1);
 
 
+<<<<<<< HEAD
 
 
 
@@ -838,3 +839,51 @@ INSERT INTO HinhAnh (MaHH, URL) VALUES
 (148, 'https://placehold.co/500x500/6D4C41/white?text=Den+Pin'),
 (149, 'https://placehold.co/500x500/6D4C41/white?text=Ao+Mua'),
 (150, 'https://placehold.co/500x500/6D4C41/white?text=Balo+Phuot');
+=======
+-- Bảng TaiKhoan cần thêm tọa độ nhà riêng cho người bán (Mình đặt trùng với Cửa hàng cho tiện test)
+-- =====================================================================
+INSERT INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang, ViDo, KinhDo) VALUES
+(12, 'shop_hanoi', 'hanoi@gmail.com', '0901000101', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 21.028511, 105.804817),
+(13, 'shop_haiphong', 'haiphong@gmail.com', '0901000102', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 20.844911, 106.688084),
+(14, 'shop_quangninh', 'quangninh@gmail.com', '0901000103', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 20.950453, 107.073361),
+(15, 'shop_hue', 'hue@gmail.com', '0901000104', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 16.463713, 107.593782),
+(16, 'shop_danang', 'danang@gmail.com', '0901000105', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 16.068341, 108.223849),
+(17, 'shop_nhatrang', 'nhatrang@gmail.com', '0901000106', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 12.238791, 109.196749),
+(18, 'shop_dalat', 'dalat@gmail.com', '0901000107', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 11.940419, 108.438313),
+(19, 'shop_hcm', 'hcm@gmail.com', '0901000108', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.773234, 106.700984),
+(20, 'shop_vungtau', 'vungtau@gmail.com', '0901000109', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.345990, 107.094260),
+(21, 'shop_camau', 'camau@gmail.com', '0901000110', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 9.176900, 105.150000);
+
+-- =====================================================================
+-- 2. THÊM TỌA ĐỘ VÀO BẢNG HoSoNguoiBan (Kho Hàng)
+INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, ViDo, KinhDo, NgayDuyet, SoDu) VALUES
+(12, 'Hà Nội 2Hand Store', '1 Kim Mã, Ba Đình, Hà Nội', 21.028511, 105.804817, NOW(), 0),
+(13, 'Hải Phòng Vintage', '12 Lạch Tray, Ngô Quyền, Hải Phòng', 20.844911, 106.688084, NOW(), 0),
+(14, 'Hạ Long Store', '1 Trần Hưng Đạo, Hạ Long, Quảng Ninh', 20.950453, 107.073361, NOW(), 0),
+(15, 'Huế Cổ Phục', '12 Hùng Vương, Phú Hội, Thừa Thiên Huế', 16.463713, 107.593782, NOW(), 0),
+(16, 'Đà Nẵng Retro', '100 Bạch Đằng, Hải Châu, Đà Nẵng', 16.068341, 108.223849, NOW(), 0),
+(17, 'Biển Xanh Boutique', '50 Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa', 12.238791, 109.196749, NOW(), 0),
+(18, 'Đà Lạt Len Shop', '1 Nguyễn Thị Minh Khai, Phường 1, Đà Lạt, Lâm Đồng', 11.940419, 108.438313, NOW(), 0),
+(19, 'Sài Gòn Secondhand', '65 Lê Lợi, Bến Nghé, Quận 1, TP. Hồ Chí Minh', 10.773234, 106.700984, NOW(), 0),
+(20, 'Vũng Tàu Thrift', '15 Thi Sách, Thắng Tam, Bà Rịa - Vũng Tàu', 10.345990, 107.094260, NOW(), 0),
+(21, 'Cà Mau Fashion', '1 Trần Hưng Đạo, Phường 5, Cà Mau', 9.176900, 105.150000, NOW(), 0);
+
+INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES
+(12, '1 Kim Mã, Ba Đình, Hà Nội', 1, 21.028511, 105.804817),
+(13, '12 Lạch Tray, Ngô Quyền, Hải Phòng', 1, 20.844911, 106.688084),
+(14, '1 Trần Hưng Đạo, Hạ Long, Quảng Ninh', 1, 20.950453, 107.073361),
+(15, '12 Hùng Vương, Phú Hội, Thừa Thiên Huế', 1, 16.463713, 107.593782),
+(16, '100 Bạch Đằng, Hải Châu, Đà Nẵng', 1, 16.068341, 108.223849),
+(17, '50 Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa', 1, 12.238791, 109.196749),
+(18, '1 Nguyễn Thị Minh Khai, Phường 1, Đà Lạt, Lâm Đồng', 1, 11.940419, 108.438313),
+(19, '65 Lê Lợi, Bến Nghé, Quận 1, TP. Hồ Chí Minh', 1, 10.773234, 106.700984),
+(20, '15 Thi Sách, Thắng Tam, Bà Rịa - Vũng Tàu', 1, 10.345990, 107.094260),
+(21, '1 Trần Hưng Đạo, Phường 5, Cà Mau', 1, 9.176900, 105.150000);
+
+
+-- thêm sp từ 41 dến 70
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+
+-- thêm sp từ 71 đến 71
+
+>>>>>>> c6c38553819985c6511c41b851e086adaa35dc19
