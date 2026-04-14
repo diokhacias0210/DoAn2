@@ -19,7 +19,8 @@ CREATE TABLE TaiKhoan (
     DiemViPham INT DEFAULT 0,
     ViDo DECIMAL(10, 8) NULL COMMENT 'Latitude - Vĩ độ của Người Mua',
     KinhDo DECIMAL(11, 8) NULL COMMENT 'Longitude - Kinh độ của Người Mua',
-    HanKhoaTaiKhoan DATETIME DEFAULT NULL
+    HanKhoaTaiKhoan DATETIME DEFAULT NULL,
+    Avatar VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE DiaChi (

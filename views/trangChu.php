@@ -140,13 +140,13 @@
       <div class="tieu-de-san-pham">
         <h2><i class="fa-solid fa-minus"></i> CỬA HÀNG GẦN BẠN</h2>
       </div>
-      
+
       <div class="container-fluid mt-3">
         <div id="status-message" class="alert alert-info text-center shadow-sm" style="display: none;"></div>
       </div>
 
       <div class="horizontal-scroll-wrapper mt-2" id="danh-sach-cua-hang">
-         </div>
+      </div>
     </div>
 
     <div class="danh-muc">
@@ -172,7 +172,7 @@
 
       <div class="horizontal-scroll-wrapper mt-3" id="danh-sach-sp-gan-nhat">
         <div class="w-100 text-center text-muted py-4">
-          <div class="spinner-border spinner-border-sm text-danger" role="status"></div> 
+          <div class="spinner-border spinner-border-sm text-danger" role="status"></div>
         </div>
       </div>
     </div>
@@ -189,7 +189,8 @@
           $idKhachHang = $_SESSION['IdTaiKhoan'];
 
           // Dùng 127.0.0.1 thay cho localhost để không bị lỗi trên XAMPP
-          $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=8";
+          // 1. Xin AI 15 sản phẩm (xin dư ra để bù trừ cho những món bị lọc bỏ)
+          $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=15";
 
           // SỬ DỤNG CURL ĐỂ KẾT NỐI SIÊU ỔN ĐỊNH
           $ch = curl_init();
@@ -207,9 +208,11 @@
               $ids = array_column($goi_y_list, 'id');
               $ids_string = implode(',', $ids);
 
-              // Truy vấn DB lấy thông tin
+              // 2. Truy vấn DB lấy thông tin và CHẶN KHÔNG CHO HIỂN THỊ ĐỒ CỦA CHÍNH MÌNH BÁN
               $sql_ai = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
-                               FROM HangHoa hh WHERE MaHH IN ($ids_string) 
+                               FROM HangHoa hh 
+                               WHERE MaHH IN ($ids_string) 
+                               AND IdNguoiBan != $idKhachHang 
                                ORDER BY FIELD(MaHH, $ids_string)";
               $result_ai = $conn->query($sql_ai);
 
@@ -218,10 +221,15 @@
                 $sanphams[$row['MaHH']] = $row;
               }
 
-              // Vẽ các thẻ sản phẩm
+              // 3. Vẽ các thẻ sản phẩm (Chỉ lấy đủ 8 cái)
+              $demSP = 0;
               foreach ($goi_y_list as $item) {
                 $sp = $sanphams[$item['id']] ?? null;
-                if (!$sp) continue;
+                if (!$sp) continue; // Bỏ qua nếu món đồ này bị lọc ở bước SQL trên
+
+                // Nếu đã in đủ 8 cái thì dừng vòng lặp
+                if ($demSP >= 8) break;
+                $demSP++;
 
                 // XỬ LÝ NHÃN (HIỆN TRENDING CHO COLD START, % CHO AI MATCH)
                 if (isset($item['reason']) && $item['reason'] == 'Trending') {
@@ -240,9 +248,9 @@
                   <div class="product-item">
                     <div class="product-item-top">
                       <?php
-                          // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
-                          $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
-                          $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
+                      // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
+                      $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
+                      $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
                       ?>
                       <img src="<?= $duongDanAnh ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
                       <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
@@ -275,9 +283,9 @@
               <div class="product-item">
                 <div class="product-item-top">
                   <?php
-                      // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
-                      $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
-                      $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
+                  // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
+                  $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
+                  $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
                   ?>
                   <img src="<?= $duongDanAnh ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
                   <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
@@ -458,7 +466,7 @@
             let html = '';
             if (data.status === 'success' && data.data.length > 0) {
               data.data.forEach(sp => {
-                
+
                 // === ĐÂY LÀ ĐOẠN QUAN TRỌNG NHẤT ĐỂ XỬ LÝ ẢNH ===
                 let hinhAnhURL = sp.HinhAnh ? sp.HinhAnh : 'assets/images/placeholder.png';
                 let imgSrc = hinhAnhURL.startsWith('http') ? hinhAnhURL : '../' + hinhAnhURL;
