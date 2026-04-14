@@ -307,7 +307,9 @@ CREATE TABLE HanhVi_AI (
     IdTaiKhoan int(11) NOT NULL,
     MaHH int(11) NOT NULL,
     Diem int(11) NOT NULL,
-    PRIMARY KEY (IdTaiKhoan, MaHH)
+    PRIMARY KEY (IdTaiKhoan, MaHH),
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
+    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE
 );
 -- =============================================
 -- 2. INSERT DỮ LIỆU CŨ CỦA BẠN
