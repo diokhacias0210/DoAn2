@@ -38,7 +38,7 @@ CREATE TABLE DanhMuc (
 );
 
 CREATE TABLE HangHoa ( 
-    MaHH INT(10) PRIMARY KEY AUTO_INCREMENT,
+    MaHH INT(10) PRIMARY KEY,
     IdNguoiBan INT(10) NOT NULL, 
     MaDM INT(10), 
     TenHH VARCHAR(255) NOT NULL,
@@ -658,188 +658,6 @@ INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES
 (103, 2, 1);
 
 
-<<<<<<< HEAD
-
-
-
-
-
-
--- =====================================================================
--- 0. DỌN DẸP DỮ LIỆU LỖI CŨ (Tránh bị trùng ID)
--- =====================================================================
-SET FOREIGN_KEY_CHECKS = 0; -- Tạm tắt kiểm tra khóa ngoại để xóa cho sạch
-DELETE FROM HinhAnh WHERE MaHH BETWEEN 101 AND 150;
-DELETE FROM HangHoa WHERE IdNguoiBan BETWEEN 101 AND 110;
-DELETE FROM DiaChi WHERE IdTaiKhoan BETWEEN 101 AND 110;
-DELETE FROM HoSoNguoiBan WHERE IdTaiKhoan BETWEEN 101 AND 110;
-DELETE FROM TaiKhoan WHERE IdTaiKhoan BETWEEN 101 AND 110;
-SET FOREIGN_KEY_CHECKS = 1; -- Bật lại khóa ngoại
-
--- =====================================================================
--- 1. THÊM 10 TÀI KHOẢN NGƯỜI BÁN (ID: 101 -> 110)
--- =====================================================================
-INSERT INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang, ViDo, KinhDo) VALUES
-(101, 'shop_hanoi', 'hanoi@gmail.com', '0901000101', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 21.028511, 105.804817),
-(102, 'shop_haiphong', 'haiphong@gmail.com', '0901000102', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 20.844911, 106.688084),
-(103, 'shop_quangninh', 'quangninh@gmail.com', '0901000103', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 20.950453, 107.073361),
-(104, 'shop_hue', 'hue@gmail.com', '0901000104', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 16.463713, 107.593782),
-(105, 'shop_danang', 'danang@gmail.com', '0901000105', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 16.068341, 108.223849),
-(106, 'shop_nhatrang', 'nhatrang@gmail.com', '0901000106', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 12.238791, 109.196749),
-(107, 'shop_dalat', 'dalat@gmail.com', '0901000107', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 11.940419, 108.438313),
-(108, 'shop_hcm', 'hcm@gmail.com', '0901000108', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 10.773234, 106.700984),
-(109, 'shop_vungtau', 'vungtau@gmail.com', '0901000109', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 10.345990, 107.094260),
-(110, 'shop_camau', 'camau@gmail.com', '0901000110', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 1, 'DangHoatDong', 9.176900, 105.150000);
-
--- =====================================================================
--- 2. THÊM TỌA ĐỘ VÀO BẢNG HoSoNguoiBan (Kho Hàng)
--- =====================================================================
-INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, ViDo, KinhDo, NgayDuyet, SoDu) VALUES
-(101, 'Hà Nội 2Hand Store', '1 Kim Mã, Ba Đình, Hà Nội', 21.028511, 105.804817, NOW(), 0),
-(102, 'Hải Phòng Vintage', '12 Lạch Tray, Ngô Quyền, Hải Phòng', 20.844911, 106.688084, NOW(), 0),
-(103, 'Hạ Long Store', '1 Trần Hưng Đạo, Hạ Long, Quảng Ninh', 20.950453, 107.073361, NOW(), 0),
-(104, 'Huế Cổ Phục', '12 Hùng Vương, Phú Hội, Thừa Thiên Huế', 16.463713, 107.593782, NOW(), 0),
-(105, 'Đà Nẵng Retro', '100 Bạch Đằng, Hải Châu, Đà Nẵng', 16.068341, 108.223849, NOW(), 0),
-(106, 'Biển Xanh Boutique', '50 Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa', 12.238791, 109.196749, NOW(), 0),
-(107, 'Đà Lạt Len Shop', '1 Nguyễn Thị Minh Khai, Phường 1, Đà Lạt, Lâm Đồng', 11.940419, 108.438313, NOW(), 0),
-(108, 'Sài Gòn Secondhand', '65 Lê Lợi, Bến Nghé, Quận 1, TP. Hồ Chí Minh', 10.773234, 106.700984, NOW(), 0),
-(109, 'Vũng Tàu Thrift', '15 Thi Sách, Thắng Tam, Bà Rịa - Vũng Tàu', 10.345990, 107.094260, NOW(), 0),
-(110, 'Cà Mau Fashion', '1 Trần Hưng Đạo, Phường 5, Cà Mau', 9.176900, 105.150000, NOW(), 0);
-
--- =====================================================================
--- 3. THÊM TỌA ĐỘ VÀO BẢNG DiaChi (Sổ Địa Chỉ)
--- =====================================================================
-INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES
-(101, '1 Kim Mã, Ba Đình, Hà Nội', 1, 21.028511, 105.804817),
-(102, '12 Lạch Tray, Ngô Quyền, Hải Phòng', 1, 20.844911, 106.688084),
-(103, '1 Trần Hưng Đạo, Hạ Long, Quảng Ninh', 1, 20.950453, 107.073361),
-(104, '12 Hùng Vương, Phú Hội, Thừa Thiên Huế', 1, 16.463713, 107.593782),
-(105, '100 Bạch Đằng, Hải Châu, Đà Nẵng', 1, 16.068341, 108.223849),
-(106, '50 Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa', 1, 12.238791, 109.196749),
-(107, '1 Nguyễn Thị Minh Khai, Phường 1, Đà Lạt, Lâm Đồng', 1, 11.940419, 108.438313),
-(108, '65 Lê Lợi, Bến Nghé, Quận 1, TP. Hồ Chí Minh', 1, 10.773234, 106.700984),
-(109, '15 Thi Sách, Thắng Tam, Bà Rịa - Vũng Tàu', 1, 10.345990, 107.094260),
-(110, '1 Trần Hưng Đạo, Phường 5, Cà Mau', 1, 9.176900, 105.150000);
-
--- =====================================================================
--- 4. THÊM 50 SẢN PHẨM VÀO BẢNG HangHoa (Gắn với người bán)
--- =====================================================================
-INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES
-(101, 101, 5, 'Áo khoác dạ nam dáng dài', 10, 250000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo khoác dạ lót lông cừu ấm áp'),
-(102, 101, 5, 'Giày Oxford Vintage', 5, 350000, 450000, 'Mới', 'Còn hàng', 'DaDuyet', 'Giày da bò thật, size 42'),
-(103, 101, 5, 'Mũ nồi họa tiết caro', 8, 80000, 120000, 'Mới', 'Còn hàng', 'DaDuyet', 'Phong cách thu đông cực chất'),
-(104, 101, 5, 'Khăn choàng cổ len', 15, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Len đan tay thủ công'),
-(105, 101, 5, 'Túi xách da retro', 2, 190000, 250000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Túi chéo da mềm'),
-
-(106, 102, 2, 'Bàn phím cơ cũ Blue Switch', 3, 190000, 250000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bàn phím cơ gõ êm'),
-(107, 102, 2, 'Chuột Gaming Logitech', 5, 150000, 200000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Chuột dùng lướt, ngoại hình đẹp'),
-(108, 102, 2, 'Tai nghe chụp tai LED', 8, 200000, 280000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tai nghe âm thanh vòm 7.1'),
-(109, 102, 2, 'Lót chuột cỡ lớn', 12, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Lót chuột phong cảnh anime'),
-(110, 102, 2, 'Giá đỡ tai nghe hợp kim', 4, 70000, 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Chắc chắn, thiết kế hầm hố'),
-
-(111, 103, 1, 'Bếp từ đơn Kangaroo', 2, 330000, 450000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bếp từ nấu lẩu siêu tốc'),
-(112, 103, 1, 'Ấm đun nước siêu tốc', 6, 90000, 130000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ấm inox 1.8L'),
-(113, 103, 1, 'Quạt để bàn mini', 10, 140000, 190000, 'Mới', 'Còn hàng', 'DaDuyet', 'Quạt sạc pin tích điện'),
-(114, 103, 1, 'Nồi cơm điện nắp gài', 3, 210000, 300000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Nồi nấu cơm chín đều, không dính'),
-(115, 103, 1, 'Bàn ủi khô Philips', 5, 160000, 210000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bàn là nhiệt độ cao, mặt chống dính'),
-
-(116, 104, 5, 'Áo dài lụa tơ tằm', 2, 420000, 600000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo dài mềm mại thướt tha'),
-(117, 104, 5, 'Guốc mộc điêu khắc', 4, 150000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Guốc đẽo tay thủ công xứ Huế'),
-(118, 104, 5, 'Nón lá bài thơ sen', 10, 50000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nón lá in chìm thơ Huế'),
-(119, 104, 5, 'Khăn lụa quàng vai', 6, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Khăn lụa mỏng dạo phố'),
-(120, 104, 5, 'Túi cói đan tay', 3, 165000, 220000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Túi xách tay đan cói vintage'),
-
-(121, 105, 5, 'Váy hoa nhí đi biển', 7, 130000, 190000, 'Mới', 'Còn hàng', 'DaDuyet', 'Váy voan mềm mại dạo biển'),
-(122, 105, 5, 'Mũ rộng vành chống nắng', 12, 60000, 90000, 'Mới', 'Còn hàng', 'DaDuyet', 'Mũ đi biển mùa hè'),
-(123, 105, 5, 'Sơ mi đũi nam cộc tay', 8, 140000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sơ mi vải đũi mát rượi'),
-(124, 105, 5, 'Quần short kaki túi hộp', 6, 110000, 150000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Quần đùi đi chơi thoải mái'),
-(125, 105, 5, 'Dép sandal da bò thật', 4, 260000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sandal da nam'),
-
-(126, 106, 7, 'Máy ảnh kĩ thuật số cũ', 1, 850000, 1200000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Máy ảnh compact bỏ túi'),
-(127, 106, 7, 'Sạc dự phòng 10000mAh', 8, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Sạc siêu nhỏ gọn'),
-(128, 106, 7, 'Loa Bluetooth mini', 5, 180000, 250000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Loa âm bass sâu, chống nước nhẹ'),
-(129, 106, 7, 'Cáp sạc đa năng 3 đầu', 20, 30000, 50000, 'Mới', 'Còn hàng', 'DaDuyet', 'Cáp dây dù siêu bền'),
-(130, 106, 7, 'Tai nghe True Wireless', 6, 250000, 350000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tai nghe cảm ứng, pin 5 tiếng'),
-
-(131, 107, 5, 'Áo len măng tô dài', 3, 260000, 350000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Áo len dày dặn phong cách Hàn Quốc'),
-(132, 107, 5, 'Mũ len quả bông xinh', 10, 55000, 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Mũ len đan tay thủ công'),
-(133, 107, 5, 'Găng tay da lót nỉ ấm', 8, 90000, 130000, 'Mới', 'Còn hàng', 'DaDuyet', 'Găng tay đi xe máy mùa đông'),
-(134, 107, 5, 'Bốt da lộn cổ thấp', 4, 280000, 390000, 'Mới', 'Còn hàng', 'DaDuyet', 'Giày boots êm chân'),
-(135, 107, 5, 'Áo thun giữ nhiệt cổ lọ', 15, 110000, 160000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo giữ nhiệt vải thun ôm sát'),
-
-(136, 108, 4, 'Bàn xếp gỗ thông', 5, 150000, 220000, 'Mới', 'Còn hàng', 'DaDuyet', 'Bàn gấp gọn uống trà, làm việc'),
-(137, 108, 4, 'Ghế lười hạt xốp mini', 2, 280000, 400000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Ghế thư giãn đọc sách'),
-(138, 108, 4, 'Gương soi toàn thân', 3, 350000, 450000, 'Mới', 'Còn hàng', 'DaDuyet', 'Gương décor phòng xinh xắn'),
-(139, 108, 4, 'Khung tranh treo tường', 10, 40000, 70000, 'Mới', 'Còn hàng', 'DaDuyet', 'Khung ảnh A4 viền đen'),
-(140, 108, 4, 'Kệ sách mini để bàn', 8, 95000, 140000, 'Mới', 'Còn hàng', 'DaDuyet', 'Kệ đựng tài liệu văn phòng'),
-
-(141, 109, 6, 'Máy chơi game cầm tay', 4, 180000, 250000, 'Mới', 'Còn hàng', 'DaDuyet', 'Tích hợp 400 game nes 8 bit'),
-(142, 109, 6, 'Tay cầm PS4 cũ', 2, 450000, 600000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Nút bấm nảy, analog không trôi'),
-(143, 109, 6, 'Bao đựng Nintendo Switch', 5, 120000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Túi chống sốc game'),
-(144, 109, 6, 'Đĩa game PS4 ngẫu nhiên', 3, 200000, 300000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Đĩa xước nhẹ vẫn cài tốt'),
-(145, 109, 6, 'Bộ Nút bấm chơi PUBG', 15, 30000, 50000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nút cơ hỗ trợ bắn chuẩn'),
-
-(146, 110, 9, 'Nón tai bèo bộ đội', 10, 45000, 60000, 'Mới', 'Còn hàng', 'DaDuyet', 'Nón đi rừng, câu cá chắn nắng'),
-(147, 110, 9, 'Võng dù 2 lớp', 6, 110000, 150000, 'Mới', 'Còn hàng', 'DaDuyet', 'Võng dã ngoại siêu bền'),
-(148, 110, 9, 'Đèn pin siêu sáng', 8, 150000, 200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Đèn sạc pin chống nước'),
-(149, 110, 9, 'Áo mưa cánh dơi', 12, 70000, 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Áo mưa có kính che đèn xe'),
-(150, 110, 9, 'Balo phượt 50L', 3, 220000, 300000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Balo to đựng nhiều đồ, nhiều ngăn');
-
--- =====================================================================
--- 5. THÊM ẢNH VÀO BẢNG HinhAnh (Gắn với Sản phẩm)
--- =====================================================================
-INSERT INTO HinhAnh (MaHH, URL) VALUES
-(101, 'https://placehold.co/500x500/E53935/white?text=Ao+Khoac+Da'),
-(102, 'https://placehold.co/500x500/E53935/white?text=Giay+Oxford'),
-(103, 'https://placehold.co/500x500/E53935/white?text=Mu+Noi+Caro'),
-(104, 'https://placehold.co/500x500/E53935/white?text=Khan+Choang+Len'),
-(105, 'https://placehold.co/500x500/E53935/white?text=Tui+Xach+Retro'),
-(106, 'https://placehold.co/500x500/1E88E5/white?text=Ban+Phim+Co'),
-(107, 'https://placehold.co/500x500/1E88E5/white?text=Chuot+Gaming'),
-(108, 'https://placehold.co/500x500/1E88E5/white?text=Tai+Nghe+LED'),
-(109, 'https://placehold.co/500x500/1E88E5/white?text=Lot+Chuot+Lon'),
-(110, 'https://placehold.co/500x500/1E88E5/white?text=Gia+Do+Tai+Nghe'),
-(111, 'https://placehold.co/500x500/43A047/white?text=Bep+Tu+Don'),
-(112, 'https://placehold.co/500x500/43A047/white?text=Am+Sieu+Toc'),
-(113, 'https://placehold.co/500x500/43A047/white?text=Quat+Mini'),
-(114, 'https://placehold.co/500x500/43A047/white?text=Noi+Com+Dien'),
-(115, 'https://placehold.co/500x500/43A047/white?text=Ban+Ui+Kho'),
-(116, 'https://placehold.co/500x500/8E24AA/white?text=Ao+Dai+Lua'),
-(117, 'https://placehold.co/500x500/8E24AA/white?text=Guoc+Moc'),
-(118, 'https://placehold.co/500x500/8E24AA/white?text=Non+La+Hue'),
-(119, 'https://placehold.co/500x500/8E24AA/white?text=Khan+Lua'),
-(120, 'https://placehold.co/500x500/8E24AA/white?text=Tui+Coi'),
-(121, 'https://placehold.co/500x500/F4511E/white?text=Vay+Hoa+Nhi'),
-(122, 'https://placehold.co/500x500/F4511E/white?text=Mu+Rong+Vanh'),
-(123, 'https://placehold.co/500x500/F4511E/white?text=So+Mi+Dui'),
-(124, 'https://placehold.co/500x500/F4511E/white?text=Quan+Short'),
-(125, 'https://placehold.co/500x500/F4511E/white?text=Sandal+Da'),
-(126, 'https://placehold.co/500x500/00ACC1/white?text=May+Anh+Cu'),
-(127, 'https://placehold.co/500x500/00ACC1/white?text=Sac+Du+Phong'),
-(128, 'https://placehold.co/500x500/00ACC1/white?text=Loa+Bluetooth'),
-(129, 'https://placehold.co/500x500/00ACC1/white?text=Cap+Sac'),
-(130, 'https://placehold.co/500x500/00ACC1/white?text=Tai+Nghe+TWS'),
-(131, 'https://placehold.co/500x500/D81B60/white?text=Ao+Len+Dai'),
-(132, 'https://placehold.co/500x500/D81B60/white?text=Mu+Len'),
-(133, 'https://placehold.co/500x500/D81B60/white?text=Gang+Tay+Da'),
-(134, 'https://placehold.co/500x500/D81B60/white?text=Boots+Da'),
-(135, 'https://placehold.co/500x500/D81B60/white?text=Ao+Giu+Nhiet'),
-(136, 'https://placehold.co/500x500/3949AB/white?text=Ban+Go+Thong'),
-(137, 'https://placehold.co/500x500/3949AB/white?text=Ghe+Luoi'),
-(138, 'https://placehold.co/500x500/3949AB/white?text=Guong+Soi'),
-(139, 'https://placehold.co/500x500/3949AB/white?text=Khung+Tranh'),
-(140, 'https://placehold.co/500x500/3949AB/white?text=Ke+Sach+Mini'),
-(141, 'https://placehold.co/500x500/00897B/white?text=May+Game'),
-(142, 'https://placehold.co/500x500/00897B/white?text=Tay+Cam+PS4'),
-(143, 'https://placehold.co/500x500/00897B/white?text=Tui+Switch'),
-(144, 'https://placehold.co/500x500/00897B/white?text=Dia+Game+PS4'),
-(145, 'https://placehold.co/500x500/00897B/white?text=Nut+Bam+PUBG'),
-(146, 'https://placehold.co/500x500/6D4C41/white?text=Non+Tai+Beo'),
-(147, 'https://placehold.co/500x500/6D4C41/white?text=Vong+Du'),
-(148, 'https://placehold.co/500x500/6D4C41/white?text=Den+Pin'),
-(149, 'https://placehold.co/500x500/6D4C41/white?text=Ao+Mua'),
-(150, 'https://placehold.co/500x500/6D4C41/white?text=Balo+Phuot');
-=======
 -- Bảng TaiKhoan cần thêm tọa độ nhà riêng cho người bán (Mình đặt trùng với Cửa hàng cho tiện test)
 -- =====================================================================
 INSERT INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang, ViDo, KinhDo) VALUES
@@ -883,7 +701,340 @@ INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh, ViDo, KinhDo) VALUES
 
 -- thêm sp từ 41 dến 70
 INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+-- IdNguoiBan 12 (MaHH 41 - 46)
+(41, 12, 1, 'Tủ lạnh Panasonic Inverter 188L', 1, 2500000, 4500000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Tủ xài cực kỳ giữ kỹ, công nghệ Inverter siêu tiết kiệm điện, làm đá nhanh. Bao thợ test thoải mái.'),
+(42, 12, 1, 'Nồi chiên không dầu Ariete 11L Đen', 2, 900000, 2000000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Được tặng tân gia nhưng ít xài. Máy chiên nướng cực ngon, không bị khô, nguyên hộp chưa xé bọc phụ kiện.'),
+(43, 12, 1, 'Máy giặt lồng ngang LG 9kg AI DD', 1, 4500000, 8500000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Chuyển nhà cần thanh lý gấp, máy chạy êm ru không rung lắc, vắt đồ cực khô, mua về ghim điện là xài.'),
+(44, 12, 2, 'Card Nvidia GTX 1660 Super 6Gb GDDR6', 1, 2600000, 3500000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Hàng người dùng chơi game lướt web, cam kết không trâu cày. Tản nhiệt mát rượi, cân tốt các game hiện nay.'),
+(45, 12, 2, 'Dell Latitude 7490 i5-8350U 14 inch 8GB/256GB', 3, 2100000, 2800000, 'Mới', 'còn hàng', 'DaDuyet', 'Cấu hình 1: Giá bán: 5.790.000 VNĐ CPU: Intel® Core™ i5-8350U (4 lõi 8 luồng, 1.7GHZ up to 3.6GHz, 6MB Cache) RAM: 8GB DDR4 Ổ cứng: SSD 256GB Màn hình: 14 inch FHD (1920 x 1080)Đồ họa: Intel HD Graphics 620 Trọng lượng 1,4Kg'),
+(46, 12, 2, 'RAM XPG SPECTRIX D50 8GB', 2, 950000, 1600000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Tháo máy thanh lý, tản nhiệt LED RGB sáng đẹp chớp nháy bao ngầu, bus 3200Hz chạy mượt mà.'),
 
--- thêm sp từ 71 đến 71
+-- IdNguoiBan 13 (MaHH 47 - 52)
+(47, 13, 3, 'Dell XPS 9310 i7-1185G7 16GB/512GB', 1, 14500000, 21000000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Máy doanh nhân siêu mỏng nhẹ, vỏ nhôm nguyên khối, màn hình tràn viền cực sắc nét. Phù hợp anh chị em văn phòng.'),
+(48, 13, 3, 'MacBook Pro M1 2020 8GB 256GB', 1, 16200000, 24000000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Máy nữ xài kỹ, ngoại hình đẹp 99% không cấn móp, pin sạc ít lần. Làm đồ họa nhẹ, chỉnh sửa ảnh vivu.'),
+(49, 13, 3, 'THÙNG GAME-H110-i5 7500-GAM 8G-VGA GTX1050-SSD 256', 2, 6800000, 9500000, 'Mới', 'còn hàng', 'DaDuyet', 'Dàn máy quốc dân cho anh em cày cuốc. Chơi mượt LOL, FIFA, Valorant max setting. Vỏ case kính LED siêu xịn.'),
+(50, 13, 4, 'Bàn làm việc gỗ cao su 140x60x80cm', 5, 450000, 800000, 'Mới', 'còn hàng', 'DaDuyet', 'Bàn làm việc 5 ngăn kéo .Gỗ cao su tự nhiên . Chắc nặng. Kích thước 140*60*80 '),
+(51, 13, 4, 'Ghế xoay công thái học Ergonomic', 2, 1200000, 2200000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Cứu tinh cho cái lưng mùa cày đồ án. Lưới thoáng mát, có tựa đầu, ngả lưng 135 độ ngủ trưa thoải mái.'),
+(52, 13, 4, 'Tủ quần áo nhựa Đài Loan 3 cánh', 1, 1400000, 2500000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Kích thước lớn để được nhiều đồ, nhựa không ẩm mốc mối mọt. Hỗ trợ phụ tiền xe ba gác chở về.'),
 
->>>>>>> c6c38553819985c6511c41b851e086adaa35dc19
+-- IdNguoiBan 14 (MaHH 53 - 58)
+(53, 14, 5, 'Áo khoác da nam lót lông cừu', 3, 450000, 850000, 'Mới', 'còn hàng', 'DaDuyet', 'Lên form biker cực ngầu, da PU cao cấp không bong tróc, lót lông bên trong mặc bao ấm.'),
+(54, 14, 5, 'Quần Jean nam ống suông Unisex', 10, 150000, 350000, 'Mới', 'còn hàng', 'DaDuyet', 'Trend Hàn Quốc cực dễ phối đồ. Chất denim dày dặn chuẩn xịn, mặc lên dáng thẳng tắp.'),
+(55, 14, 5, 'Váy hoa nhí Vintage kiểu Pháp', 4, 120000, 280000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Pass lại váy đi Đà Lạt mặc đúng 1 lần chụp hình. Vải voan lụa 2 lớp thướt tha, eo thun dễ mặc.'),
+(56, 14, 6, 'Máy chơi game Sony PS4 Slim 1TB', 1, 4200000, 6000000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Máy kèm 2 tay cầm xịn zin. Đã chép sẵn full game đá banh PES, God of War... Mua về cắm tivi là chiến.'),
+(57, 14, 6, 'Nintendo Switch OLED Neon Fullbox', 1, 5600000, 8500000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Máy mua Hacom còn bảo hành, màn hình OLED siêu nét, đã dán cường lực và tặng kèm bóp đựng bảo vệ.'),
+(58, 14, 6, 'Tay cầm Xbox One S kết nối PC', 5, 750000, 1300000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Nút bấm êm ru, cò L R nhạy bén, rung bần bật. Kết nối bluetooth mượt mà chơi game Steam số zách.'),
+
+-- IdNguoiBan 15 (MaHH 59 - 64)
+(59, 15, 7, 'Smart Tivi LG 43 inch 4K UHD', 1, 4100000, 7800000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Hình ảnh 4K sắc nét, lên mạng xem Youtube đọc báo vèo vèo. Tặng kèm giá treo tường xịn.'),
+(60, 15, 7, 'Loa Bluetooth Marshall Emberton II', 1, 2800000, 4500000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Chính hãng ASH, bass đánh lực nghe cực chill phòng ngủ. Pin trâu xài cả tuần chưa hết.'),
+(61, 15, 7, 'Máy ảnh Sony A6000 kèm lens kit', 1, 6500000, 9500000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Khởi đầu hoàn hảo cho dân tập chơi nhiếp ảnh. Lấy nét nhanh, chụp chân dung xóa phông mịt mù.'),
+(62, 15, 1, 'Quạt điều hòa làm mát không khí Sunhouse', 2, 1100000, 2200000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Giải nhiệt mùa nóng siêu hiệu quả, có khay đá khô mát rượi như máy lạnh, lướt êm không ồn.'),
+(63, 15, 2, 'Ổ cứng SSD Samsung 980 500GB NVMe', 6, 950000, 1500000, 'Mới', 'còn hàng', 'DaDuyet', 'Hàng xách tay Mỹ, tốc độ đọc ghi chớp nhoáng, boot win mở app chỉ tốn vài giây.'),
+(64, 15, 3, 'Laptop Lenovo ThinkPad T14 Gen 1', 1, 8800000, 14000000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Bàn phím gõ êm nhất thế giới laptop. Máy nồi đồng cối đá, ngoại hình còn đẹp keng.'),
+
+-- IdNguoiBan 16 (MaHH 65 - 70)
+(65, 16, 4, 'Sofa giường', 1, 2200000, 4800000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Ban ngày làm ghế tiếp khách, ban đêm kéo ra thành giường ngủ bao tiện lợi. Nệm êm chưa xẹp lún.'),
+(66, 16, 5, 'Áo sơ mi Flannel caro vintage', 8, 80000, 250000, 'Đã qua sử dụng', 'còn hàng', 'DaDuyet', 'Hàng tuyển kiện độ mới siêu cao, lỗi 1 đổi 1. Mặc khoác ngoài bao phong cách street style.'),
+(67, 16, 6, 'Bàn phím cơ DareU EK87 Red Switch', 3, 350000, 650000, 'Mới', 'còn hàng', 'DaDuyet', 'Gõ êm ru không ồn ào ảnh hưởng bạn cùng phòng. LED đỏ rực rỡ, phím bấm nảy nhẹ.'),
+(68, 16, 7, 'Tai nghe Apple AirPods Pro 2', 2, 3200000, 5800000, 'Gần như mới', 'còn hàng', 'DaDuyet', 'Tai nghe pass lại lên đời, chống ồn chủ động tuyệt đỉnh, pin còn siêu trâu, âm thanh bass đập chắc.'),
+(69, 16, 7, 'Máy chiếu mini Beecube X2 Max Gen 3', 3, 1600000, 2500000, 'Mới', 'còn hàng', 'DaDuyet', 'Biến bức tường phòng ngủ thành rạp chiếu phim mini. Tích hợp sẵn Android tha hồ xem Netflix.'),
+(70, 16, 1, 'Máy hút bụi cầm tay Xiaomi Deerma', 4, 450000, 850000, 'Mới', 'còn hàng', 'DaDuyet', 'Hút bụi giường nệm, mạng nhện rèm cửa siêu sạch. Thiết kế tháo lắp dễ dàng, lực hút mạnh mẽ.');
+
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(41, 'assets/images/products/41/41-1.jpg'), (41, 'assets/images/products/41/41-2.jpg'), (41, 'assets/images/products/41/41-3.jpg'),
+(42, 'assets/images/products/42/42-1.jpg'),
+(43, 'assets/images/products/43/43-1.jpg'), (43, 'assets/images/products/43/43-2.jpg'), (43, 'assets/images/products/43/43-3.jpg'),
+(44, 'assets/images/products/44/44-1.jpg'), (44, 'assets/images/products/44/44-2.jpg'), (44, 'assets/images/products/44/44-3.jpg'),
+(45, 'assets/images/products/45/45-1.jpg'), (45, 'assets/images/products/45/45-2.jpg'), (45, 'assets/images/products/45/45-3.jpg'), (45, 'assets/images/products/45/45-4.jpg'), (45, 'assets/images/products/45/45-5.jpg'),
+(46, 'assets/images/products/46/46-1.jpg'), 
+(47, 'assets/images/products/47/47-1.jpg'), (47, 'assets/images/products/47/47-2.jpg'), (47, 'assets/images/products/47/47-3.jpg'),
+(48, 'assets/images/products/48/48-1.jpg'), (48, 'assets/images/products/48/48-2.jpg'), (48, 'assets/images/products/48/48-3.jpg'),
+(49, 'assets/images/products/49/49-1.jpg'), (49, 'assets/images/products/49/49-2.jpg'), (49, 'assets/images/products/49/49-3.jpg'),
+(50, 'assets/images/products/50/50-1.jpg'), (50, 'assets/images/products/50/50-2.jpg'), (50, 'assets/images/products/50/50-3.jpg'), (50, 'assets/images/products/50/50-4.jpg'), (50, 'assets/images/products/50/50-5.jpg'),
+(51, 'assets/images/products/51/51-1.jpg'), (51, 'assets/images/products/51/51-2.jpg'), (51, 'assets/images/products/51/51-3.jpg'),
+(52, 'assets/images/products/52/52-1.jpg'), (52, 'assets/images/products/52/52-2.jpg'), (52, 'assets/images/products/52/52-3.jpg'),
+(53, 'assets/images/products/53/53-1.jpg'), (53, 'assets/images/products/53/53-2.jpg'), (53, 'assets/images/products/53/53-3.jpg'),
+(54, 'assets/images/products/54/54-1.jpg'), (54, 'assets/images/products/54/54-2.jpg'), 
+(55, 'assets/images/products/55/55-1.jpg'), 
+(56, 'assets/images/products/56/56-1.jpg'), (56, 'assets/images/products/56/56-2.jpg'), (56, 'assets/images/products/56/56-3.jpg'),
+(57, 'assets/images/products/57/57-1.jpg'), (57, 'assets/images/products/57/57-2.jpg'), (57, 'assets/images/products/57/57-3.jpg'),
+(58, 'assets/images/products/58/58-1.jpg'), (58, 'assets/images/products/58/58-2.jpg'), (58, 'assets/images/products/58/58-3.jpg'),
+(59, 'assets/images/products/59/59-1.jpg'), (59, 'assets/images/products/59/59-2.jpg'), (59, 'assets/images/products/59/59-3.jpg'),
+(60, 'assets/images/products/60/60-1.jpg'), (60, 'assets/images/products/60/60-2.jpg'), 
+(61, 'assets/images/products/61/61-1.jpg'), (61, 'assets/images/products/61/61-2.jpg'), (61, 'assets/images/products/61/61-3.jpg'),
+(62, 'assets/images/products/62/62-1.jpg'), (62, 'assets/images/products/62/62-2.jpg'), (62, 'assets/images/products/62/62-3.jpg'),
+(63, 'assets/images/products/63/63-1.jpg'), (63, 'assets/images/products/63/63-2.jpg'), (63, 'assets/images/products/63/63-3.jpg'),
+(64, 'assets/images/products/64/64-1.jpg'), (64, 'assets/images/products/64/64-2.jpg'), (64, 'assets/images/products/64/64-3.jpg'),
+(65, 'assets/images/products/65/65-1.jpg'), (65, 'assets/images/products/65/65-2.jpg'), (65, 'assets/images/products/65/65-3.jpg'),
+(66, 'assets/images/products/66/66-1.jpg'), (66, 'assets/images/products/66/66-2.jpg'), 
+(67, 'assets/images/products/67/67-1.jpg'), 
+(68, 'assets/images/products/68/68-1.jpg'), (68, 'assets/images/products/68/68-2.jpg'), (68, 'assets/images/products/68/68-3.jpg'),
+(69, 'assets/images/products/69/69-1.jpg'), (69, 'assets/images/products/69/69-2.jpg'),
+(70, 'assets/images/products/70/70-1.jpg'), (70, 'assets/images/products/70/70-2.jpg'), (70, 'assets/images/products/70/70-3.jpg');
+
+
+
+
+-- thêm sp từ 71 đến 100
+-- người bán 21
+
+-- hh71
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(71, 21, 5, 'Giày thể thao Adidas chính hãng đã qua sử dụng', 1, 850000, 1000000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Giày thể thao Adidas màu trắng phối xanh lá, phù hợp cho cả nam.
+ - Chất liệu da tổng hợp bền đẹp. 
+ - Size 42.5 (EU)  
+ - Thiết kế năng động, dễ phối đồ.
+ - Đã qua sử dụng được 2 lần
+ - Không Box
+ - Chính hãng 100% (đã sử dụng checkcheck để kiểm tra)
+ - Giá cả có thể thương lượng nếu chốt nhanh, chỉ giao dịch tại Ninh Kiều Cần Thơ');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(71, 'assets/images/products/71/71-1.jpg'), (71, 'assets/images/products/71/71-2.jpg'), (71, 'assets/images/products/71/71-3.jpg');
+
+-- hh72
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+                    (72, 21, 5, 'Thanh Lý Giày thể thao Adidas XLG Runner Nam', 2, 3000000, 3500000, 'Mới', 'Còn hàng', 'DaDuyet', '🔥 THANH LÝ NHẸ – HÀNG CHẤT CHO AE BIẾT CHƠI 🔥
+Adidas XLG Runner Deluxe – form hầm hố, cực kỳ thời trang 💣
+✔️ Tình trạng: Mới 100% do mình đi du lịch bên Bắc Kinh mua về nhưng không hợp style nên để đó ko đi.
+✔️ Size: 39 1/3 (fit chân 39–40)
+✔️ Full box, tem mác đầy đủ
+✔️ Màu đen phối xám – dễ phối đồ, đi street hay casual đều nổi
+💎 Điểm nổi bật:
+– Đế chunky siêu êm, tôn dáng
+– Thiết kế futuristic, nhìn là biết dân chơi
+– Mang cực kỳ đầm chân, đi lâu không mỏi
+💰 Giá thanh lý: 3.000.000đ (fix nhẹ cho người thiện chí)
+🚀 Ai nhanh tay thì còn – hàng đẹp không chờ lâu
+⚡ Ưu tiên người chốt nhanh – giao dịch gọn gàng
+#Adidas #SneakerThanhLy #GiayDep #StreetStyle');
+INSERT INTO HinhAnh (MaHH, URL) VALUES 
+(72, 'assets/images/products/72/72-1.jpg'), (72, 'assets/images/products/72/72-2.jpg'), (72, 'assets/images/products/72/72-3.jpg');
+
+-- hh73
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(73, 21, 8, 'Đồng hồ Seiko 7S26 21J Nam', 1, 1800000, 2000000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Góc mua bán
+Xin phép add
+Em lên em xanh dương ít gặp , size 37 độ mới cao, còn hộp k sổ đủ mắc thừa, máy móc dial đẹp như mới, lộ mông máy 7s26 21j, chạy chuẩn chỉ, có dạ quang, lên tay sang hợp ae cổ tay vừa và nhỏ!
+Giá 1tr8 (HCM)
+Thanks add và ae đã xem tin');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(73, 'assets/images/products/73/73-1.jpg'), (73, 'assets/images/products/73/73-2.jpg'), (73, 'assets/images/products/73/73-3.jpg');
+
+-- hh74
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(74, 21, 5, 'Thể thao Running Nhật', 14, 150000, 180000, 'Mới', 'Còn hàng', 'DaDuyet', 'Thể thao Running Nhật
+Tình trạng như áo mới, chất thun lạnh run mỏng nhẹ mát, phối đen đỏ, cổ zip.
+Size L ngang 55 dài 70,73 tham khảo 70-77kg
+Giá 150ka ck bao ship.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(74, 'assets/images/products/74/74-1.jpg'), (74, 'assets/images/products/74/74-2.jpg');
+
+-- hh75
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(75, 21, 1, 'Túi đựng đa năng vải nhiều màu', 14, 10000, 20000, 'Mới', 'Còn hàng', 'DaDuyet', 'Túi đựng đa năng nhiều màu, chất liệu vải bền đẹp.
+ - Thiết kế nhỏ gọn, tiện lợi.
+ - Phù hợp cho cả nam và nữ.
+ - Giá 10 nghìn/túi.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(75, 'assets/images/products/75/75-1.jpg'), (75, 'assets/images/products/75/75-2.jpg'), (75, 'assets/images/products/75/75-3.jpg');
+
+-- hh76
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(76, 21, 5, 'Áo sơ mi nam vải hoa', 2, 150000, 160000, 'Mới', 'Còn hàng', 'DaDuyet', '150k size XL. XXL
+Vải dày, mềm, ko xù lông, ko nhão
+Hàng có sẵn');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(76, 'assets/images/products/76/76-1.jpg');
+
+-- người bán 20
+-- hh77
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(77, 20, 1, 'Bút bi PIERRE CARDIN Victoria Bạc', 2, 999000, 1200000, 'Mới', 'Còn hàng', 'DaDuyet', 'Bút bi xoay PIERRE CARDIN Victoria
+• Thân bút bằng kim loại với các đường rãnh dọc tinh tế.
+• Phần cài bút được đính một hàng đá xanh tạo điểm nhấn nổi bật và sang trọng.
+Em gl 999k');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(77, 'assets/images/products/77/77-1.jpg'), (77, 'assets/images/products/77/77-2.jpg'), (77, 'assets/images/products/77/77-3.jpg');
+
+-- hh78
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(78, 20, 1, 'Máy may công nghiệp Juki Xám', 1, 1000000, 1200000, 'Mới', 'Còn hàng', 'DaDuyet', '
+Máy may công nghiệp Juki màu xám, đã qua sử dụng nhưng còn hoạt động tốt. 
+ - Máy may khỏe, đường may đẹp. 
+ - Phù hợp cho xưởng may hoặc cá nhân có nhu cầu.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(78, 'assets/images/products/78/78-1.jpg');
+
+-- hh79
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(79, 20, 9, 'Máy bơm nước Panasonic Xanh dương', 1, 500000, 700000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'Máy bơm nước Panasonic màu xanh dương, thiết kế nhỏ gọn, dễ lắp đặt. 
+ - Hoạt động êm ái, bền bỉ. 
+ - Phù hợp cho gia đình, tưới tiêu.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(79, 'assets/images/products/79/79-1.jpg'), (79, 'assets/images/products/79/79-2.jpg'), (79, 'assets/images/products/79/79-3.jpg');
+
+-- hh80
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(80, 20, 9, 'Máy in HP 2 mặt tự động đảo giấy', 1, 1400000 , 1800000, 'Mới', 'Còn hàng', 'DaDuyet', 'máy in dành cho hộ kinh doanh, dành cho lam dịch vụ in ân ...dùng cho hộ gia đình in tài liệu cho con cái học tập, in nhanh ,hộp mực lớn,dễ dàng nạp mực tại nhà,  mực phổ thông,gia thành rẻ , in A4 & A5  IN 2 mặt tự động..  bản in sắc nét ,máy bao gồm hộp mực ,cáp kết nối, cài đặt thao tác kết nối là in .. máy thanh lý từ cơ quan tình trạng mới trên 95%');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(80, 'assets/images/products/80/80-1.jpg');
+
+-- hh81
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(81, 20, 8, 'Máy tiệt trùng UV Trắng', 1, 250000  , 300000, 'Mới', 'Còn hàng', 'DaDuyet', 'Máy tiệt trùng đèn UV màu trắng, thiết kế nhỏ gọn, tiện lợi. 
+ - Tiệt trùng hiệu quả dụng cụ làm đẹp. 
+ - Đảm bảo vệ sinh, an toàn khi sử dụng.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(81, 'assets/images/products/81/81-1.jpg'), (81, 'assets/images/products/81/81-2.jpg'), (81, 'assets/images/products/81/81-3.jpg');
+
+-- hh82
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(82, 20, 8, 'Máy hàn ống nhựa Vàng Đã sử dụng', 1, 120000 , 150000, 'Đã qua sử dụng', 'Còn hàng', 'DaDuyet', 'hàn ống nhựa chịu nhiệt còn hoạt động tốt bán lại cho ai cần');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(82, 'assets/images/products/82/82-1.jpg'), (82, 'assets/images/products/82/82-2.jpg');
+
+-- hh83
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(83, 20, 8, 'Bảng menu gỗ thông 50x70cm', 1, 230000 , 280000, 'Mới', 'Còn hàng', 'DaDuyet', 'Bảng menu KT 50x70cm dùng trưng bày nhà hàng, quán ăn.
+Bảng menu dùng treo tường hoặc dùng kết hợp với giá đỡ bảng ( chân gỗ ).
+Dùng để trình bày nội dung quảng cáo, khuyến mãi, thực đơn… cho cửa hàng, quán ăn, quán cafe.
+Khung bảng bằng gỗ thông với tông màu sáng.
+Bạn có thể treo bảng lên tường hoặc dùng giá đỡ nhằm thu hút thêm sự chú ý của khách hàng vào thông điệp quảng cáo của mình.
+Với nhiều kích thước cho bạn lựa chọn, bảng phù hợp với cả việc treo menu trên tường hay dựng đứng trên giá gỗ để trước cửa.
+Hiện nay có thể thấy menu treo tường được thiết kế hầu hết tại các quán café, trà sữa, nhà hàng, quán ăn … theo nhiều hình thức khác nhau.
+Khách hàng sẽ làm gì khi rảnh rỗi ngoài đợi món? Tất nhiên là sẽ lướt trên menu và chọn các món khác rồi.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(83, 'assets/images/products/83/83-1.jpg'), (83, 'assets/images/products/83/83-2.jpg');
+
+-- hh84
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(84, 20, 1, 'Cân đồng hồ 15kg Kim loại Xanh', 1, 250000 , 300000, 'Mới', 'Còn hàng', 'DaDuyet', 'ít dùng đến cần thanh lý cân 15 kg 250k');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(84, 'assets/images/products/84/84-1.jpg');
+
+-- người bán 19
+-- hh85
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(85, 19, 4, 'Đồng hồ treo tường Gỗ Nâu', 1, 3500000 , 4000000, 'Mới', 'Còn hàng', 'DaDuyet', 'Đồng hồ treo tường gỗ màu nâu, phong cách cổ điển.
+ - Thiết kế tinh tế, tạo điểm nhấn cho không gian.
+ - Chất liệu gỗ bền đẹp, chắc chắn.
+ - Phù hợp trang trí phòng khách, phòng làm việc.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(85, 'assets/images/products/85/85-1.jpg');
+
+-- hh86
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(86, 19, 4, 'Ổ cắm điện 3 chấu 5m Trắng', 1, 70000 , 80000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ổ điện dây dài 5m. vẫn sử dụng được. pass do không còn nhu cầu sử dụng');
+insert into HinhAnh (MaHH, URL) values
+(86, 'assets/images/products/86/86-1.jpg'), (86, 'assets/images/products/86/86-2.jpg'); 
+ -- hh87
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(87, 19, 1, 'Ấm siêu tốc Thép không gỉ Bạc Hỏng', 1, 15000 , 30000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ấm siêu tốc Thép không gỉ màu bạc, thiết kế hiện đại.');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(87, 'assets/images/products/87/87-1.jpg'), (87, 'assets/images/products/87/87-2.jpg');
+
+-- người bán 18
+-- hh88
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(88, 18, 4, 'Ghế dã ngoại gấp gọn Đen', 2, 82000 , 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ghế Dã Ngoại Gấp Gọn, Phù Hợp Du Lịch Dã Ngoại Cắm Trại Câu Cá
+✨✨✨  Sỉ: 82k/c SL giảm75k
+✅ Ghế ngồi cực kì chắc chắn ạ
+✅ Khung chữ X, ổn định cao; Gấp mở nhanh chóng.
+✅ Có thể sử dụng trong điều kiện địa hình, dùng trong mọi hoạt động như : đi bộ, đạp xe , camping, ');
+insert into HinhAnh (MaHH, URL) values
+(88, 'assets/images/products/88/88-1.jpg');
+
+-- hh89
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(89, 18, 6, 'Gamesir Dawn star 2, có fix giá', 2, 350000 , 400000, 'Mới', 'Còn hàng','DaDuyet', 'Gamesir
+Tay cầm chơi game Qixingming 2
+3 mode kết nối');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(89, 'assets/images/products/89/89-1.jpg'), (89, 'assets/images/products/89/89-2.jpg'), (89, 'assets/images/products/89/89-3.jpg');
+
+-- hh90
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(90, 18, 6, 'Máy chơi game cầm tay 16GB Đen', 1, 500000 , 550000, 'Mới', 'Còn hàng', 'DaDuyet', 'T bán máy game retro kèm thẻ 16gb đã cóp nhiều game hoạt động bình thường 500k');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(90, 'assets/images/products/90/90-1.jpg');
+
+-- hh91
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(91, 18, 6, 'Pass nhanh combo game giá rẻ', 1, 200000 , 250000, 'Mới', 'Còn hàng', 'DaDuyet', 'Hàng mới nguyên hộp chưa qua sử dụng. Mình pass nhanh giá rất rẻ. Hỗ trợ game mobile rất ngon lành
+Bán nhanh 200K');
+INSERT INTO HinhAnh (MaHH, URL) VALUES
+(91, 'assets/images/products/91/91-1.jpg'), (91, 'assets/images/products/91/91-2.jpg'), (91, 'assets/images/products/91/91-3.jpg');
+
+-- hh92
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(92, 18, 6, 'Trò chơi điện tử PS4', 1, 600000 , 650000, 'Mới', 'Còn hàng', 'DaDuyet', 'Cần thanh lý một số game PS4. Mỗi game mình bán 200.000. Gdtt tại Hà Nội.');
+insert into HinhAnh (MaHH, URL) values
+(92, 'assets/images/products/92/92-1.jpg'), (92, 'assets/images/products/92/92-2.jpg'), (92, 'assets/images/products/92/92-3.jpg');
+
+-- hh93
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(93, 18, 6, 'Máy chơi game Sony PS4 Pro Đen', 1, 4800000 , 5200000, 'Mới', 'Còn hàng', 'DaDuyet', 'K có nhu cầu cần bán ps4 pro cuh-7017b hắc ám phiên bản 11.0
+Đầy đủ phụ kiện, 1 tay k lên, kèm chân đế
+Fix cho ae nhiệt tình');
+insert into HinhAnh (MaHH, URL) values
+(93, 'assets/images/products/93/93-1.jpg'), (93, 'assets/images/products/93/93-2.jpg'), (93, 'assets/images/products/93/93-3.jpg');
+
+-- hh94
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(94, 18, 6, 'Máy chơi game Sony PS Vita 2000 Xanh', 1, 2700000 , 3000000, 'Mới', 'Còn hàng', 'DaDuyet', 'Máy chơi game cầm tay Sony PS Vita 2000 đã hack
+ - Kèm ốp và núm joystick.
+ - Thiết kế nhỏ gọn, màn hình đẹp.
+ - Kho game đa dạng, giải trí mọi lúc mọi nơi.');
+insert into HinhAnh (MaHH, URL) values
+(94, 'assets/images/products/94/94-1.jpg'), (94, 'assets/images/products/94/94-2.jpg');
+
+-- hh95
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(95, 18, 6, 'Máy chơi game Sony PS4 Pro 1TB Đen', 1, 5200000 , 6000000, 'Mới', 'Còn hàng', 'DaDuyet', 'Ps4 Pro 1TB Hack đã chép nhiều game khủng, chơi game mượt mà');
+insert into HinhAnh (MaHH, URL) values
+(95, 'assets/images/products/95/95-1.jpg');
+
+-- người bán 17
+-- hh96
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(96, 17, 7, 'Bàn phím cơ Newmen GM601 Pro 99%', 1, 1100000 , 1400000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'newmen gm601 pro ( 99%) full box
+full 3 mod kết nối');
+insert into HinhAnh (MaHH, URL) values
+(96, 'assets/images/products/96/96-1.jpg'), (96, 'assets/images/products/96/96-2.jpg'), (96, 'assets/images/products/96/96-3.jpg');
+
+-- hh97
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(97, 17, 7, 'Cáp sạc Xiaomi Type C 100W', 1, 64890 , 100000, 'Mới', 'Còn hàng', 'DaDuyet', 'Dây cáp sạc Xiaomi Gold Label, 6A-100W, tích hợp chip, công nghệ SuperCharge, dùng cho các dòng Android cổng sạc Type C
+ hàng mới 100%');
+insert into HinhAnh (MaHH, URL) values
+(97, 'assets/images/products/97/97-1.jpg'), (97, 'assets/images/products/97/97-2.jpg'), (97, 'assets/images/products/97/97-3.jpg');
+
+-- hh98
+insert into HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(98, 17, 7, 'Bộ chuyển đổi Wifi USB AC1200Mbps', 2, 100000 , 150000, 'Gần như mới', 'Còn hàng', 'DaDuyet', 'Bộ chuyển đổi USB không dây tốc độ AC1200Mbps, chuẩn Wifi 5. 
+ - Kết nối USB tiện lợi. 
+ - Màu đen nhỏ gọn, dễ mang theo. 
+ - Giúp máy tính bàn, laptop kết nối Wifi nhanh chóng, ổn định.');
+insert into HinhAnh (MaHH, URL) values
+(98, 'assets/images/products/98/98-1.jpg');
+
+-- hh99
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(99, 17, 6, 'Chuột Bluetooth Logitech M650 Đen - Mới nguyên hộp', 1, 390000  , 500000, 'Mới', 'Còn hàng', 'DaDuyet', 'Thanh lý 5 chuột không dây Bluetooth Logitech Signature M650 màu đen.
+ - Hàng mới 100% chưa bóc tem, bảo hành chính hãng, size M
+ - Độ phân giải 400-4000 DPI, cảm biến quang học nâng cao.
+ - Tương thích nhiều hệ điều hành: Windows, macOS, Linux, ChromeOS, iPadOS, Android.
+ - Thiết kế 5 nút tiện lợi: nhấp trái/phải, quay lại/tiếp tục, nút cuộn với nhấp chuột giữa.
+- Sử dụng cả 2 dạng kết nối USB Logi Bolt và Bluetooth. Có kết nối với app của Logitech để tiện cài đặt điều khiển đa dụng.');
+insert into HinhAnh (MaHH, URL) values
+(99, 'assets/images/products/99/99-1.jpg'), (99, 'assets/images/products/99/99-2.jpg'), (99, 'assets/images/products/99/99-3.jpg');
+
+-- hh100
+INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 
+(100, 17, 7, 'Màn hình MSI G27C4X 27 inch bh hãng 12/2026', 1, 2450000 , 3000000, 'Mới', 'Còn hàng', 'DaDuyet', 'E cần bán màn hình MSI G27C4X 27in fullhd cong 250hz còn bảo hành hãng đến 12/2026 sử dụng bình thường còn thùng đầy đủ 1 chủ. Ai cần liên hệ e qua lấy có fix thêm. Xin cảm ơn');
+insert into HinhAnh (MaHH, URL) values
+(100, 'assets/images/products/100/100-1.jpg'), (100, 'assets/images/products/100/100-2.jpg'), (100, 'assets/images/products/100/100-3.jpg');
+
+
+
