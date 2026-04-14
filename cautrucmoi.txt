@@ -1,0 +1,521 @@
+Folder PATH listing for volume OS
+Volume serial number is AAD9-15E3
+C:.
+|   cautruc.txt
+|   index.php
+|   
++---admin
+|   |   index.php
+|   |   
+|   +---controllers
+|   |       adminBannerController.php
+|   |       adminBaoCaoController.php
+|   |       adminChiTietDonHangController.php
+|   |       adminChiTietNguoiDungController.php
+|   |       adminChiTietSanPhamController.php
+|   |       adminDanhGiaController.php
+|   |       adminDanhMucController.php
+|   |       adminDoanhThuController.php
+|   |       adminDonHangController.php
+|   |       adminMaGiamGiaController.php
+|   |       adminNguoiDungController.php
+|   |       adminSanPhamController.php
+|   |       adminThongBaoController.php
+|   |       hangDongBinhLuanController.php
+|   |       
+|   +---models
+|   |       adminBannerModel.php
+|   |       adminBaoCaoModel.php
+|   |       adminDanhGiaModel.php
+|   |       adminDanhMucModel.php
+|   |       adminDoanhThuModel.php
+|   |       adminDonHangModel.php
+|   |       adminMaGiamGiaModel.php
+|   |       adminNguoiDungModel.php
+|   |       adminSanPhamModel.php
+|   |       adminThongKeModel.php
+|   |       
+|   \---views
+|           adminChiTietDonHang.php
+|           adminChiTietNguoiDung.php
+|           adminChiTietSanPham.php
+|           quanLyBanner.php
+|           quanLyBaoCao.php
+|           quanLyChiTietDonHang.php
+|           quanLyDanhGia.php
+|           quanLyDanhMuc.php
+|           quanLyDoanhThu.php
+|           quanLyDonHang.php
+|           quanLyMaGiamGia.php
+|           quanLyNguoiDung.php
+|           quanLySanPham.php
+|           quanLyThongBao.php
+|           
++---assets
+|   +---css
+|   |   |   admin_sidebar.css
+|   |   |   chat.css
+|   |   |   chiTietDonHang.css
+|   |   |   chiTietNguoiBan.css
+|   |   |   chiTietSanPham.css
+|   |   |   color.css
+|   |   |   dangNhap.css
+|   |   |   danhSachSanPham.css
+|   |   |   danhSachYeuThich.css
+|   |   |   footer.css
+|   |   |   gioHang.css
+|   |   |   header.css
+|   |   |   kichHoatBanHang.css
+|   |   |   lichSuGiaoDich.css
+|   |   |   navbar.css
+|   |   |   quanly_donhang.css
+|   |   |   quanly_nguoidung.css
+|   |   |   quanly_sanpham.css
+|   |   |   sanPham.css
+|   |   |   thanhToan.css
+|   |   |   thongBao.css
+|   |   |   thongTinTaiKhoan.css
+|   |   |   trangChu.css
+|   |   |   
+|   |   \---bootstrap
+|   |           bootstrap.css
+|   |           bootstrap.min.css
+|   |           
+|   +---images
+|   |   |   placeholder.png
+|   |   |   
+|   |   +---banners
+|   |   |       1-1.png
+|   |   |       anh-qc-1.webp
+|   |   |       anh-qc-2.webp
+|   |   |       anh-qc-3.webp
+|   |   |       anh-qc-4.webp
+|   |   |       test.webp
+|   |   |       
+|   |   +---mock
+|   |   |       0_iphone.jpg
+|   |   |       10_leather_jacket.jpg
+|   |   |       11_nike_shoes.jpg
+|   |   |       12_mens_shirt.jpg
+|   |   |       13_jeans.jpg
+|   |   |       14_mens_watch.jpg
+|   |   |       15_backpack.jpg
+|   |   |       16_leather_belt.jpg
+|   |   |       17_leather_shoes.jpg
+|   |   |       18_tshirt.jpg
+|   |   |       19_sunglasses.jpg
+|   |   |       1_macbook.jpg
+|   |   |       20_handbag.jpg
+|   |   |       21_dress.jpg
+|   |   |       22_high_heels.jpg
+|   |   |       23_blazer.jpg
+|   |   |       24_lipstick.jpg
+|   |   |       25_cardigan.jpg
+|   |   |       26_skirt.jpg
+|   |   |       27_bucket_hat.jpg
+|   |   |       28_womens_watch.jpg
+|   |   |       29_necklace.jpg
+|   |   |       2_earbuds.jpg
+|   |   |       30_microwave.jpg
+|   |   |       31_air_fryer.jpg
+|   |   |       32_office_chair.jpg
+|   |   |       33_desk.jpg
+|   |   |       34_blender.jpg
+|   |   |       35_desk_lamp.jpg
+|   |   |       36_induction_stove.jpg
+|   |   |       37_cooking_pot.jpg
+|   |   |       38_wardrobe.jpg
+|   |   |       39_bookshelf.jpg
+|   |   |       3_computer_mouse.jpg
+|   |   |       40_bicycle.jpg
+|   |   |       41_helmet.jpg
+|   |   |       42_badminton.jpg
+|   |   |       43_yoga_mat.jpg
+|   |   |       44_soccer_shoes.jpg
+|   |   |       45_basketball.jpg
+|   |   |       46_motorcycle.jpg
+|   |   |       47_gym_gloves.jpg
+|   |   |       48_skateboard.jpg
+|   |   |       49_jump_rope.jpg
+|   |   |       4_mechanical_keyboard.jpg
+|   |   |       50_book.jpg
+|   |   |       51_manga.jpg
+|   |   |       52_guitar.jpg
+|   |   |       53_film_camera.jpg
+|   |   |       54_anime_figure.jpg
+|   |   |       55_chess.jpg
+|   |   |       56_programming_book.jpg
+|   |   |       57_rubik.jpg
+|   |   |       58_vinyl_record.jpg
+|   |   |       59_oil_painting.jpg
+|   |   |       5_computer_monitor.jpg
+|   |   |       6_ipad.jpg
+|   |   |       7_smartwatch.jpg
+|   |   |       8_powerbank.jpg
+|   |   |       9_phone_case.jpg
+|   |   |       
+|   |   +---products
+|   |   |   +---1
+|   |   |   |       1-1.png
+|   |   |   |       1-2.png
+|   |   |   |       1-3.png
+|   |   |   |       
+|   |   |   +---10
+|   |   |   |       10-1.png
+|   |   |   |       10-2.png
+|   |   |   |       10-3.png
+|   |   |   |       10-4.png
+|   |   |   |       
+|   |   |   +---11
+|   |   |   |       11-1.png
+|   |   |   |       11-2.png
+|   |   |   |       
+|   |   |   +---12
+|   |   |   |       12-1.png
+|   |   |   |       12-2.png
+|   |   |   |       
+|   |   |   +---13
+|   |   |   |       13-1.png
+|   |   |   |       13-2.png
+|   |   |   |       
+|   |   |   +---14
+|   |   |   |       14-1.png
+|   |   |   |       14-2.png
+|   |   |   |       
+|   |   |   +---15
+|   |   |   |       15-1.png
+|   |   |   |       15-2.png
+|   |   |   |       
+|   |   |   +---16
+|   |   |   |       16-1.png
+|   |   |   |       16-2.png
+|   |   |   |       
+|   |   |   +---17
+|   |   |   |       17-1.png
+|   |   |   |       17-2.png
+|   |   |   |       17-3.png
+|   |   |   |       
+|   |   |   +---18
+|   |   |   |       18-1.png
+|   |   |   |       
+|   |   |   +---19
+|   |   |   |       19-1.png
+|   |   |   |       19-2.png
+|   |   |   |       
+|   |   |   +---2
+|   |   |   |       2-1.png
+|   |   |   |       2-2.png
+|   |   |   |       2-3.png
+|   |   |   |       
+|   |   |   +---20
+|   |   |   |       20-1.png
+|   |   |   |       20-2.png
+|   |   |   |       20-3.png
+|   |   |   |       
+|   |   |   +---21
+|   |   |   |       21-1.png
+|   |   |   |       
+|   |   |   +---22
+|   |   |   |       22-1.png
+|   |   |   |       22-2.png
+|   |   |   |       
+|   |   |   +---23
+|   |   |   |       23-1.png
+|   |   |   |       
+|   |   |   +---24
+|   |   |   |       24-1.png
+|   |   |   |       24-2.png
+|   |   |   |       24-3.png
+|   |   |   |       
+|   |   |   +---25
+|   |   |   |       25-1.png
+|   |   |   |       25-2.png
+|   |   |   |       25-3.png
+|   |   |   |       
+|   |   |   +---26
+|   |   |   |       26-1.png
+|   |   |   |       26-2.png
+|   |   |   |       26-3.png
+|   |   |   |       
+|   |   |   +---27
+|   |   |   |       27-1.png
+|   |   |   |       27-2.png
+|   |   |   |       27-3.png
+|   |   |   |       
+|   |   |   +---28
+|   |   |   |       28-1.png
+|   |   |   |       28-2.png
+|   |   |   |       28-3.png
+|   |   |   |       
+|   |   |   +---29
+|   |   |   |       29-1.png
+|   |   |   |       29-2.png
+|   |   |   |       29-3.png
+|   |   |   |       
+|   |   |   +---3
+|   |   |   |       3-1.png
+|   |   |   |       3-2.png
+|   |   |   |       3-3.png
+|   |   |   |       
+|   |   |   +---30
+|   |   |   |       30-1.png
+|   |   |   |       30-2.png
+|   |   |   |       30-3.png
+|   |   |   |       
+|   |   |   +---31
+|   |   |   |       31-1.png
+|   |   |   |       31-2.png
+|   |   |   |       
+|   |   |   +---32
+|   |   |   |       32-1.png
+|   |   |   |       32-2.png
+|   |   |   |       32-3.png
+|   |   |   |       
+|   |   |   +---33
+|   |   |   |       33-1.png
+|   |   |   |       33-2.png
+|   |   |   |       33-3.png
+|   |   |   |       
+|   |   |   +---34
+|   |   |   |       34-1.png
+|   |   |   |       34-2.png
+|   |   |   |       34-3.png
+|   |   |   |       
+|   |   |   +---35
+|   |   |   |       35-1.png
+|   |   |   |       35-2.png
+|   |   |   |       
+|   |   |   +---36
+|   |   |   |       36-1.png
+|   |   |   |       36-2.png
+|   |   |   |       
+|   |   |   +---37
+|   |   |   |       37-1.png
+|   |   |   |       37-2.png
+|   |   |   |       37-3.png
+|   |   |   |       
+|   |   |   +---38
+|   |   |   |       38-1.png
+|   |   |   |       38-2.png
+|   |   |   |       38-3.png
+|   |   |   |       New Text Document.txt
+|   |   |   |       
+|   |   |   +---39
+|   |   |   |       39-1.png
+|   |   |   |       New Text Document.txt
+|   |   |   |       
+|   |   |   +---4
+|   |   |   |       4-1.png
+|   |   |   |       4-2.png
+|   |   |   |       
+|   |   |   +---40
+|   |   |   |       40-1.png
+|   |   |   |       40-2.png
+|   |   |   |       40-3.png
+|   |   |   |       
+|   |   |   +---5
+|   |   |   |       5-1.png
+|   |   |   |       
+|   |   |   +---6
+|   |   |   |       6-1.png
+|   |   |   |       
+|   |   |   +---7
+|   |   |   |       7-1.png
+|   |   |   |       
+|   |   |   +---8
+|   |   |   |       8-1.png
+|   |   |   |       8-2.png
+|   |   |   |       
+|   |   |   +---9
+|   |   |   |       9-1.png
+|   |   |   |       9-2.png
+|   |   |   |       
+|   |   |   \---uploaded
+|   |   |           1764724750_692f900e9fe54.png
+|   |   |           1764724750_692f900ea0df4.png
+|   |   |           1764724750_692f900ea13f2.png
+|   |   |           1769427362_697751a266810.png
+|   |   |           1769432435_69776573e45d6.png
+|   |   |           1775122297_69ce3779c482c.png
+|   |   |           1775122297_69ce3779c4b1e.png
+|   |   |           1775122664_69ce38e8240c8.png
+|   |   |           1775122664_69ce38e82428c.png
+|   |   |           1775122664_69ce38e824417.png
+|   |   |           1775124232_69ce3f08a2106.png
+|   |   |           1775124232_69ce3f08a2292.png
+|   |   |           1775124232_69ce3f08a23e1.png
+|   |   |           1775124249_69ce3f191a114.png
+|   |   |           1775124249_69ce3f191a2ce.png
+|   |   |           1775124249_69ce3f191a462.png
+|   |   |           1775124876_69ce418ce5438.png
+|   |   |           1775124876_69ce418ce55f0.png
+|   |   |           1775124876_69ce418ce574c.png
+|   |   |           1775124909_69ce41adf071e.png
+|   |   |           1775124909_69ce41adf0966.png
+|   |   |           1775124925_69ce41bd14b44.png
+|   |   |           1775124942_69ce41ce6f9f0.png
+|   |   |           1775124969_69ce41e907a8f.png
+|   |   |           1775125042_69ce42322ebfe.png
+|   |   |           1775125042_69ce42322edae.png
+|   |   |           1775125090_69ce426234a17.png
+|   |   |           1775125090_69ce426234c54.png
+|   |   |           1775125108_69ce427404799.png
+|   |   |           1775125108_69ce4274049c6.png
+|   |   |           1775125108_69ce427404b6a.png
+|   |   |           1775125108_69ce427404d01.png
+|   |   |           1775125218_69ce42e2b412b.png
+|   |   |           1775125218_69ce42e2b42bf.png
+|   |   |           1775125231_69ce42ef02913.png
+|   |   |           1775125231_69ce42ef02ad1.png
+|   |   |           1775125248_69ce430046b56.png
+|   |   |           1775125248_69ce430046de4.png
+|   |   |           1775125261_69ce430d58400.png
+|   |   |           1775125261_69ce430d585f4.png
+|   |   |           1775125296_69ce433044e35.png
+|   |   |           1775125296_69ce433045046.png
+|   |   |           1775125331_69ce43532f6c2.png
+|   |   |           1775125331_69ce43532f8a4.png
+|   |   |           1775125368_69ce4378174ca.png
+|   |   |           1775125368_69ce437817733.png
+|   |   |           1775125368_69ce437817945.png
+|   |   |           1775125382_69ce4386d4195.png
+|   |   |           1775125405_69ce439d42c2c.png
+|   |   |           1775125405_69ce439d42e7a.png
+|   |   |           1775125420_69ce43ac2f0e9.png
+|   |   |           1775125420_69ce43ac2f2d6.png
+|   |   |           1775125420_69ce43ac2f459.png
+|   |   |           
+|   |   \---source
+|   |           anh-qc-1.webp
+|   |           anh-qc-2.webp
+|   |           anh-qc-3.webp
+|   |           anh-qc-4.webp
+|   |           logo.png
+|   |           
+|   \---js
+|       |   danhGia.js
+|       |   js.js
+|       |   liveSearch.js
+|       |   loadLocSanPham.js
+|       |   loadSanPham.js
+|       |   nutThemGioHang_muaNgay.js
+|       |   sellerShop.js
+|       |   yeuThich.js
+|       |   
+|       \---bootstrap
+|               bootstrap.bundle.js
+|               bootstrap.bundle.min.js
+|               
++---controllers
+|       ajaxTimCuaHang.php
+|       ajaxTimSanPhamGanNhat.php
+|       baoCaoController.php
+|       chatController.php
+|       chiTietDonHangController.php
+|       chiTietNguoiBanController.php
+|       chiTietSanPhamController.php
+|       dangKyController.php
+|       dangNhapController.php
+|       dangXuatController.php
+|       danhSachSanPhamController.php
+|       danhSachYeuThichController.php
+|       datHangController.php
+|       gioHangApiController.php
+|       gioHangController.php
+|       hangDongBinhLuanController.php
+|       inDanhMuc.php
+|       inDSSPGiamGia.php
+|       inDSSPMoi.php
+|       inLocDSSP.php
+|       kichHoatBanHangController.php
+|       lichSuDonHangController.php
+|       sanPhamGanBanController.php
+|       searchController.php
+|       sellerApiController.php
+|       taiAnhMau.php
+|       taoDuLieuMau.php
+|       thanhToanController.php
+|       thongBaoController.php
+|       thongTinTaiKhoanController.php
+|       trangChuController.php
+|       xoaDuLieuMau.php
+|       xuLyBinhLuan.php
+|       xuLyThanhToan.php
+|       yeuThichApiController.php
+|       
++---database
+|       DoAn1 - 40sp.sql
+|       DoAn2.mdj
+|       DoAn2.sql
+|       events.csv
+|       import_events_anh_xa.php
+|       
++---includes
+|       footer.php
+|       header.php
+|       ketnoi.php
+|       ketnoiajax.php
+|       navbar.php
+|       
++---models
+|       baoCaoModel.php
+|       chatModel.php
+|       chiTietDonHangModel.php
+|       dangKyModel.php
+|       danhGia.php
+|       danhGiaModel.php
+|       danhMuc.php
+|       DiaChiModel.php
+|       donHang.php
+|       kichHoatBanHangModel.php
+|       sanPham.php
+|       sanPhamChiTiet.php
+|       TaiKhoanModel.php
+|       thongBaoModel.php
+|       yeuThichModel.php
+|       
++---project
++---python_ai
+|       api_goi_y.py
+|       
++---seller
+|   +---controllers
+|   |       sellerChatController.php
+|   |       sellerChiTietDonHangController.php
+|   |       sellerDoanhThuController.php
+|   |       sellerDonHangController.php
+|   |       sellerSanPhamController.php
+|   |       sellerThongTinController.php
+|   |       
+|   +---models
+|   |       sellerDoanhThuModel.php
+|   |       sellerDonHangModel.php
+|   |       sellerSanPhamModel.php
+|   |       
+|   \---views
+|           sellerChat.php
+|           sellerChiTietDonHang.php
+|           sellerDoanhThu.php
+|           sellerQuanLyDonHang.php
+|           sellerQuanLySanPham.php
+|           sellerThongTinCuaHang.php
+|           
+\---views
+        boQuaGoiY.php
+        chat.php
+        chiTietDonHang.php
+        chiTietNguoiBan.php
+        chiTietSanPham.php
+        dangKy.php
+        dangNhap.php
+        danhSachSanPham.php
+        danhSachYeuThich.php
+        gioHang.php
+        kichHoatBanHang.php
+        lichSuDonHang.php
+        sanPhamGanBan.php
+        thanhToan.php
+        thongBao.php
+        thongTinTaiKhoan.php
+        trangChu.php
+        
