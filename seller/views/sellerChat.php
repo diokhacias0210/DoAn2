@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,24 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="../../assets/css/header.css" rel="stylesheet">
     <link href="../../assets/css/color.css" rel="stylesheet">
+    <!-- ✅ Load CSS chat để khung chat giống hệt bên người mua -->
+    <link href="../../assets/css/chat.css" rel="stylesheet">
 
     <style>
-        /* --- ĐỒNG BỘ KHUNG SƯỜN --- */
-        .seller-wrapper {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        .seller-content-box {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            min-height: 600px;
-        }
-
-        /* --- MENU BÊN TRÁI (SIDEBAR) --- */
+        /* Giữ nguyên toàn bộ style cũ của bạn (không thay đổi) */
+        .seller-wrapper { max-width: 1300px; margin: 0 auto; padding: 0 15px; }
+        .seller-content-box { background: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); min-height: 600px; }
         .seller-sidebar {
             background: #ffffff;
             border-radius: 10px;
@@ -62,25 +50,10 @@
             border-left: 4px solid var(--bs-pink-600);
         }
 
-        .chat-badge {
-            position: absolute;
-            top: -4px;
-            right: -8px;
-            background-color: #dc3545;
-            color: white;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 50px;
-            line-height: 1;
-            border: 2px solid #fff;
-        }
-
-        /* Tinh chỉnh khung chat cho Seller */
-        .chat-wrapper {
-            margin: 10px auto;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
+        .chat-badge { position: absolute; top: -4px; right: -8px; background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 3px 6px; border-radius: 50px; line-height: 1; border: 2px solid #fff; }
+        
+        /* Chỉ tinh chỉnh nhẹ để khung chat vừa vặn */
+        .chat-wrapper { height: 70vh; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; }
 
         /* CSS Accordion Khách hàng */
         .shop-group {
@@ -124,25 +97,20 @@
         }
     </style>
 </head>
-
 <body>
     <?php include '../../includes/header.php'; ?>
 
     <?php
-    // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+    // Phần đếm tin nhắn chưa đọc (giữ nguyên)
     $soTinNhanChuaDoc = 0;
     if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
         $idSellerCurrent = $_SESSION['IdTaiKhoan'];
-
-        // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này, 
-        // do người khác gửi (Khách hàng) và có trạng thái DaDoc = 0
         $sqlDemTinNhan = "SELECT COUNT(tn.MaTN) AS SoLuong 
-                            FROM TinNhan tn 
-                            JOIN PhongChat p ON tn.MaPhong = p.MaPhong 
-                            WHERE p.IdNguoiBan = $idSellerCurrent 
-                            AND tn.IdNguoiGui != $idSellerCurrent 
-                            AND tn.DaXem = 0";
-
+                          FROM TinNhan tn 
+                          JOIN PhongChat p ON tn.MaPhong = p.MaPhong 
+                          WHERE p.IdNguoiBan = $idSellerCurrent 
+                          AND tn.IdNguoiGui != $idSellerCurrent 
+                          AND tn.DaXem = 0";
         $rsDem = $conn->query($sqlDemTinNhan);
         if ($rsDem && $rsDem->num_rows > 0) {
             $rowDem = $rsDem->fetch_assoc();
@@ -158,16 +126,22 @@
                 <div class="seller-sidebar">
                     <a href="sellerThongTinController.php"><i class="fa-solid fa-circle-info"></i> Thông tin cửa hàng</a>
                     <a href="sellerSanPhamController.php"><i class="fa-solid fa-box-open"></i> Quản lý sản phẩm</a>
-                    <a href="sellerDonHangController.php"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
-                    <a href="sellerChatController.php" class="active"><i class="fa-solid fa-comments"></i> Tin nhắn <?php if (isset($soTinNhanChuaDoc) && $soTinNhanChuaDoc > 0): ?><span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span><?php endif; ?></a>
-                    <a href="sellerDoanhThuController.php"><i class="fa-solid fa-chart-line"></i> Doanh thu & Rút tiền</a>
+                    <a href="sellerDonHangController.php" class="active"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
+                    <a href="sellerChatController.php">
+                        <i class="fa-solid fa-comments"></i> Tin nhắn
 
+                        <?php if (isset($soTinNhanChuaDoc) && $soTinNhanChuaDoc > 0): ?>
+                            <span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span>
+                        <?php endif; ?>
+                    </a>
                 </div>
             </div>
 
             <div class="col-md-9">
                 <div class="seller-content-box">
-                    <div class="chat-wrapper" style="height: 70vh; display: flex; border: 1px solid #ddd; border-radius: 12px; overflow: hidden;">
+                    <div class="chat-wrapper" style="display: flex;">
+                        
+                        <!-- ==================== SIDEBAR BÊN TRÁI (GIỮ NGUYÊN 100% CODE CŨ) ==================== -->
                         <div class="sidebar" style="width: 320px; border-right: 1px solid #ddd; background: #fff; display: flex; flex-direction: column;">
                             <div class="sidebar-header" style="background: var(--bs-pink-500); color: white; padding: 15px; font-weight: bold; text-align: center;">
                                 Khách hàng nhắn tin
@@ -228,17 +202,24 @@
                             </div>
                         </div>
 
-                        <div style="flex: 1; display: flex; flex-direction: column; background: #fafafa;">
-                            <?php if ($maPhong > 0): ?>
-                                <div class="chat-header" style="padding: 15px; background: white; border-bottom: 1px solid #ddd; font-weight: bold;">
-                                    Đang chat với khách hàng
+                        <!-- ==================== KHUNG CHAT BÊN PHẢI (ĐÃ ĐỒNG BỘ GIỐNG BÊN NGƯỜI MUA) ==================== -->
+                        <div class="chat-window" style="flex: 1; display: flex; flex-direction: column;">
+                            <?php if ($maPhong > 0 && isset($chiTietPhong) && !empty($chiTietPhong)): ?>
+                                <div class="chat-header">
+                                    <div style="font-size: 18px; font-weight: bold; color: var(--bs-pink-600);">
+                                        <i class="fa-solid fa-user"></i> <?php echo htmlspecialchars($chiTietPhong['TenNguoiChat']); ?>
+                                    </div>
+                                    <div style="font-size: 14px; color: #555; margin-top: 5px;">
+                                        Đang trao đổi về: <strong><?php echo htmlspecialchars($chiTietPhong['TenHH']); ?></strong>
+                                    </div>
                                 </div>
-                                <div class="chat-body" id="chatBox" style="flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
-                                </div>
-                                <div class="chat-footer" style="padding: 15px; background: white; border-top: 1px solid #ddd; display: flex; gap: 10px;">
+
+                                <div class="chat-body" id="chatBox"></div>
+
+                                <div class="chat-footer">
                                     <input type="text" id="txtMessage" class="form-control" placeholder="Nhập tin nhắn..." autocomplete="off">
-                                    <button class="btn btn-primary" onclick="sendMessage()" style="background: var(--bs-pink-500); border: none;">
-                                        <i class="fa-solid fa-paper-plane"></i> Gửi
+                                    <button class="btn-send" onclick="sendMessage()">
+                                        <i class="fa-solid fa-paper-plane"></i>
                                     </button>
                                 </div>
                             <?php else: ?>
@@ -277,7 +258,6 @@
 
         if (maPhong > 0) {
             function loadMessages() {
-                // ĐƯỜNG DẪN GỌI VỀ CONTROLLER GỐC
                 fetch(`../../controllers/chatController.php?action=load&MaPhong=${maPhong}`)
                     .then(res => res.text())
                     .then(data => {
@@ -290,23 +270,36 @@
             function sendMessage() {
                 const msg = txtMessage.value.trim();
                 if (msg === '') return;
-
                 let formData = new FormData();
                 formData.append('action', 'send');
                 formData.append('MaPhong', maPhong);
                 formData.append('NoiDung', msg);
-
-                // ĐƯỜNG DẪN GỌI VỀ CONTROLLER GỐC
-                fetch('../../controllers/chatController.php', {
-                        method: 'POST',
-                        body: formData
-                    })
+                fetch('../../controllers/chatController.php', { method: 'POST', body: formData })
                     .then(() => {
                         txtMessage.value = '';
                         loadMessages();
                         setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 100);
                     });
             }
+
+            // Sửa & Thu hồi tin nhắn
+            window.editMessage = function(maTN) {
+                const newContent = prompt("Nhập nội dung tin nhắn mới:");
+                if (newContent === null || newContent.trim() === '') return;
+                let formData = new FormData();
+                formData.append('action', 'edit');
+                formData.append('MaTN', maTN);
+                formData.append('NoiDung', newContent.trim());
+                fetch('../../controllers/chatController.php', { method: 'POST', body: formData }).then(() => loadMessages());
+            };
+
+            window.recallMessage = function(maTN) {
+                if (!confirm('Bạn có chắc muốn thu hồi tin nhắn này không?')) return;
+                let formData = new FormData();
+                formData.append('action', 'recall');
+                formData.append('MaTN', maTN);
+                fetch('../../controllers/chatController.php', { method: 'POST', body: formData }).then(() => loadMessages());
+            };
 
             txtMessage.addEventListener("keypress", function(event) {
                 if (event.key === "Enter") {
@@ -320,8 +313,5 @@
             setInterval(loadMessages, 2000);
         }
     </script>
-    <script src="../../assets/js/js.js"></script>
-
 </body>
-
 </html>

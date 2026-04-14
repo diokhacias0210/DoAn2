@@ -68,13 +68,13 @@ CREATE TABLE YeuThich (
 
 CREATE TABLE DanhGiaSao (
     MaDG INT AUTO_INCREMENT PRIMARY KEY,
-    IdTaiKhoan INT,
-    MaHH INT,
+    IdTaiKhoan INT(10),
+    MaHH INT(10),
     SoSao TINYINT CHECK (SoSao BETWEEN 1 AND 5),
     NgayDG DATETIME DEFAULT CURRENT_TIMESTAMP,
     TrangThai ENUM('Hiển thị', 'Ẩn') DEFAULT 'Hiển thị',
-    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
-    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH),
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
+    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE,
     UNIQUE (IdTaiKhoan, MaHH) 
 );
 
@@ -117,26 +117,26 @@ CREATE TABLE DonHang (
     IdNguoiBan INT(10) NOT NULL, 
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
     DiaChiGiao VARCHAR(255),
-    TongTien DECIMAL(10) UNSIGNED,
+    TongTien DECIMAL(10,2) UNSIGNED, -- Đã sửa để khớp số thập phân
     TrangThai ENUM('Chờ xử lý', 'Đã xác nhận', 'Đang giao', 'Hoàn tất', 'Đã hủy') DEFAULT 'Chờ xử lý',
     TrangThaiThanhToan ENUM('ChuaThanhToan', 'DaThanhToan', 'ChoHoanTien') DEFAULT 'ChuaThanhToan', 
     GhiChu TEXT,
     NgaySua DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PhiSan DECIMAL(10,2) DEFAULT 0, 
     TienNguoiBanNhan DECIMAL(10,2) DEFAULT 0, 
-    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan), -- Đã bỏ CASCADE
     FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan)
 );
 
 CREATE TABLE ThanhToan (
     MaTT INT AUTO_INCREMENT PRIMARY KEY,
-    MaDH INT,
+    MaDH INT(10),
     MaThanhToan VARCHAR(50) UNIQUE, 
     SoTien DECIMAL(10,2) NOT NULL,
     NgayThanhToan DATETIME DEFAULT CURRENT_TIMESTAMP,
     PhuongThuc ENUM('Tiền mặt', 'Chuyển khoản', 'Ví điện tử', 'Thẻ ngân hàng') DEFAULT 'Tiền mặt',
     TrangThai ENUM('Thành công', 'Thất bại', 'Đang xử lý') DEFAULT 'Đang xử lý',
-    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) -- Đã bỏ CASCADE
 );
 
 CREATE TABLE ChiTietDonHang ( 
@@ -146,17 +146,17 @@ CREATE TABLE ChiTietDonHang (
     SoLuongSanPham SMALLINT UNSIGNED, 
     DonGia DECIMAL(10,2) UNSIGNED,
     GiamGia DECIMAL(10,2) DEFAULT 0,
-    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH), -- Đã bỏ CASCADE
+    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) -- Đã bỏ CASCADE
 );
 
 CREATE TABLE LichSuDonHang ( 
     MaLichSu INT AUTO_INCREMENT PRIMARY KEY, 
-    MaDH INT,
+    MaDH INT(10),
     NgayThayDoi DATETIME DEFAULT CURRENT_TIMESTAMP,
     TrangThai ENUM('Chờ xử lý', 'Đã xác nhận', 'Đang giao', 'Hoàn tất', 'Đã hủy'),
     GhiChu TEXT,
-    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) ON DELETE CASCADE
 );
 
 CREATE TABLE MaGiamGia (
@@ -173,7 +173,7 @@ CREATE TABLE MaGiamGia (
 
 CREATE TABLE MaGiamGiaDanhMuc (
     MaGG INT,
-    MaDM INT,
+    MaDM INT(10),
     PRIMARY KEY (MaGG, MaDM),
     FOREIGN KEY (MaGG) REFERENCES MaGiamGia(MaGG) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (MaDM) REFERENCES DanhMuc(MaDM) ON DELETE CASCADE ON UPDATE CASCADE
@@ -201,7 +201,8 @@ CREATE TABLE ThongBao (
     NoiDung TEXT,
     LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong',
     NguoiGui INT(10) DEFAULT NULL, 
-    NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP
+    NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (NguoiGui) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE SET NULL -- Đã bổ sung
 );
 
 CREATE TABLE ThongBaoNguoiDung (
@@ -233,7 +234,19 @@ CREATE TABLE TinNhan (
     LoaiTin ENUM('VanBan', 'HinhAnh') DEFAULT 'VanBan',
     DaXem BOOLEAN DEFAULT 0,
     NgayGui DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (MaPhong) REFERENCES PhongChat(MaPhong) ON DELETE CASCADE
+    TrangThai TINYINT(1) DEFAULT 0, -- Đã sửa ; thành ,
+    DaChinhSua TINYINT(1) DEFAULT 0, -- Đã sửa ; thành ,
+    FOREIGN KEY (MaPhong) REFERENCES PhongChat(MaPhong) ON DELETE CASCADE,
+    FOREIGN KEY (IdNguoiGui) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE -- Đã bổ sung
+);
+
+CREATE TABLE LichSuTinNhan (
+    IdLichSu INT AUTO_INCREMENT PRIMARY KEY,
+    MaTN INT NOT NULL, -- Đã sửa IdTinNhan thành MaTN cho khớp
+    NoiDungCu TEXT,
+    LoaiThayDoi ENUM('Sua', 'ThuHoi'),
+    ThoiGianThayDoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (MaTN) REFERENCES TinNhan(MaTN) ON DELETE CASCADE -- Đã sửa khớp
 );
 
 CREATE TABLE Banner (
@@ -256,7 +269,8 @@ CREATE TABLE BaoCao (
     TrangThai ENUM('ChoXuLy', 'ViPham', 'KhongViPham') DEFAULT 'ChoXuLy',
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (IdNguoiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
-    FOREIGN KEY (IdDoiTuongBiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE
+    FOREIGN KEY (IdDoiTuongBiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
+    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE -- Đã bổ sung
 );
 
 CREATE TABLE KhangCao (
@@ -279,7 +293,7 @@ CREATE TABLE CauHinhHeThong (
 
 CREATE TABLE YeuCauRutTien (
     MaYC INT PRIMARY KEY AUTO_INCREMENT,
-    IdTaiKhoan INT NOT NULL,
+    IdTaiKhoan INT(10) NOT NULL,
     SoTien DECIMAL(15,2) NOT NULL,
     NganHang VARCHAR(100),
     SoTaiKhoan VARCHAR(50),
@@ -293,19 +307,20 @@ CREATE TABLE YeuCauRutTien (
 
 CREATE TABLE BienDongSoDu (
     MaBD INT PRIMARY KEY AUTO_INCREMENT,
-    IdTaiKhoan INT NOT NULL,
+    IdTaiKhoan INT(10) NOT NULL,
     LoaiGiaoDich ENUM('CongTienDonHang', 'RutTien', 'HoanTien', 'TruTien') NOT NULL,
     SoTien DECIMAL(15,2) NOT NULL,
     SoDuSauGiaoDich DECIMAL(15,2) NOT NULL,
     NoiDung TEXT,
-    MaDH INT NULL, 
+    MaDH INT(10) NULL, 
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan),
     FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH)
 );
+
 CREATE TABLE HanhVi_AI (
-    IdTaiKhoan int(11) NOT NULL,
-    MaHH int(11) NOT NULL,
+    IdTaiKhoan int(10) NOT NULL,
+    MaHH int(10) NOT NULL,
     Diem int(11) NOT NULL,
     PRIMARY KEY (IdTaiKhoan, MaHH),
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,

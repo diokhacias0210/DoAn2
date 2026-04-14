@@ -50,15 +50,19 @@ class chatModel
         return 0;
     }
 
-    // Lấy danh sách các phòng chat của một người dùng (Cột trái giao diện)
+    // Lấy danh sách các phòng chat của một người dùng (ĐÃ BỔ SUNG SỐ TIN NHẮN CHƯA ĐỌC)
     public function layDanhSachPhongCuaNguoiDung($idNguoiDung)
     {
-        // Sử dụng CASE WHEN để xác định tên đối phương đang chat với mình
         $sql = "SELECT p.MaPhong, h.TenHH, 
                        CASE 
                            WHEN p.IdNguoiMua = ? THEN tk_ban.TenTK
                            ELSE tk_mua.TenTK
-                       END as TenNguoiChat
+                       END as TenNguoiChat,
+                       (SELECT COUNT(tn.MaTN) 
+                        FROM TinNhan tn 
+                        WHERE tn.MaPhong = p.MaPhong 
+                        AND tn.IdNguoiGui != ? 
+                        AND tn.DaXem = 0) as SoTinNhanMoi
                 FROM PhongChat p 
                 JOIN HangHoa h ON p.MaHH = h.MaHH 
                 JOIN TaiKhoan tk_ban ON p.IdNguoiBan = tk_ban.IdTaiKhoan
@@ -66,16 +70,16 @@ class chatModel
                 WHERE p.IdNguoiMua = ? OR p.IdNguoiBan = ?";
                 
         $stmt = $this->conn->prepare($sql);
-        // Bind 3 tham số $idNguoiDung
-        $stmt->bind_param("iii", $idNguoiDung, $idNguoiDung, $idNguoiDung);
+        $stmt->bind_param("iiii", $idNguoiDung, $idNguoiDung, $idNguoiDung, $idNguoiDung);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Lấy toàn bộ tin nhắn của một phòng
+    // Lấy toàn bộ tin nhắn của một phòng (ĐÃ BỔ SUNG THÊM CÁC TRƯỜNG CHO SỬA/THU HỒI)
     public function layDanhSachTinNhan($maPhong)
     {
-        $sql = "SELECT IdNguoiGui, NoiDung, NgayGui FROM TinNhan WHERE MaPhong = ? ORDER BY NgayGui ASC";
+        $sql = "SELECT MaTN, IdNguoiGui, NoiDung, NgayGui, DaChinhSua, TrangThai 
+                FROM TinNhan WHERE MaPhong = ? ORDER BY NgayGui ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $maPhong);
         $stmt->execute();
@@ -90,7 +94,6 @@ class chatModel
         $stmt->bind_param("iis", $maPhong, $idNguoiGui, $noiDung);
         return $stmt->execute();
     }
-    // Hàm lưu tin nhắn vào bảng TinNhan
     public function guiTinNhan($maPhong, $idNguoiGui, $noiDung) {
         $sql = "INSERT INTO TinNhan (MaPhong, IdNguoiGui, NoiDung) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
@@ -98,7 +101,7 @@ class chatModel
         return $stmt->execute();
     }
 
-    // Lấy thông tin chi tiết của 1 phòng chat (bao gồm Tên sản phẩm và Tên đối phương)
+    // Lấy thông tin chi tiết của 1 phòng chat
     public function layChiTietPhongChat($maPhong, $idNguoiDung)
     {
         $sql = "SELECT p.MaPhong, h.TenHH, 
@@ -121,6 +124,56 @@ class chatModel
             return $result->fetch_assoc();
         }
         return null;
+    }
+
+    // ==================== THÊM MỚI: SỬA & THU HỒI TIN NHẮN ====================
+    public function suaTinNhan($maTN, $noiDungMoi, $idNguoiGui)
+    {
+        // Lấy nội dung cũ để lưu lịch sử
+        $sqlOld = "SELECT NoiDung FROM TinNhan WHERE MaTN = ? AND IdNguoiGui = ?";
+        $stmtOld = $this->conn->prepare($sqlOld);
+        $stmtOld->bind_param("ii", $maTN, $idNguoiGui);
+        $stmtOld->execute();
+        $result = $stmtOld->get_result();
+        if ($result->num_rows === 0) return false;
+        $oldContent = $result->fetch_assoc()['NoiDung'];
+
+        // Lưu lịch sử
+        $sqlHistory = "INSERT INTO LichSuTinNhan (MaTN, NoiDungCu, LoaiThayDoi) VALUES (?, ?, 'Sua')";
+        $stmtH = $this->conn->prepare($sqlHistory);
+        $stmtH->bind_param("is", $maTN, $oldContent);
+        $stmtH->execute();
+
+        // Cập nhật tin nhắn
+        $sql = "UPDATE TinNhan SET NoiDung = ?, DaChinhSua = 1 WHERE MaTN = ? AND IdNguoiGui = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sii", $noiDungMoi, $maTN, $idNguoiGui);
+        return $stmt->execute();
+    }
+
+    public function thuHoiTinNhan($maTN, $idNguoiGui)
+    {
+        // Lấy nội dung cũ để lưu lịch sử
+        $sqlOld = "SELECT NoiDung FROM TinNhan WHERE MaTN = ? AND IdNguoiGui = ?";
+        $stmtOld = $this->conn->prepare($sqlOld);
+        $stmtOld->bind_param("ii", $maTN, $idNguoiGui);
+        $stmtOld->execute();
+        $result = $stmtOld->get_result();
+        if ($result->num_rows === 0) return false;
+        $oldContent = $result->fetch_assoc()['NoiDung'];
+
+        // Lưu lịch sử
+        $sqlHistory = "INSERT INTO LichSuTinNhan (MaTN, NoiDungCu, LoaiThayDoi) VALUES (?, ?, 'ThuHoi')";
+        $stmtH = $this->conn->prepare($sqlHistory);
+        $stmtH->bind_param("is", $maTN, $oldContent);
+        $stmtH->execute();
+
+        // Thu hồi tin nhắn
+        $sql = "UPDATE TinNhan SET NoiDung = '[Tin nhắn đã được thu hồi]', DaChinhSua = 1, TrangThai = 1 
+                WHERE MaTN = ? AND IdNguoiGui = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $maTN, $idNguoiGui);
+        return $stmt->execute();
     }
 }
 ?>

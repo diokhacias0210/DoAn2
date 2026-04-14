@@ -235,3 +235,89 @@ body {
     transform: translateX(-5px); /* Hiệu ứng lùi về bên trái nhẹ khi di chuột */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+/* ==================== HOVER ICON SỬA / THU HỒI ==================== */
+.msg {
+    position: relative;
+    margin-bottom: 10px;           
+    max-width: 58%;
+}
+
+.message-bubble {
+   position: relative;
+    padding: 9px 15px;             /* Giảm padding → khung nhỏ hơn nhiều */
+    font-size: 14px;               /* Chữ nhỏ hơn, vừa với khung */
+    line-height: 1.45;
+    border-radius: 18px;
+    word-wrap: break-word;
+}
+
+.message-time {
+    font-size: 10px;
+    color: #999;
+    margin-top: 4px;
+    padding: 0 5px;
+}
+
+/* Tin nhắn gửi (hồng) */
+.msg.sent .message-bubble {
+    background: var(--bs-pink-500);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+/* Tin nhắn nhận (xám) */
+.msg.received .message-bubble {
+    background: #e9ecef;
+    color: #333;
+    border-bottom-left-radius: 4px;
+}
+
+/* Khu vực icon nổi lên khi hover */
+.message-actions {
+    position: absolute;
+    top: 50%;
+    right: -65px;
+    transform: translateY(-50%);
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    padding: 5px 8px;
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    z-index: 10;
+}
+
+.msg.sent:hover .message-actions {
+    opacity: 1;
+    visibility: visible;
+    right: 12px;            /* Di chuyển vào sát tin nhắn */
+}
+
+/* Icon trong bubble hover */
+.message-actions i {
+    font-size: 17px;
+    cursor: pointer;
+    color: #555;
+    transition: 0.2s;
+}
+
+.message-actions i:hover {
+    color: var(--bs-pink-500);
+    transform: scale(1.2);
+}
+
+/* Thời gian căn phải cho tin nhắn gửi */
+.msg.sent .message-time {
+    text-align: right;
+    margin-right: 8px;
+}
+
+/* Tin nhắn thu hồi */
+.msg em {
+    font-size: 13px;
+    font-style: italic;
+    color: #888;
+}

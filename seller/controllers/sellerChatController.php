@@ -10,7 +10,11 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 
 $idSeller = $_SESSION['IdTaiKhoan'];
 
-// LẤY DANH SÁCH PHÒNG CHAT KÈM SỐ TIN NHẮN CHƯA ĐỌC CỦA TỪNG PHÒNG
+// ==================== THÊM MỚI: SỬ DỤNG MODEL ====================
+require_once '../../models/chatModel.php';
+$chatModel = new chatModel($conn);
+
+// LẤY DANH SÁCH PHÒNG CHAT KÈM SỐ TIN NHẮN CHƯA ĐỌC (giữ nguyên code cũ của bạn)
 $sql = "SELECT p.MaPhong, p.MaHH, h.TenHH, t.TenTK AS TenNguoiChat,
                (SELECT COUNT(tn.MaTN) 
                 FROM TinNhan tn 
@@ -31,18 +35,19 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
-// Lấy mã phòng đang chọn (nếu có)
 $maPhong = isset($_GET['MaPhong']) ? (int)$_GET['MaPhong'] : 0;
 
-// Cập nhật trạng thái "Đã đọc" cho các tin nhắn của khách trong phòng này
+// Cập nhật trạng thái "Đã đọc"
 if ($maPhong > 0) {
-    $sqlUpdateDaDoc = "UPDATE TinNhan
-                       SET DaXem = 1 
-                       WHERE MaPhong = $maPhong 
-                       AND IdNguoiGui != $idSeller";
+    $sqlUpdateDaDoc = "UPDATE TinNhan SET DaXem = 1 WHERE MaPhong = $maPhong AND IdNguoiGui != $idSeller";
     $conn->query($sqlUpdateDaDoc);
+    
+    // LẤY CHI TIẾT PHÒNG (để hiển thị giống bên người mua)
+    $chiTietPhong = $chatModel->layChiTietPhongChat($maPhong, $idSeller);
+} else {
+    $chiTietPhong = null;
 }
 
-// Gọi View hiển thị
+// Gọi View
 require_once '../views/sellerChat.php';
 ?>

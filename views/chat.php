@@ -31,42 +31,41 @@
                 <div class="sidebar-content" style="overflow-y: auto; height: calc(100% - 54px);">
                     <?php
                     if (!empty($danhSachPhong)) {
-                        // 1. Nhóm dữ liệu theo Tên Người Bán (Shop)
                         $danhSachNhom = [];
                         foreach ($danhSachPhong as $r) {
                             $tenShop = $r['TenNguoiChat'];
                             $danhSachNhom[$tenShop][] = $r;
                         }
 
-                        // 2. Hiển thị danh sách đã nhóm
                         foreach ($danhSachNhom as $tenShop => $cacPhongChat) {
-                            // Kiểm tra xem nhóm này có chứa phòng đang chat không để tự động mở
                             $isActiveGroup = false;
                             foreach ($cacPhongChat as $p) {
-                                if ($p['MaPhong'] == $maPhong) {
-                                    $isActiveGroup = true;
-                                    break;
-                                }
+                                if ($p['MaPhong'] == $maPhong) { $isActiveGroup = true; break; }
                             }
                             
                             $displayStyle = $isActiveGroup ? "display: block;" : "display: none;";
                             $iconClass = $isActiveGroup ? "fa-chevron-up" : "fa-chevron-down";
                             $headerActiveClass = $isActiveGroup ? "active-shop" : "";
 
-                            // In ra tiêu đề Shop
                             echo "<div class='shop-group'>";
                             echo "  <div class='shop-group-title {$headerActiveClass}' onclick='toggleShop(this)'>";
                             echo "      <div style='font-weight: bold;'><i class='fa-solid fa-store' style='color: var(--bs-pink-500);'></i> " . htmlspecialchars($tenShop) . "</div>";
                             echo "      <i class='fa-solid {$iconClass} toggle-icon' style='font-size: 12px; color: #888;'></i>";
                             echo "  </div>";
                             
-                            // In ra danh sách các phòng chat (sản phẩm) của Shop đó
                             echo "  <div class='shop-group-items' style='{$displayStyle}'>";
                             foreach ($cacPhongChat as $r) {
                                 $activeClass = ($r['MaPhong'] == $maPhong) ? 'active' : '';
+                                
+                                // BADGE SỐ TIN NHẮN CHƯA ĐỌC (mới thêm)
+                                $badgeHTML = '';
+                                if (isset($r['SoTinNhanMoi']) && $r['SoTinNhanMoi'] > 0) {
+                                    $badgeHTML = "<span style='background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);'>{$r['SoTinNhanMoi']}</span>";
+                                }
+
                                 echo "      <div class='room-item {$activeClass}' onclick='window.location.href=\"../controllers/chatController.php?action=index&MaPhong=" . $r['MaPhong'] . "\"'>";
                                 echo "          <div class='room-product-name' style='font-size: 14px; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>";
-                                echo "              <i class='fa-solid fa-box-open' style='color: #888; margin-right: 5px;'></i> SP: " . htmlspecialchars($r['TenHH']);
+                                echo "              <i class='fa-solid fa-box-open' style='color: #888; margin-right: 5px;'></i> SP: " . htmlspecialchars($r['TenHH']) . $badgeHTML;
                                 echo "          </div>";
                                 echo "      </div>";
                             }
@@ -96,8 +95,7 @@
                     <?php endif; ?>
                 </div>
 
-                <div class="chat-body" id="chatBox">
-                    </div>
+                <div class="chat-body" id="chatBox"></div>
 
                 <div class="chat-footer">
                     <input type="text" id="txtMessage" placeholder="Nhập tin nhắn..." autocomplete="off" <?php echo ($maPhong > 0) ? '' : 'disabled'; ?>>
@@ -114,11 +112,9 @@
         const chatBox = document.getElementById('chatBox');
         const txtMessage = document.getElementById('txtMessage');
 
-        function toggleShop(element) {
+        function toggleShop(element) { /* giữ nguyên code cũ của bạn */ 
             const items = element.nextElementSibling;
             const icon = element.querySelector('.toggle-icon');
-            
-            // Đổi trạng thái hiển thị
             if (items.style.display === "none" || items.style.display === "") {
                 items.style.display = "block";
                 icon.classList.remove('fa-chevron-down');
@@ -139,9 +135,7 @@
                     .then(data => {
                         let isScrolledToBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 5;
                         chatBox.innerHTML = data;
-                        if (isScrolledToBottom) {
-                            chatBox.scrollTop = chatBox.scrollHeight;
-                        }
+                        if (isScrolledToBottom) chatBox.scrollTop = chatBox.scrollHeight;
                     });
             }
 
@@ -154,31 +148,45 @@
                 formData.append('MaPhong', maPhong);
                 formData.append('NoiDung', msg);
 
-                fetch('../controllers/chatController.php', {
-                        method: 'POST',
-                        body: formData
-                    })
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData })
                     .then(() => {
                         txtMessage.value = ''; 
                         loadMessages(); 
-                        setTimeout(() => {
-                            chatBox.scrollTop = chatBox.scrollHeight;
-                        }, 100);
+                        setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 100);
                     });
             }
 
+            // ==================== THÊM MỚI: SỬA & THU HỒI ====================
+            window.editMessage = function(maTN) {
+                const newContent = prompt("Nhập nội dung tin nhắn mới:");
+                if (newContent === null || newContent.trim() === '') return;
+                
+                let formData = new FormData();
+                formData.append('action', 'edit');
+                formData.append('MaTN', maTN);
+                formData.append('NoiDung', newContent.trim());
+                
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData })
+                    .then(() => loadMessages());
+            };
+
+            window.recallMessage = function(maTN) {
+                if (!confirm('Bạn có chắc muốn thu hồi tin nhắn này không?')) return;
+                
+                let formData = new FormData();
+                formData.append('action', 'recall');
+                formData.append('MaTN', maTN);
+                
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData })
+                    .then(() => loadMessages());
+            };
+
             txtMessage.addEventListener("keypress", function(event) {
-                if (event.key === "Enter") {
-                    event.preventDefault(); 
-                    sendMessage();
-                }
+                if (event.key === "Enter") { event.preventDefault(); sendMessage(); }
             });
 
             loadMessages();
-            setTimeout(() => {
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 300);
-
+            setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 300);
             setInterval(loadMessages, 2000);
         }
     </script>
