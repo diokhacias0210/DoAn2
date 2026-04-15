@@ -309,6 +309,7 @@
     grid-template-columns: 2fr 1fr;
     gap: 32px;
     margin-top: 32px;
+    margin-bottom: 16px;
   }
 
   /* Thông tin thêm với nút xem thêm */

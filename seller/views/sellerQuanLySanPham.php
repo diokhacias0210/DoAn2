@@ -537,6 +537,7 @@
                 $(".alert").slideUp(500);
             }, 3000);
         });
+        CKEDITOR.config.versionCheck = false;
     </script>
     <script src="../../assets/js/js.js"></script>
 

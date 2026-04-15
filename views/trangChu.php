@@ -237,35 +237,60 @@
                 } else {
                   $badgeHtml = '<div class="badge-match">Phù hợp ' . $item['match'] . '%</div>';
                 }
+
+                // CHUẨN BỊ DỮ LIỆU ĐỂ VẼ THẺ
+                $maHH = $sp['MaHH'];
+                $tenHH = htmlspecialchars($sp['TenHH']);
+
+                // Xử lý ảnh
+                $anh = $sp['Anh'] ?? (isset($sp['URL']) ? $sp['URL'] : 'assets/images/placeholder.png');
+                $imgSrc = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
+
+                // Xử lý số sao, giá, số lượng
+                $rating = isset($sp['Rating']) ? number_format((float)$sp['Rating'], 1) : "0.0";
+                $gia = number_format($sp['Gia'], 0, ',', '.');
+                $soLuong = isset($sp['SoLuongHH']) ? (int)$sp['SoLuongHH'] : 1;
+
+                // Xử lý hết hàng
+                $hetHang = $soLuong == 0;
+                $productClass = $hetHang ? "<div class='product-item het-hang' style='background: rgba(0, 0, 0, 0.1);'>" : "<div class='product-item'>";
+                $badgeHetHang = $hetHang ? "<div class='badge-het-hang'>Hết hàng</div>" : '';
+
+                // Xử lý giảm giá
+                if (!empty($sp['GiaTri']) && $sp['GiaTri'] > 0) {
+                  $giaGiamVal = $sp['Gia'] - ($sp['Gia'] * ($sp['GiaTri'] / 100));
+                  $giaGiam = number_format($giaGiamVal, 0, ',', '.');
+                  $giaHienThi = "<span class='gia-goc'>{$gia} đ</span><span class='gia-giam'>{$giaGiam} đ</span>";
+                } else {
+                  $giaHienThi = "<span class='gia-giam'>{$gia} đ</span>";
+                }
         ?>
-                <a href="chiTietSanPhamController.php?id=<?= $sp['MaHH'] ?>" class="product-link">
-                  <button class="btn-bo-qua shadow" onclick="boQuaSanPham(<?= $sp['MaHH'] ?>, this, event)" title="Bỏ qua / Không thích">
+                <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
+                  <?= $productClass ?>
+
+                  <button class="btn-bo-qua shadow" onclick="boQuaSanPham(<?= $maHH ?>, this, event)" title="Bỏ qua / Không thích">
                     <i class="fa-solid fa-xmark"></i>
                   </button>
-
                   <?= $badgeHtml ?>
 
-                  <div class="product-item">
-                    <div class="product-item-top">
-                      <?php
-                      // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
-                      $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
-                      $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
-                      ?>
-                      <img src="<?= $duongDanAnh ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                      <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
-                    </div>
-                    <div class="product-item-bottom">
-                      <div class="gia-rating">
-                        <div class="rating"><span>5.0</span><i class="fa-solid fa-star"></i></div>
-                        <div class="gia-san-pham">
-                          <span class="gia-giam"><?= number_format($sp['Gia'], 0, ',', '.') ?>đ</span>
-                        </div>
+                  <div class='product-item-top'>
+                    <img src='<?= $imgSrc ?>' alt='<?= $tenHH ?>' loading='lazy' style='height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;'>
+                    <?= $badgeHetHang ?>
+                    <div class='tieude-sanpham'><?= $tenHH ?></div>
+                  </div>
+                  <div class='product-item-bottom'>
+                    <div class='gia-rating'>
+                      <div class='rating'>
+                        <i class='fa-solid fa-star'></i>
+                        <span><?= $rating ?></span>
+                      </div>
+                      <div class='gia-san-pham'>
+                        <?= $giaHienThi ?>
                       </div>
                     </div>
                   </div>
-                </a>
-            <?php
+      </div> </a>
+  <?php
               }
             }
           }
@@ -277,47 +302,55 @@
                         FROM HangHoa hh WHERE TrangThaiDuyet = 'DaDuyet' ORDER BY NgayThem DESC LIMIT 8";
           $result_new = $conn->query($sql_new);
           while ($sp = $result_new->fetch_assoc()) {
-            ?>
-            <a href="chiTietSanPhamController.php?id=<?= $sp['MaHH'] ?>" class="product-link">
-              <div class="badge-match" style="background:#28a745;">Mới nhất</div>
-              <div class="product-item">
-                <div class="product-item-top">
-                  <?php
-                  // Kiểm tra xem ảnh có bắt đầu bằng http không (ảnh mạng), nếu không thì mới thêm ../
-                  $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
-                  $duongDanAnh = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
-                  ?>
-                  <img src="<?= $duongDanAnh ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                  <div class="tieude-sanpham"><?= htmlspecialchars($sp['TenHH']) ?></div>
-                </div>
-                <div class="product-item-bottom">
-                  <div class="gia-rating">
-                    <div class="rating"><span>-</span><i class="fa-solid fa-star text-muted"></i></div>
-                    <div class="gia-san-pham"><span class="gia-giam"><?= number_format($sp['Gia'], 0, ',', '.') ?>đ</span></div>
-                  </div>
-                </div>
-              </div>
-            </a>
-        <?php
+
+            $maHH = $sp['MaHH'];
+            $tenHH = htmlspecialchars($sp['TenHH']);
+            $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
+            $imgSrc = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
+            $gia = number_format($sp['Gia'], 0, ',', '.');
+  ?>
+  <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
+    <div class="product-item">
+
+      <div class="badge-match" style="background:#28a745;">Mới nhất</div>
+
+      <div class="product-item-top">
+        <img src="<?= $imgSrc ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+        <div class="tieude-sanpham"><?= $tenHH ?></div>
+      </div>
+      <div class="product-item-bottom">
+        <div class="gia-rating">
+          <div class="rating">
+            <i class="fa-solid fa-star"></i>
+            <span>0.0</span>
+          </div>
+          <div class="gia-san-pham">
+            <span class="gia-giam"><?= $gia ?> đ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+<?php
           }
         }
-        ?>
-      </div>
+?>
     </div>
+  </div>
 
-    <div class="san-pham-moi">
-      <div class="tieu-de-san-pham">
-        <h2><i class="fa-solid fa-minus"></i> TẤT CẢ SẢN PHẨM</h2>
-      </div>
-      <div class="loai-san-pham-moi" id="main-product-list">
-      </div>
+  <div class="san-pham-moi">
+    <div class="tieu-de-san-pham">
+      <h2><i class="fa-solid fa-minus"></i> TẤT CẢ SẢN PHẨM</h2>
     </div>
+    <div class="loai-san-pham-moi" id="main-product-list">
+    </div>
+  </div>
 
-    <div class="nut-xem-them-san-pham">
-      <a href="danhSachSanPhamController.php">
-        <button>xem thêm</button>
-      </a>
-    </div>
+  <div class="nut-xem-them-san-pham">
+    <a href="danhSachSanPhamController.php">
+      <button>xem thêm</button>
+    </a>
+  </div>
 
   </div>
 
