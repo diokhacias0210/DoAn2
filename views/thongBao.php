@@ -37,13 +37,23 @@
             ?>
 
             <div class="side">
-                <div class="avatar-ten" style="text-align: center; margin-bottom: 20px;">
-                    <div class="avatar" style="width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid var(--bs-pink-200); padding: 3px; display: flex; justify-content: center; align-items: center;">
-
-                        <img src="../<?php echo isset($_SESSION['Avatar']) && !empty($_SESSION['Avatar']) ? $_SESSION['Avatar'] : 'assets/images/placeholder.png'; ?>"
-                            alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-
-                    </div>
+                <div class="text-center mb-4 position-relative">
+                    <?php
+                    // Truy vấn nhanh để lấy Avatar mới nhất
+                    $avatarPath = '../assets/images/user.png'; // Ảnh mặc định
+                    if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
+                        $idUser_avatar = (int)$_SESSION['IdTaiKhoan'];
+                        $sql_avatar = "SELECT Avatar FROM TaiKhoan WHERE IdTaiKhoan = $idUser_avatar";
+                        $res_avatar = $conn->query($sql_avatar);
+                        if ($res_avatar && $res_avatar->num_rows > 0) {
+                            $row_avatar = $res_avatar->fetch_assoc();
+                            if (!empty($row_avatar['Avatar'])) {
+                                $avatarPath = '../' . $row_avatar['Avatar'];
+                            }
+                        }
+                    }
+                    ?>
+                    <img src="<?= htmlspecialchars($avatarPath) ?>" alt="Avatar" class="avatar-img border" style="width: 140px; height: 140px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block; margin: 0 auto;">
                 </div>
 
                 <nav class="menu">
@@ -56,7 +66,7 @@
 
                         <li>
                             <a href="../controllers/thongBaoController.php" class="<?= ($current_page == 'thongBaoController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-bell"></i> Thông báo hệ thống
+                                <i class="fa-solid fa-bell"></i> Thông báo
                                 <?php if ($soThongBaoMoi_Sidebar > 0): ?>
                                     <span class="menu-badge-count"><?= $soThongBaoMoi_Sidebar ?></span>
                                 <?php endif; ?>
@@ -85,7 +95,7 @@
                             <!-- <a href="../seller/controllers/sellerSanPhamController.php" class="seller-link">
                                 <i class="fa-solid fa-store"></i> Kênh Người Bán
                             </a> -->
-                            <?php 
+                            <?php
                             $trangThai = 'ChuaKichHoat'; // Gán mặc định
 
                             // TRUY VẤN TRỰC TIẾP LẤY TRẠNG THÁI MỚI NHẤT
@@ -100,7 +110,7 @@
                             }
 
                             // KIỂM TRA ĐỂ HIỂN THỊ NÚT
-                            if ($trangThai === 'DangHoatDong'): 
+                            if ($trangThai === 'DangHoatDong'):
                             ?>
                                 <a href="../seller/controllers/sellerSanPhamController.php" class="btn btn-warning">
                                     <i class="fa-solid fa-store"></i> Kênh người bán

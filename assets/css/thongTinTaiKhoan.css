@@ -210,6 +210,54 @@ button.change-password:hover {
 .alert-success { background-color: #28a745; }
 .alert-danger { background-color: #dc3545; }
 .alert-warning { background-color: #ffc107; color: #333; }
+
+/* Khung ảnh đại diện */
+.avatar-img {
+    width: 140px; 
+    height: 140px; 
+    object-fit: cover; 
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+
+/* Nút chọn ảnh giả */
+.custom-file-upload {
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-color: #ccc;
+    color: #555;
+}
+
+.custom-file-upload:hover {
+    background-color: var(--bs-pink-50);
+    color: var(--bs-pink-500);
+    border-color: var(--bs-pink-400);
+}
+
+/* Nút Cập nhật */
+.btn-pink {
+    background-color: var(--bs-pink-500);
+    color: white;
+    font-weight: 500;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-pink:hover {
+    background-color: var(--bs-pink-600);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(214, 51, 132, 0.3);
+}
+
+/* Trạng thái mờ của nút Cập nhật khi chưa chọn ảnh */
+.nut-luu-mo {
+    opacity: 0.4;
+    pointer-events: none; /* Không cho bấm */
+}
 @media screen and (max-width: 768px) {
     
     .container {
