@@ -100,7 +100,7 @@
                                 <?php foreach ($danhSachNguoiDung as $nd): ?>
                                     <tr>
                                         <td class="text-center">
-                                            <img src="../../<?= !empty($nd['Avatar']) ? $nd['Avatar'] : 'assets/images/placeholder.png' ?>" style="width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd;">
+                                            <img src="../../<?= !empty($nd['Avatar']) ? $nd['Avatar'] : 'assets/images/user.png' ?>" style="width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 1px solid #ddd;">
                                         </td>
                                         <td>
                                             <strong class="text-primary fs-6"><?= htmlspecialchars($nd['TenTK']) ?></strong><br>

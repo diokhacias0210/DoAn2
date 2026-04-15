@@ -19,8 +19,8 @@ class TaiKhoanModel
 
     public function getUserById($id)
     {
-        // Thêm LEFT JOIN để lấy kèm địa chỉ mặc định
-        $stmt = $this->conn->prepare("SELECT tk.TenTK, tk.Email, tk.Sdt, dc.DiaChiChiTiet 
+        // Thêm tk.Avatar vào câu SELECT
+        $stmt = $this->conn->prepare("SELECT tk.TenTK, tk.Email, tk.Sdt, tk.Avatar, dc.DiaChiChiTiet 
                                       FROM TaiKhoan tk 
                                       LEFT JOIN DiaChi dc ON tk.IdTaiKhoan = dc.IdTaiKhoan AND dc.MacDinh = 1 
                                       WHERE tk.IdTaiKhoan = ?");
@@ -30,10 +30,10 @@ class TaiKhoanModel
         $stmt->close();
         return $res;
     }
+
     public function getThongTin($idUser)
     {
-        // Tương tự, lấy thêm thông tin địa chỉ để hiển thị ở phần Thông tin tài khoản
-        $stmt = $this->conn->prepare("SELECT tk.TenTK, tk.Email, tk.Sdt, dc.DiaChiChiTiet 
+        $stmt = $this->conn->prepare("SELECT tk.TenTK, tk.Email, tk.Sdt, tk.Avatar, dc.DiaChiChiTiet 
                                       FROM TaiKhoan tk 
                                       LEFT JOIN DiaChi dc ON tk.IdTaiKhoan = dc.IdTaiKhoan AND dc.MacDinh = 1 
                                       WHERE tk.IdTaiKhoan = ?");
@@ -86,7 +86,7 @@ class TaiKhoanModel
         $delete->bind_param("i", $maDC);
         return $delete->execute() ? "ok" : "fail";
     }
- 
+
     public function setDiaChiMacDinh($idUser, $maDC)
     {
         $this->conn->begin_transaction();
@@ -108,12 +108,20 @@ class TaiKhoanModel
             return false;
         }
     }
-    
-    public function getDiaChiMacDinh($idUser) {
+
+    public function getDiaChiMacDinh($idUser)
+    {
         $stmt = $this->conn->prepare("SELECT ViDo, KinhDo, DiaChiChiTiet FROM DiaChi WHERE IdTaiKhoan = ? AND MacDinh = 1 LIMIT 1");
         $stmt->bind_param("i", $idUser);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc(); // Trả về 1 dòng duy nhất hoặc null
+    }
+
+    public function updateAvatar($idUser, $duongDanAnh)
+    {
+        $stmt = $this->conn->prepare("UPDATE TaiKhoan SET Avatar = ? WHERE IdTaiKhoan = ?");
+        $stmt->bind_param("si", $duongDanAnh, $idUser);
+        return $stmt->execute();
     }
 }

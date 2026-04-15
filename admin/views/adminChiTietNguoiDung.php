@@ -69,7 +69,7 @@
                         <div class="info-card">
                             <h5 class="fw-bold mb-4 border-bottom pb-2"><i class="fa-solid fa-user text-primary"></i> Thông tin cơ bản</h5>
                             <div class="d-flex gap-4 align-items-center mb-4">
-                                <img src="../../<?= !empty($chiTietUser['Avatar']) ? $chiTietUser['Avatar'] : 'assets/images/placeholder.png' ?>" class="avatar-lg shadow-sm">
+                                <img src="../../<?= !empty($chiTietUser['Avatar']) ? $chiTietUser['Avatar'] : 'assets/images/user.png' ?>" class="avatar-lg shadow-sm">
                                 <div>
                                     <h3 class="fw-bold text-primary m-0"><?= htmlspecialchars($chiTietUser['TenTK']) ?></h3>
                                     <p class="text-muted m-0 mt-1">Tham gia: <?= date('d/m/Y', strtotime($chiTietUser['ThoiGianTao'])) ?></p>

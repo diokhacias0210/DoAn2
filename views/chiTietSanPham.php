@@ -29,9 +29,9 @@
                     <div class="image-gallery">
                         <div class="main-image">
                             <?php if (!empty($hinhAnhs)): ?>
-                                <?php 
-                                    $anhMain = $hinhAnhs[0]['URL'];
-                                    $imgSrcMain = (strpos($anhMain, 'http') === 0) ? $anhMain : '../' . $anhMain; 
+                                <?php
+                                $anhMain = $hinhAnhs[0]['URL'];
+                                $imgSrcMain = (strpos($anhMain, 'http') === 0) ? $anhMain : '../' . $anhMain;
                                 ?>
                                 <img id="product-image" src="<?php echo $imgSrcMain; ?>" alt="<?php echo htmlspecialchars($chiTiet['TenHH']); ?>">
                             <?php else: ?>
@@ -41,9 +41,9 @@
                         <div class="thumbnail-images">
                             <?php if (!empty($hinhAnhs)): ?>
                                 <?php foreach ($hinhAnhs as $index => $img): ?>
-                                    <?php 
-                                        $anhThumb = $img['URL'];
-                                        $imgSrcThumb = (strpos($anhThumb, 'http') === 0) ? $anhThumb : '../' . $anhThumb; 
+                                    <?php
+                                    $anhThumb = $img['URL'];
+                                    $imgSrcThumb = (strpos($anhThumb, 'http') === 0) ? $anhThumb : '../' . $anhThumb;
                                     ?>
                                     <img src="<?php echo $imgSrcThumb; ?>"
                                         alt="ảnh <?php echo $index + 1; ?>"
@@ -118,7 +118,7 @@
             <div class="container-mid">
                 <div class="nguoi-ban">
                     <div class="avatar-nguoi-ban">
-                        <img src="../<?php echo $hoSoNguoiBan['Avatar'] ?? '../assets/images/placeholder.png'; ?>" alt="avatar người bán">
+                        <img src="../<?php echo $hoSoNguoiBan['Avatar'] ?? 'assets/images/user.png'; ?>" alt="avatar người bán">
                     </div>
                     <div class="thong-tin-nguoi-ban">
                         <h3><?php echo htmlspecialchars($hoSoNguoiBan['TenCuaHang'] ?? 'Người bán ẩn danh'); ?></h3>

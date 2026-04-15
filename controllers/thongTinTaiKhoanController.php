@@ -14,6 +14,28 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 $idUser = $_SESSION['IdTaiKhoan'];
 $message = '';
 
+
+// --- XỬ LÝ UPLOAD AVATAR ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cap_nhat_avatar') {
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['avatar']['tmp_name'];
+        $fileName = time() . '_' . basename($_FILES['avatar']['name']);
+        $uploadDir = __DIR__ . '/../assets/images/avatars/';
+
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+        $destPath = $uploadDir . $fileName;
+        if (move_uploaded_file($fileTmpPath, $destPath)) {
+            $duongDanDB = 'assets/images/avatars/' . $fileName;
+            $model->updateAvatar($idUser, $duongDanDB);
+            $_SESSION['message'] = '<div class="alert alert-success">Cập nhật ảnh đại diện thành công!</div>';
+        } else {
+            $_SESSION['message'] = '<div class="alert alert-danger">Lỗi khi tải ảnh lên.</div>';
+        }
+        header("Location: thongTinTaiKhoanController.php");
+        exit;
+    }
+}
 // XỬ LÝ LOGIC POST (Thêm / Xóa / Đặt mặc định địa chỉ)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
@@ -35,12 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
         if ($redirect === 'thanhtoan') {
-            header("Location: thanhToanController.php"); 
+            header("Location: thanhToanController.php");
         } else {
-            header("Location: thongTinTaiKhoanController.php"); 
+            header("Location: thongTinTaiKhoanController.php");
         }
         exit;
-
     } elseif ($action === 'xoa_diachi') {
         $result = $model->xoaDiaChi($idUser, (int)$_POST['MaDC_xoa']);
         if ($result === "default") {
@@ -51,10 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } else {
             $message = '<div class="alert alert-danger">Lỗi khi xóa hoặc địa chỉ không tồn tại.</div>';
         }
-        
     } elseif ($action === 'dat_mac_dinh') {
         $maDC = (int)$_POST['MaDC'];
-        
+
         // Gọi hàm bên model
         if ($model->setDiaChiMacDinh($idUser, $maDC)) {
             header("Location: thongTinTaiKhoanController.php?status=set_default_success");

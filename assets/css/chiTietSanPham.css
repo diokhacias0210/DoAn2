@@ -636,7 +636,6 @@ display: flex ;
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--bs-pink-200);
 }
 
 /* Thông tin tên và địa chỉ */

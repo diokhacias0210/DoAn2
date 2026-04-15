@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -36,11 +35,28 @@
             $current_page = basename($_SERVER['PHP_SELF']);
             ?>
             <div class="side">
-                <div class="avatar-ten" style="text-align: center; margin-bottom: 20px;">
-                    <div class="avatar" style="width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid var(--bs-pink-200); padding: 3px; display: flex; justify-content: center; align-items: center;">
-                        <img src="../<?php echo isset($_SESSION['Avatar']) && !empty($_SESSION['Avatar']) ? $_SESSION['Avatar'] : 'assets/images/placeholder.png'; ?>"
-                            alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                    </div>
+                <div class="text-center mb-4 position-relative">
+                    <?php
+                    $avatarPath = !empty($user['Avatar']) ? '../' . $user['Avatar'] : '../assets/images/user.png';
+                    ?>
+                    <img src="<?= htmlspecialchars($avatarPath) ?>" alt="Avatar" class="avatar-img border">
+
+                    <form action="thongTinTaiKhoanController.php" method="POST" enctype="multipart/form-data" class="mt-3">
+                        <input type="hidden" name="action" value="cap_nhat_avatar">
+
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                            <label for="avatarInput" class="btn btn-outline-secondary btn-sm mb-0 rounded-pill px-3 custom-file-upload">
+                                <i class="fa-solid fa-camera"></i> Chọn ảnh
+                            </label>
+
+                            <input type="file" id="avatarInput" name="avatar" accept="image/*" required class="d-none">
+
+                            <button type="submit" id="btnSubmitAvatar" class="btn btn-sm btn-pink rounded-pill px-3 nut-luu-mo">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Cập nhật
+                            </button>
+                        </div>
+                        <div id="fileNameDisplay" class="small text-muted mt-2" style="height: 20px;"></div>
+                    </form>
                 </div>
 
                 <nav class="menu">
@@ -52,7 +68,7 @@
                         </li>
                         <li>
                             <a href="../controllers/thongBaoController.php" class="<?= ($current_page == 'thongBaoController.php') ? 'active' : '' ?>">
-                                <i class="fa-solid fa-bell"></i> Thông báo hệ thống
+                                <i class="fa-solid fa-bell"></i> Thông báo
                                 <?php if ($soThongBaoMoi_Sidebar > 0): ?>
                                     <span class="menu-badge-count"><?= $soThongBaoMoi_Sidebar ?></span>
                                 <?php endif; ?>
