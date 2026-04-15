@@ -78,11 +78,15 @@ switch ($action) {
                 echo "    <div class='message-time'>$time</div>";
 
                 // Chỉ tin nhắn của mình + chưa thu hồi mới có nút hover
+                // Chỉ hiện Icon nếu thời gian <= 10 phút VÀ tin nhắn chưa bị thu hồi
                 if ($tn['IdNguoiGui'] == $idNguoiDung && $tn['TrangThai'] != 1) {
-                    echo "    <div class='message-actions'>";
-                    echo "        <i class='fa-solid fa-pen' onclick='editMessage({$tn['MaTN']}); event.stopImmediatePropagation();' title='Sửa tin nhắn'></i>";
-                    echo "        <i class='fa-solid fa-rotate-left' onclick='recallMessage({$tn['MaTN']}); event.stopImmediatePropagation();' title='Thu hồi tin nhắn'></i>";
-                    echo "    </div>";
+                    $phutDaQua = (time() - strtotime($tn['NgayGui'])) / 60;
+                    if ($phutDaQua <= 10) {
+                        echo "    <div class='message-actions'>";
+                        echo "        <i class='fa-solid fa-pen' onclick='editMessage({$tn['MaTN']}); event.stopImmediatePropagation();' title='Sửa tin nhắn'></i>";
+                        echo "        <i class='fa-solid fa-rotate-left' onclick='recallMessage({$tn['MaTN']}); event.stopImmediatePropagation();' title='Thu hồi tin nhắn'></i>";
+                        echo "    </div>";
+                    }
                 }
                 echo "</div>";
             }
@@ -97,19 +101,39 @@ switch ($action) {
         }
         break;
 
-    // ==================== THÊM MỚI: SỬA & THU HỒI ====================
+    // ==================== THÊM MỚI: SỬA & THU HỒI (GIỚI HẠN 10 PHÚT) ====================
     case 'edit':
         $maTN = isset($_POST['MaTN']) ? (int)$_POST['MaTN'] : 0;
         $noiDung = isset($_POST['NoiDung']) ? trim($_POST['NoiDung']) : '';
         if ($maTN > 0 && !empty($noiDung)) {
+            // Kiểm tra xem tin nhắn đã gửi quá 10 phút chưa
+            $checkTime = $conn->query("SELECT TIMESTAMPDIFF(MINUTE, NgayGui, NOW()) as PhutDaQua FROM TinNhan WHERE MaTN = $maTN");
+            $phut = $checkTime->fetch_assoc()['PhutDaQua'] ?? 999;
+            
+            if ($phut > 1) {
+                echo "QUATHAIGIAN"; // Trả về cờ báo lỗi
+                exit;
+            }
+            
             $chatModel->suaTinNhan($maTN, $noiDung, $idNguoiDung);
+            echo "OK";
         }
         break;
 
     case 'recall':
         $maTN = isset($_POST['MaTN']) ? (int)$_POST['MaTN'] : 0;
         if ($maTN > 0) {
+            // Kiểm tra xem tin nhắn đã gửi quá 10 phút chưa
+            $checkTime = $conn->query("SELECT TIMESTAMPDIFF(MINUTE, NgayGui, NOW()) as PhutDaQua FROM TinNhan WHERE MaTN = $maTN");
+            $phut = $checkTime->fetch_assoc()['PhutDaQua'] ?? 999;
+            
+            if ($phut > 1) {
+                echo "QUATHAIGIAN"; // Trả về cờ báo lỗi
+                exit;
+            }
+            
             $chatModel->thuHoiTinNhan($maTN, $idNguoiDung);
+            echo "OK";
         }
         break;
 

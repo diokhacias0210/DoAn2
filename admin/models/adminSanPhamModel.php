@@ -159,38 +159,6 @@ class AdminSanPhamModel
         return $stmt->execute();
     }
 
-    //Xóa sản phẩm (bao gồm cả ảnh)
-    public function xoaSanPham($id)
-    {
-        // 1. Lấy danh sách ảnh để xóa file
-        $urls_to_delete = [];
-        $stmt_img = $this->conn->prepare("SELECT URL FROM HinhAnh WHERE MaHH = ?");
-        $stmt_img->bind_param("i", $id);
-        $stmt_img->execute();
-        $img_res = $stmt_img->get_result();
-        while ($img_row = $img_res->fetch_assoc()) {
-            $urls_to_delete[] = $img_row['URL'];
-        }
-        $stmt_img->close();
-
-        // Xóa bản ghi trong CSDL (sẽ tự động xóa HinhAnh nhờ CASCADE)
-        $stmt_del_hh = $this->conn->prepare("DELETE FROM HangHoa WHERE MaHH=?");
-        $stmt_del_hh->bind_param("i", $id);
-        if ($stmt_del_hh->execute() && $stmt_del_hh->affected_rows > 0) {
-            //  Xóa file vật lý
-            foreach ($urls_to_delete as $url) {
-                // Chỉ xóa file do chúng ta upload (trong 'uploaded/')
-                $file_to_delete = realpath(__DIR__ . "/../../" . $url);
-                if ($file_to_delete && strpos($url, 'assets/images/products/uploaded/') === 0 && file_exists($file_to_delete)) {
-                    @unlink($file_to_delete);
-                }
-            }
-            return true;
-        }
-        $stmt_del_hh->close();
-        return false;
-    }
-
     //   Xóa ảnh cũ của sản phẩm
     public function xoaAnhCu($mahh)
     {

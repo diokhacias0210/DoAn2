@@ -129,41 +129,6 @@ class SellerSanPhamModel
         return $stmt->execute();
     }
 
-    // Xóa sản phẩm
-    public function xoaSanPham($idNguoiBan, $mahh)
-    {
-        // Logic xóa file ảnh vật lý giữ nguyên, nhưng phải select kiểm tra quyền trước
-
-        // B1: Lấy danh sách ảnh để xóa file (Chỉ lấy nếu đúng là hàng của người này)
-        $urls_to_delete = [];
-        $stmt_img = $this->conn->prepare("SELECT ha.URL FROM HinhAnh ha JOIN HangHoa hh ON ha.MaHH = hh.MaHH WHERE hh.MaHH = ? AND hh.IdNguoiBan = ?");
-        $stmt_img->bind_param("ii", $mahh, $idNguoiBan);
-        $stmt_img->execute();
-        $res = $stmt_img->get_result();
-        while ($row = $res->fetch_assoc()) {
-            $urls_to_delete[] = $row['URL'];
-        }
-
-        // B2: Xóa trong DB
-        $sql = "DELETE FROM HangHoa WHERE MaHH=? AND IdNguoiBan=?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $mahh, $idNguoiBan);
-
-        if ($stmt->execute() && $stmt->affected_rows > 0) {
-            // B3: Xóa file vật lý
-            foreach ($urls_to_delete as $url) {
-                // Đường dẫn tương đối từ file Controller ra thư mục assets
-                // Vì controller nằm ở seller/controllers/ -> ra ngoài 2 cấp là root
-                $file_to_delete = realpath(__DIR__ . "/../../" . $url);
-                if ($file_to_delete && file_exists($file_to_delete)) {
-                    @unlink($file_to_delete);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     // Thêm ảnh (Dùng chung logic)
     public function themNhieuAnh($mahh, $danh_sach_anh)
     {

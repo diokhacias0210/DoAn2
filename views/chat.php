@@ -39,17 +39,29 @@
 
                         foreach ($danhSachNhom as $tenShop => $cacPhongChat) {
                             $isActiveGroup = false;
+                            $tongTinNhanShop = 0; // Thêm biến đếm tổng tin nhắn của shop
+
                             foreach ($cacPhongChat as $p) {
-                                if ($p['MaPhong'] == $maPhong) { $isActiveGroup = true; break; }
+                                if ($p['MaPhong'] == $maPhong) { $isActiveGroup = true; }
+                                // Cộng dồn số tin nhắn mới
+                                if (isset($p['SoTinNhanMoi'])) {
+                                    $tongTinNhanShop += $p['SoTinNhanMoi'];
+                                }
                             }
                             
                             $displayStyle = $isActiveGroup ? "display: block;" : "display: none;";
                             $iconClass = $isActiveGroup ? "fa-chevron-up" : "fa-chevron-down";
                             $headerActiveClass = $isActiveGroup ? "active-shop" : "";
 
+                            // Tạo HTML cho Badge của Shop
+                            $badgeShopHTML = '';
+                            if ($tongTinNhanShop > 0) {
+                                $badgeShopHTML = "<span style='background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);'>{$tongTinNhanShop}</span>";
+                            }
+
                             echo "<div class='shop-group'>";
                             echo "  <div class='shop-group-title {$headerActiveClass}' onclick='toggleShop(this)'>";
-                            echo "      <div style='font-weight: bold;'><i class='fa-solid fa-store' style='color: var(--bs-pink-500);'></i> " . htmlspecialchars($tenShop) . "</div>";
+                            echo "      <div style='font-weight: bold;'><i class='fa-solid fa-store' style='color: var(--bs-pink-500);'></i> " . htmlspecialchars($tenShop) . $badgeShopHTML . "</div>";
                             echo "      <i class='fa-solid {$iconClass} toggle-icon' style='font-size: 12px; color: #888;'></i>";
                             echo "  </div>";
                             
@@ -157,6 +169,7 @@
             }
 
             // ==================== THÊM MỚI: SỬA & THU HỒI ====================
+          
             window.editMessage = function(maTN) {
                 const newContent = prompt("Nhập nội dung tin nhắn mới:");
                 if (newContent === null || newContent.trim() === '') return;
@@ -166,8 +179,14 @@
                 formData.append('MaTN', maTN);
                 formData.append('NoiDung', newContent.trim());
                 
-                fetch('../controllers/chatController.php', { method: 'POST', body: formData })
-                    .then(() => loadMessages());
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData }) // Bên sellerChat là '../../' nhé
+                    .then(response => response.text())
+                    .then(text => {
+                        if (text.trim() === "QUATHAIGIAN") {
+                            alert("Tin nhắn đã gửi quá 10 phút, không thể sửa!");
+                        }
+                        loadMessages();
+                    });
             };
 
             window.recallMessage = function(maTN) {
@@ -177,8 +196,14 @@
                 formData.append('action', 'recall');
                 formData.append('MaTN', maTN);
                 
-                fetch('../controllers/chatController.php', { method: 'POST', body: formData })
-                    .then(() => loadMessages());
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData }) // Bên sellerChat là '../../' nhé
+                    .then(response => response.text())
+                    .then(text => {
+                        if (text.trim() === "QUATHAIGIAN") {
+                            alert("Tin nhắn đã gửi quá 10 phút, không thể thu hồi!");
+                        }
+                        loadMessages();
+                    });
             };
 
             txtMessage.addEventListener("keypress", function(event) {
@@ -187,7 +212,7 @@
 
             loadMessages();
             setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 300);
-            setInterval(loadMessages, 2000);
+            setInterval(loadMessages, 30000);
         }
     </script>
 </body>

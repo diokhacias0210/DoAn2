@@ -17,20 +17,6 @@ $idAdmin = $_SESSION['IdTaiKhoan'];
 $message = '';
 
 try {
-    // ---- XÓA SẢN PHẨM ----
-    if (isset($_GET['xoa'])) {
-        $id = (int)$_GET['xoa'];
-        $conn->begin_transaction();
-        if ($sanPhamModel->xoaSanPham($id)) {
-            $conn->commit();
-            $_SESSION['msg'] = "Đã xóa sản phẩm!";
-        } else {
-            $conn->rollback();
-            $_SESSION['err'] = "Lỗi khi xóa sản phẩm.";
-        }
-        header("Location: adminSanPhamController.php");
-        exit;
-    }
 
     // ---- DUYỆT TẤT CẢ (HÀNG LOẠT) ----
     if (isset($_GET['action']) && $_GET['action'] == 'duyet_tat_ca') {

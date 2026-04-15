@@ -23,6 +23,17 @@ if (isset($_SESSION['IdTaiKhoan'])) {
         if ($res_tt && $res_tt->num_rows > 0) {
             $trangThaiBanHangHeader = $res_tt->fetch_assoc()['TrangThaiBanHang'];
         }
+        $soTinNhanChatMoi = 0;
+        $sql_chat_moi = "SELECT COUNT(tn.MaTN) AS SoLuong 
+                         FROM TinNhan tn 
+                         JOIN PhongChat p ON tn.MaPhong = p.MaPhong 
+                         WHERE tn.DaXem = 0 
+                         AND tn.IdNguoiGui != $idUserHeader 
+                         AND (p.IdNguoiMua = $idUserHeader OR p.IdNguoiBan = $idUserHeader)";
+        $res_chat_moi = $conn->query($sql_chat_moi);
+        if ($res_chat_moi && $res_chat_moi->num_rows > 0) {
+            $soTinNhanChatMoi = $res_chat_moi->fetch_assoc()['SoLuong'];
+        }
     }
 }
 ?>
@@ -47,7 +58,13 @@ if (isset($_SESSION['IdTaiKhoan'])) {
 
             <a href="<?= $baseURL ?>/controllers/trangChuController.php" class="trangchu"><i class="fa-solid fa-house"></i> Trang chủ</a>
             <a href="<?= $baseURL ?>/controllers/danhSachSanPhamController.php" class="sanpham"><i class="fa-solid fa-box"></i> Sản phẩm</a>
-            <a href="<?= $baseURL ?>/controllers/chatController.php" class="chat"><i class="fa-solid fa-comments"></i> Chat</a>
+            <a href="<?= $baseURL ?>/controllers/chatController.php" class="chat">
+                <i class="fa-solid fa-comments"></i> Chat
+                <?php if (isset($soTinNhanChatMoi) && $soTinNhanChatMoi > 0): ?>
+                    <span style="background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: 4px; position: relative; top: -2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"><?= $soTinNhanChatMoi ?></span>
+                <?php endif; ?>
+            </a>
+            
             <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
                 <div class="account-dropdown">
                     <a href="<?= $baseURL ?>/controllers/thongTinTaiKhoanController.php" class="account-btn">

@@ -133,6 +133,13 @@
                     <a href="sellerThongTinController.php"><i class="fa-solid fa-circle-info"></i> Thông tin cửa hàng</a>
                     <a href="sellerSanPhamController.php"><i class="fa-solid fa-box-open"></i> Quản lý sản phẩm</a>
                     <a href="sellerDonHangController.php"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
+                    <a href="sellerChatController.php">
+                        <i class="fa-solid fa-comments"></i> Tin nhắn
+
+                        <?php if (isset($soTinNhanChuaDoc) && $soTinNhanChuaDoc > 0): ?>
+                            <span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span>
+                        <?php endif; ?>
+                    </a>      
                     <a href="sellerDoanhThuController.php" class="active"><i class="fa-solid fa-wallet"></i> Doanh thu & Ví tiền</a>
                 </div>
             </div>
