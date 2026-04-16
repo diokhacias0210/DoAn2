@@ -195,7 +195,7 @@
                             </div>
                         </div>
                         <div class="phan-nut-duoi">
-                            <div class="nut-yeu-thich">
+                            <div class="nut-yeu-thich-chitietsanpham">
                                 <button id="save-favorite" onclick="toggleFavorite(this, <?php echo $chiTiet['MaHH']; ?>)">
                                     <i class="<?php echo $daYeuThich ? 'fa-solid' : 'fa-regular'; ?> fa-heart"
                                         style="<?php echo $daYeuThich ? 'color: red;' : ''; ?>"></i>

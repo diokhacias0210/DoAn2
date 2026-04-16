@@ -216,10 +216,10 @@
     justify-content: end;             /* đẩy cụm nút sang phải */
   }
 
-  .nut-yeu-thich {
+  .nut-yeu-thich-chitietsanpham {
     grid-column: 1 / -1;   /* chiếm cả hàng */
     justify-self: end;     /* nhưng dạt phải */
-    width: auto;           /* không full width */
+    width: 100%;
   }
 .phan-nut-tren{
   display: grid;
@@ -268,9 +268,6 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   }
-.nut-yeu-thich{
-  width: 100%;
-}
 
 
   #save-favorite {
