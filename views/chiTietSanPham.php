@@ -206,6 +206,40 @@
                     </div>
                 </div>
             </div>
+
+            <div class="container-mid">
+                <div class="nguoi-ban">
+                    <div class="avatar-nguoi-ban">
+                        <img src="../<?php echo $hoSoNguoiBan['Avatar'] ?? 'assets/images/user.png'; ?>" alt="avatar người bán">
+                    </div>
+                    <div class="thong-tin-nguoi-ban">
+                        <h3><?php echo htmlspecialchars($hoSoNguoiBan['TenCuaHang'] ?? 'Người bán ẩn danh'); ?></h3>
+                        <p><i class="fa-solid fa-location-dot"></i> Địa chỉ: <span><?php echo htmlspecialchars($hoSoNguoiBan['DiaChiKhoHang'] ?? 'Chưa cập nhật'); ?></span></p>
+                    </div>
+                    <div class="nut-xem-nguoi-ban">
+                        <a href="chiTietNguoiBanController.php?IdTaiKhoan=<?php echo $chiTiet['IdNguoiBan']; ?>">
+                            <button>Xem cửa hàng</button>
+                        </a>
+                    </div>
+
+                    <div class="chat-voi-nguoi-ban">
+                        <?php if (isset($_SESSION['IdTaiKhoan']) && $_SESSION['IdTaiKhoan'] == $chiTiet['IdNguoiBan']): ?>
+                            <button disabled style="background:#ccc; cursor:not-allowed;">Bạn là người bán</button>
+                        <?php else: ?>
+                            <a href="chatController.php?MaHH=<?php echo $chiTiet['MaHH']; ?>">
+                                <button class="..." onclick="window.location.href='../controllers/chatController.php?action=tao_phong&MaHH=<?php echo $chiTiet['MaHH']; ?>'">
+                                    Chat với người bán
+                                </button>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+
+                    <button onclick="moBaoCao('SanPham', <?= $chiTiet['IdNguoiBan'] ?>, <?= $chiTiet['MaHH'] ?>)" class="btn btn-sm btn-outline-danger nut-bao-cao">
+                        <i class="fa-solid fa-flag"></i> Báo cáo sản phẩm này
+                    </button>
+                </div>
+            </div>
+
             <div class="container-bot">
                 <div class="thong-tin-them">
                     <h2>Thông tin thêm</h2>
