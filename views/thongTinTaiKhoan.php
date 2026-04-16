@@ -283,6 +283,40 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+
+            const avatarInput = document.getElementById('avatarInput');
+            const preview = document.querySelector('.avatar-img'); // Thẻ img chứa avatar
+            const btnSubmit = document.getElementById('btnSubmitAvatar');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+            if (avatarInput) {
+                avatarInput.addEventListener('change', function(e) {
+                    const file = this.files[0];
+
+                    if (file) {
+                        // Hiện tên file đã chọn
+                        fileNameDisplay.innerHTML = `<i class="fa-solid fa-check text-success"></i> Đã chọn: <b>${file.name}</b>`;
+
+                        // Kích hoạt nút Cập nhật (xóa class làm mờ và khóa click)
+                        btnSubmit.classList.remove('nut-luu-mo');
+                        btnSubmit.style.pointerEvents = "auto";
+                        btnSubmit.style.opacity = "1";
+
+                        // Xem trước ảnh trực tiếp (tùy chọn, nếu muốn đổi ảnh ngay lập tức trên màn hình)
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            preview.src = event.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    } else {
+                        // Nếu hủy chọn
+                        fileNameDisplay.innerHTML = '';
+                        btnSubmit.classList.add('nut-luu-mo');
+                        btnSubmit.style.pointerEvents = "none";
+                        btnSubmit.style.opacity = "0.4";
+                    }
+                });
+            }
             // XỬ LÝ NÚT THÊM / XÓA ĐỊA CHỈ
             const btnThem = document.getElementById('btn-them-diachi');
             const formThem = document.getElementById('form-them-diachi');
