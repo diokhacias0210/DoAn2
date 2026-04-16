@@ -357,8 +357,8 @@
                                                 <a href="sellerSanPhamController.php?edit=<?= $sp['MaHH'] ?>" class="btn btn-sm btn-outline-primary" title="Sửa">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="sellerSanPhamController.php?xoa=<?= $sp['MaHH'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn chắc chắn muốn xóa?')" title="Xóa">
-                                                    <i class="fas fa-trash"></i>
+                                                <a href="sellerChiTietSanPhamController.php?MaHH=<?= $sp['MaHH'] ?>" class="btn btn-sm btn-outline-info">
+                                                    <i class="fa-solid fa-eye"></i> Chi tiết
                                                 </a>
                                             </td>
                                         </tr>
@@ -522,7 +522,7 @@
             if (confirm('Bạn muốn xóa ảnh này? Lịch sử sẽ không thể hoàn tác nếu bạn nhấn lưu form.')) {
                 element.parentElement.style.display = 'none';
 
-                // Thêm input hidden để báo cho controller biết cần xóa ảnh nào khi ấn Lưu
+                // Thêm input hidden để báo cho controller biết cần ảnh nào khi ấn Lưu
                 let hiddenInput = document.createElement("input");
                 hiddenInput.setAttribute("type", "hidden");
                 hiddenInput.setAttribute("name", "delete_images[]");

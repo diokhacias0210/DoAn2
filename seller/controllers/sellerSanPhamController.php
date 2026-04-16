@@ -147,15 +147,7 @@ try {
         exit;
     }
 
-    //ACTION: XÓA SẢN PHẨM (GET)
-    if (isset($_GET['xoa'])) {
-        $idXoa = (int)$_GET['xoa'];
-        if ($sanPhamModel->xoaSanPham($idNguoiBan, $idXoa)) {
-            $message = "Đã xóa sản phẩm.";
-        } else {
-            $error = "Xóa thất bại (Có thể sản phẩm không phải của bạn).";
-        }
-    }
+    
 } catch (Exception $e) {
     $error = $e->getMessage();
 }

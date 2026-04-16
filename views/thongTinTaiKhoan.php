@@ -151,7 +151,7 @@
                 }
                 if ($trangThaiMenu === 'DangHoatDong'):
                 ?>
-                    <li>
+                    <!-- <li>
                         <a href="#" onclick="xacNhanHuyBanHang(); return false;" style="color: #dc3545;">
                             <i class='bx bx-store-alt'></i> Hủy kích hoạt bán hàng
                         </a>
@@ -165,7 +165,7 @@
                                 }
                             }
                         </script>
-                    </li>
+                    </li> -->
                 <?php endif; ?>
 
                 <div id="alert-container">

@@ -164,7 +164,6 @@
                                                     </a>
                                                 <?php endif; ?>
 
-                                                <a href="adminSanPhamController.php?xoa=<?= $r['MaHH'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa vĩnh viễn sản phẩm này?')" title="Xóa"><i class="fas fa-trash"></i></a>
                                             </div>
                                         </td>
                                     </tr>

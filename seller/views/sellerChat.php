@@ -126,14 +126,15 @@
                 <div class="seller-sidebar">
                     <a href="sellerThongTinController.php"><i class="fa-solid fa-circle-info"></i> Thông tin cửa hàng</a>
                     <a href="sellerSanPhamController.php"><i class="fa-solid fa-box-open"></i> Quản lý sản phẩm</a>
-                    <a href="sellerDonHangController.php" class="active"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
-                    <a href="sellerChatController.php">
+                    <a href="sellerDonHangController.php"><i class="fa-solid fa-clipboard-list"></i> Quản lý đơn hàng</a>
+                    <a href="sellerChatController.php" class="active">
                         <i class="fa-solid fa-comments"></i> Tin nhắn
 
                         <?php if (isset($soTinNhanChuaDoc) && $soTinNhanChuaDoc > 0): ?>
                             <span class="chat-badge"><?php echo $soTinNhanChuaDoc; ?></span>
                         <?php endif; ?>
                     </a>
+                     <a href="sellerDoanhThuController.php"><i class="fa-solid fa-chart-line"></i> Doanh thu & Rút tiền</a>
                 </div>
             </div>
 
@@ -158,10 +159,16 @@
 
                                     foreach ($danhSachNhom as $tenKhach => $cacPhongChat) {
                                         $isActiveGroup = false;
+                                        $tongTinNhanKhach = 0; // Thêm biến đếm tổng tin nhắn của 1 khách hàng
+
                                         foreach ($cacPhongChat as $p) {
                                             if ($p['MaPhong'] == $maPhong) {
                                                 $isActiveGroup = true;
                                                 break;
+                                            }
+                                            // Cộng dồn số tin nhắn mới
+                                            if (isset($p['SoTinNhanMoi'])) {
+                                                $tongTinNhanKhach += $p['SoTinNhanMoi'];
                                             }
                                         }
 
@@ -169,9 +176,15 @@
                                         $iconClass = $isActiveGroup ? "fa-chevron-up" : "fa-chevron-down";
                                         $headerActiveClass = $isActiveGroup ? "active-shop" : "";
 
+                                        // Tạo HTML cho Badge của Khách
+                                        $badgeKhachHTML = '';
+                                        if ($tongTinNhanKhach > 0) {
+                                            $badgeKhachHTML = "<span style='background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; margin-left: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);'>{$tongTinNhanKhach}</span>";
+                                        }
+
                                         echo "<div class='shop-group'>";
                                         echo "  <div class='shop-group-title {$headerActiveClass}' onclick='toggleShop(this)'>";
-                                        echo "      <div style='font-weight: bold;'><i class='fa-solid fa-user' style='color: var(--bs-pink-500);'></i> " . htmlspecialchars($tenKhach) . "</div>";
+                                        echo "      <div style='font-weight: bold;'><i class='fa-solid fa-user' style='color: var(--bs-pink-500);'></i> " . htmlspecialchars($tenKhach) . $badgeKhachHTML . "</div>";
                                         echo "      <i class='fa-solid {$iconClass} toggle-icon' style='font-size: 12px; color: #888;'></i>";
                                         echo "  </div>";
 
@@ -283,22 +296,41 @@
             }
 
             // Sửa & Thu hồi tin nhắn
+            // Sửa & Thu hồi tin nhắn
             window.editMessage = function(maTN) {
                 const newContent = prompt("Nhập nội dung tin nhắn mới:");
                 if (newContent === null || newContent.trim() === '') return;
+                
                 let formData = new FormData();
                 formData.append('action', 'edit');
                 formData.append('MaTN', maTN);
                 formData.append('NoiDung', newContent.trim());
-                fetch('../../controllers/chatController.php', { method: 'POST', body: formData }).then(() => loadMessages());
+                
+                fetch('../../controllers/chatController.php', { method: 'POST', body: formData })
+                    .then(response => response.text())
+                    .then(text => {
+                        if (text.trim() === "QUATHAIGIAN") {
+                            alert("Tin nhắn đã gửi quá 10 phút, không thể sửa!");
+                        }
+                        loadMessages();
+                    });
             };
 
             window.recallMessage = function(maTN) {
                 if (!confirm('Bạn có chắc muốn thu hồi tin nhắn này không?')) return;
+                
                 let formData = new FormData();
                 formData.append('action', 'recall');
                 formData.append('MaTN', maTN);
-                fetch('../../controllers/chatController.php', { method: 'POST', body: formData }).then(() => loadMessages());
+                
+                fetch('../../controllers/chatController.php', { method: 'POST', body: formData })
+                    .then(response => response.text())
+                    .then(text => {
+                        if (text.trim() === "QUATHAIGIAN") {
+                            alert("Tin nhắn đã gửi quá 10 phút, không thể thu hồi!");
+                        }
+                        loadMessages();
+                    });
             };
 
             txtMessage.addEventListener("keypress", function(event) {
@@ -310,7 +342,7 @@
 
             loadMessages();
             setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 300);
-            setInterval(loadMessages, 2000);
+            setInterval(loadMessages, 30000);
         }
     </script>
 </body>
