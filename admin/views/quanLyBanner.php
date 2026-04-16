@@ -9,47 +9,172 @@
     <link href="../../assets/css/admin_sidebar.css" rel="stylesheet">
     <link href="../../assets/css/navbar.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
-        .qlbn-table { width: 100%; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .qlbn-table th { background: #4CAF50; color: white; padding: 15px; text-align: left; }
-        .qlbn-table td { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
-        .btn-action { padding: 6px 12px; border-radius: 5px; border: none; color: white; font-size: 13px; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .btn-add { background: #4CAF50; margin-bottom: 20px; }
-        .btn-delete { background: #e74c3c; }
-        .btn-edit { background: #3498db; }
-        .banner-img { width: 180px; height: 80px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd; }
-        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .status-hien { background: #d4edda; color: #155724; }
-        .status-an { background: #f8d7da; color: #721c24; }
+        .qlbn-table {
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .qlbn-table th {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .qlbn-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-add {
+            background: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+        }
+
+        .btn-edit {
+            background: #3498db;
+        }
+
+        .banner-img {
+            width: 180px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-hien {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-an {
+            background: #f8d7da;
+            color: #721c24;
+        }
 
         /* Style Modal */
         .modals-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: none; justify-content: center;
-            align-items: center; z-index: 1000; animation: fadeIn 0.25s ease-in;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.25s ease-in;
         }
+
         .modals {
-            background: #fff; border-radius: 12px; width: 600px; max-width: 95%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transform: scale(0.95);
-            opacity: 0; transition: all 0.3s ease;
+            background: #fff;
+            border-radius: 12px;
+            width: 600px;
+            max-width: 95%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
-        .modals.show { transform: scale(1); opacity: 1; }
+
+        .modals.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
         .modals-header {
-            background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff;
-            padding: 12px 16px; border-radius: 12px 12px 0 0; display: flex;
-            justify-content: space-between; align-items: center;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .modals-close { font-size: 1.5rem; background: none; border: none; color: #fff; cursor: pointer; transition: transform 0.2s; }
-        .modals-close:hover { transform: scale(1.2); }
-        .modals-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
-        .modals-body label { font-weight: 600; margin-bottom: 4px; display: block; }
-        .modals-body input, .modals-body select {
-            width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px;
-            margin-bottom: 15px; box-sizing: border-box;
+
+        .modals-close {
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
-        .modals-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid #eee; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modals-close:hover {
+            transform: scale(1.2);
+        }
+
+        .modals-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modals-body label {
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .modals-body input,
+        .modals-body select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .modals-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 12px 20px;
+            border-top: 1px solid #eee;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -98,9 +223,9 @@
                                                 <a href="adminBannerController.php?edit=<?= $b['MaBanner'] ?>" class="btn-action btn-edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="adminBannerController.php?delete=<?= $b['MaBanner'] ?>" 
-                                                   class="btn-action btn-delete" 
-                                                   onclick="return confirm('Bạn có chắc chắn muốn xóa banner này?')">
+                                                <a href="adminBannerController.php?delete=<?= $b['MaBanner'] ?>"
+                                                    class="btn-action btn-delete"
+                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa banner này?')">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </div>
@@ -125,15 +250,15 @@
                 <h3 id="modals-title"><?= isset($edit_item) ? 'Sửa Banner' : 'Thêm Banner Mới' ?></h3>
                 <button type="button" class="modals-close" onclick="closemodals()">&times;</button>
             </div>
-            
+
             <form method="POST" action="adminBannerController.php" class="modals-form" enctype="multipart/form-data">
                 <input type="hidden" name="maBanner" value="<?= $edit_item['MaBanner'] ?? '' ?>">
-                
+
                 <div class="modals-body">
                     <div>
                         <label>Tiêu đề</label>
-                        <input type="text" name="tieuDe" required placeholder="Nhập tiêu đề banner" 
-                               value="<?= isset($edit_item) ? htmlspecialchars($edit_item['TieuDe']) : '' ?>">
+                        <input type="text" name="tieuDe" required placeholder="Nhập tiêu đề banner"
+                            value="<?= isset($edit_item) ? htmlspecialchars($edit_item['TieuDe']) : '' ?>">
                     </div>
                     <div>
                         <label>Hình ảnh</label>
@@ -141,7 +266,7 @@
                         <input type="file" name="hinhAnh" id="hinhAnhInput" accept="image/*">
 
                         <!-- Ảnh hiện tại -->
-                        <?php if(isset($edit_item) && !empty($edit_item['HinhAnh'])): ?>
+                        <?php if (isset($edit_item) && !empty($edit_item['HinhAnh'])): ?>
                             <div style="margin-top:10px">
                                 <p style="font-size:13px;margin-bottom:5px"><b>Ảnh hiện tại</b></p>
                                 <img src="../../assets/images/banners/<?= $edit_item['HinhAnh'] ?>"
@@ -174,7 +299,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../../assets/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         const modals = document.getElementById('modals');
         const modalsBox = modals.querySelector('.modals');
@@ -183,9 +308,9 @@
         function openmodals() {
             // Nếu MỞ THÊM MỚI (không có biến $edit_item) thì xóa form sạch sẽ
             <?php if (!isset($edit_item)): ?>
-                modalsForm.reset(); 
+                modalsForm.reset();
             <?php endif; ?>
-            
+
             modals.style.display = 'flex';
             setTimeout(() => {
                 modalsBox.classList.add('show');
@@ -196,7 +321,7 @@
             modalsBox.classList.remove('show');
             setTimeout(() => {
                 modals.style.display = 'none';
-                
+
                 // Trỏ URL về lại bình thường (xóa ?edit=) khi tắt modal
                 const url = new URL(window.location.href);
                 if (url.searchParams.has('edit')) {
@@ -224,7 +349,7 @@
         const input = document.getElementById("hinhAnhInput");
         const preview = document.getElementById("previewBanner");
 
-        input.addEventListener("change", function () {
+        input.addEventListener("change", function() {
 
             const file = this.files[0];
             if (!file) return;
@@ -239,6 +364,8 @@
             reader.readAsDataURL(file);
 
         });
+        CKEDITOR.config.versionCheck = false;
     </script>
 </body>
+
 </html>

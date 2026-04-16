@@ -87,7 +87,7 @@ try {
         $mota = $_POST['mota'] ?? '';
         $chatluong = $_POST['chatluong'] ?? 'Mới';
         $tinhtrang = $_POST['tinhtranghang'] ?? 'Còn hàng';
-        $giathitruong = 0; // Người dùng bán có thể không cần giá thị trường, hoặc thêm input sau
+        $giathitruong = (float)($_POST['giathitruong'] ?? 0); // Người dùng bán có thể không cần giá thị trường, hoặc thêm input sau
 
         // THÊM MỚI
         if ($action === 'add') {
@@ -146,8 +146,6 @@ try {
         header("Location: sellerSanPhamController.php?success=1");
         exit;
     }
-
-    
 } catch (Exception $e) {
     $error = $e->getMessage();
 }

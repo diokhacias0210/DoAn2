@@ -316,6 +316,7 @@
             document.getElementById('view-content').innerHTML = document.getElementById('noidung_' + id).innerHTML;
             new bootstrap.Modal(document.getElementById('modalViewDetail')).show();
         }
+        CKEDITOR.config.versionCheck = false;
     </script>
 </body>
 
