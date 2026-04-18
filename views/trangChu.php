@@ -167,7 +167,7 @@
 
     <div class="san-pham-moi">
       <div class="tieu-de-san-pham">
-        <h2><i class="fa-solid fa-minus"></i> GẦN BẠN NHẤT (GỢI Ý)</h2>
+        <h2><i class="fa-solid fa-minus"></i> GẦN BẠN NHẤT</h2>
       </div>
 
       <div class="horizontal-scroll-wrapper mt-3" id="danh-sach-sp-gan-nhat">
@@ -188,15 +188,13 @@
         if (isset($_SESSION['IdTaiKhoan'])) {
           $idKhachHang = $_SESSION['IdTaiKhoan'];
 
-          // Dùng 127.0.0.1 thay cho localhost để không bị lỗi trên XAMPP
-          // 1. Xin AI 15 sản phẩm (xin dư ra để bù trừ cho những món bị lọc bỏ)
-          $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=15";
+          // Do Python đã tự động lọc hàng tồn kho & loại bỏ đồ tự bán, ta chỉ cần gọi top_n=8
+          $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=8";
 
-          // SỬ DỤNG CURL ĐỂ KẾT NỐI SIÊU ỔN ĐỊNH
           $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $api_url);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          curl_setopt($ch, CURLOPT_TIMEOUT, 3); // Đợi tối đa 3 giây
+          curl_setopt($ch, CURLOPT_TIMEOUT, 1);
           $response = curl_exec($ch);
           curl_close($ch);
 
@@ -208,11 +206,10 @@
               $ids = array_column($goi_y_list, 'id');
               $ids_string = implode(',', $ids);
 
-              // 2. Truy vấn DB lấy thông tin và CHẶN KHÔNG CHO HIỂN THỊ ĐỒ CỦA CHÍNH MÌNH BÁN
               $sql_ai = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
                                FROM HangHoa hh 
-                               WHERE MaHH IN ($ids_string) 
-                               AND IdNguoiBan != $idKhachHang 
+                               WHERE MaHH IN ($ids_string)
+                               AND IdNguoiBan != $idKhachHang
                                ORDER BY FIELD(MaHH, $ids_string)";
               $result_ai = $conn->query($sql_ai);
 
@@ -221,42 +218,26 @@
                 $sanphams[$row['MaHH']] = $row;
               }
 
-              // 3. Vẽ các thẻ sản phẩm (Chỉ lấy đủ 8 cái)
-              $demSP = 0;
               foreach ($goi_y_list as $item) {
                 $sp = $sanphams[$item['id']] ?? null;
-                if (!$sp) continue; // Bỏ qua nếu món đồ này bị lọc ở bước SQL trên
+                if (!$sp) continue;
 
-                // Nếu đã in đủ 8 cái thì dừng vòng lặp
-                if ($demSP >= 8) break;
-                $demSP++;
-
-                // XỬ LÝ NHÃN (HIỆN TRENDING CHO COLD START, % CHO AI MATCH)
                 if (isset($item['reason']) && $item['reason'] == 'Trending') {
                   $badgeHtml = '<div class="badge-match" style="background:#fd7e14;"><i class="fa-solid fa-fire"></i> Đang thịnh hành</div>';
                 } else {
                   $badgeHtml = '<div class="badge-match">Phù hợp ' . $item['match'] . '%</div>';
                 }
 
-                // CHUẨN BỊ DỮ LIỆU ĐỂ VẼ THẺ
                 $maHH = $sp['MaHH'];
                 $tenHH = htmlspecialchars($sp['TenHH']);
 
-                // Xử lý ảnh
                 $anh = $sp['Anh'] ?? (isset($sp['URL']) ? $sp['URL'] : 'assets/images/placeholder.png');
                 $imgSrc = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
 
-                // Xử lý số sao, giá, số lượng
                 $rating = isset($sp['Rating']) ? number_format((float)$sp['Rating'], 1) : "0.0";
                 $gia = number_format($sp['Gia'], 0, ',', '.');
-                $soLuong = isset($sp['SoLuongHH']) ? (int)$sp['SoLuongHH'] : 1;
 
-                // Xử lý hết hàng
-                $hetHang = $soLuong == 0;
-                $productClass = $hetHang ? "<div class='product-item het-hang' style='background: rgba(0, 0, 0, 0.1);'>" : "<div class='product-item'>";
-                $badgeHetHang = $hetHang ? "<div class='badge-het-hang'>Hết hàng</div>" : '';
-
-                // Xử lý giảm giá
+                // Mọi đồ hiển thị đều đã được Python kiểm duyệt là "Còn hàng", không lo bị khuyết.
                 if (!empty($sp['GiaTri']) && $sp['GiaTri'] > 0) {
                   $giaGiamVal = $sp['Gia'] - ($sp['Gia'] * ($sp['GiaTri'] / 100));
                   $giaGiam = number_format($giaGiamVal, 0, ',', '.');
@@ -266,40 +247,41 @@
                 }
         ?>
                 <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
-                  <?= $productClass ?>
+                  <div class="product-item">
 
-                  <button class="btn-bo-qua shadow" onclick="boQuaSanPham(<?= $maHH ?>, this, event)" title="Bỏ qua / Không thích">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                  <?= $badgeHtml ?>
 
-                  <div class='product-item-top'>
-                    <img src='<?= $imgSrc ?>' alt='<?= $tenHH ?>' loading='lazy' style='height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;'>
-                    <?= $badgeHetHang ?>
-                    <div class='tieude-sanpham'><?= $tenHH ?></div>
-                  </div>
-                  <div class='product-item-bottom'>
-                    <div class='gia-rating'>
-                      <div class='rating'>
-                        <i class='fa-solid fa-star'></i>
-                        <span><?= $rating ?></span>
-                      </div>
-                      <div class='gia-san-pham'>
-                        <?= $giaHienThi ?>
+                    <?= $badgeHtml ?>
+
+                    <div class='product-item-top'>
+                      <img src='<?= $imgSrc ?>' alt='<?= $tenHH ?>' loading='lazy' style='height: 180px; width: 100%; object-fit: cover; border-radius: 8px 8px 0 0;'>
+                      <div class='tieude-sanpham'><?= $tenHH ?></div>
+                    </div>
+                    <div class='product-item-bottom'>
+                      <div class='gia-rating'>
+                        <div class='rating'>
+                          <i class='fa-solid fa-star'></i>
+                          <span><?= $rating ?></span>
+                        </div>
+                        <div class='gia-san-pham'>
+                          <?= $giaHienThi ?>
+                        </div>
                       </div>
                     </div>
                   </div>
-      </div> </a>
-  <?php
+                </a>
+            <?php
               }
             }
           }
         }
 
-        // Nếu khách chưa đăng nhập HOẶC AI không có dữ liệu để gợi ý -> Hiện các sản phẩm mới nhất làm mặc định
+        // LUỒNG DỰ PHÒNG NẾU KHÁCH CHƯA ĐĂNG NHẬP (Hiện Mới Nhất)
         if (!$hasRecommendations) {
+          $idCheck = isset($_SESSION['IdTaiKhoan']) ? $_SESSION['IdTaiKhoan'] : 0;
           $sql_new = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
-                        FROM HangHoa hh WHERE TrangThaiDuyet = 'DaDuyet' ORDER BY NgayThem DESC LIMIT 8";
+                      FROM HangHoa hh 
+                      WHERE TrangThaiDuyet = 'DaDuyet' AND SoLuongHH > 0 AND IdNguoiBan != $idCheck
+                      ORDER BY NgayThem DESC LIMIT 8";
           $result_new = $conn->query($sql_new);
           while ($sp = $result_new->fetch_assoc()) {
 
@@ -308,49 +290,49 @@
             $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
             $imgSrc = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
             $gia = number_format($sp['Gia'], 0, ',', '.');
-  ?>
-  <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
-    <div class="product-item">
+            ?>
+            <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
+              <div class="product-item">
 
-      <div class="badge-match" style="background:#28a745;">Mới nhất</div>
+                <div class="badge-match" style="background:#28a745;">Mới nhất</div>
 
-      <div class="product-item-top">
-        <img src="<?= $imgSrc ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-        <div class="tieude-sanpham"><?= $tenHH ?></div>
-      </div>
-      <div class="product-item-bottom">
-        <div class="gia-rating">
-          <div class="rating">
-            <i class="fa-solid fa-star"></i>
-            <span>0.0</span>
-          </div>
-          <div class="gia-san-pham">
-            <span class="gia-giam"><?= $gia ?> đ</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </a>
-<?php
+                <div class="product-item-top">
+                  <img src="<?= $imgSrc ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+                  <div class="tieude-sanpham"><?= $tenHH ?></div>
+                </div>
+                <div class="product-item-bottom">
+                  <div class="gia-rating">
+                    <div class="rating">
+                      <i class="fa-solid fa-star"></i>
+                      <span>0.0</span>
+                    </div>
+                    <div class="gia-san-pham">
+                      <span class="gia-giam"><?= $gia ?> đ</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+        <?php
           }
         }
-?>
+        ?>
+      </div>
     </div>
-  </div>
 
-  <div class="san-pham-moi">
-    <div class="tieu-de-san-pham">
-      <h2><i class="fa-solid fa-minus"></i> TẤT CẢ SẢN PHẨM</h2>
+    <div class="san-pham-moi">
+      <div class="tieu-de-san-pham">
+        <h2><i class="fa-solid fa-minus"></i> TẤT CẢ SẢN PHẨM</h2>
+      </div>
+      <div class="loai-san-pham-moi" id="main-product-list">
+      </div>
     </div>
-    <div class="loai-san-pham-moi" id="main-product-list">
-    </div>
-  </div>
 
-  <div class="nut-xem-them-san-pham">
-    <a href="danhSachSanPhamController.php">
-      <button>xem thêm</button>
-    </a>
-  </div>
+    <div class="nut-xem-them-san-pham">
+      <a href="danhSachSanPhamController.php">
+        <button>xem thêm</button>
+      </a>
+    </div>
 
   </div>
 
@@ -361,23 +343,6 @@
   <script src="../assets/js/loadSanPham.js"></script>
   <script src="../assets/js/js.js"></script>
   <script src="../assets/js/yeuThich.js"></script>
-
-  <script>
-    // --- HÀM XỬ LÝ NÚT X (BỎ QUA) Ở PHẦN GỢI Ý ---
-    function boQuaSanPham(mahh, btnElement, event) {
-      event.preventDefault(); // Ngăn thẻ <a> chuyển hướng trang
-
-      // Ẩn mượt mà thẻ sản phẩm này
-      $(btnElement).closest('.product-link').fadeOut(300);
-
-      // Gửi AJAX ngầm về Server để ghi nhận 1 sao (đã tương tác) -> Lần sau Python sẽ lọc bỏ
-      $.post('boQuaGoiY.php', {
-        mahh: mahh
-      }, function(response) {
-        console.log("Đã loại bỏ sản phẩm ID: " + mahh + " khỏi gợi ý.");
-      });
-    }
-  </script>
 
   <?php if (isset($_SESSION['IdTaiKhoan'])): ?>
     <script>
@@ -499,11 +464,8 @@
             let html = '';
             if (data.status === 'success' && data.data.length > 0) {
               data.data.forEach(sp => {
-
-                // === ĐÂY LÀ ĐOẠN QUAN TRỌNG NHẤT ĐỂ XỬ LÝ ẢNH ===
                 let hinhAnhURL = sp.HinhAnh ? sp.HinhAnh : 'assets/images/placeholder.png';
                 let imgSrc = hinhAnhURL.startsWith('http') ? hinhAnhURL : '../' + hinhAnhURL;
-                // ===============================================
 
                 html += `
                         <a href="chiTietSanPhamController.php?id=${sp.MaHH}" class="product-link">
@@ -541,10 +503,6 @@
               html = `<div class="w-100 text-center text-muted py-4"><i class="fa-regular fa-face-frown"></i> Chưa có sản phẩm nào được bán gần bạn.</div>`;
             }
             container.innerHTML = html;
-          })
-          .catch(error => {
-            let container = document.getElementById('danh-sach-sp-gan-nhat');
-            if (container) container.innerHTML = `<div class="w-100 text-center text-danger py-4">Lỗi kết nối máy chủ!</div>`;
           });
       }
     </script>

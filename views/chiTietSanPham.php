@@ -73,29 +73,6 @@
             position: relative;
         }
 
-        /* Nút X bỏ qua (Custom để đè lên ảnh) */
-        .btn-bo-qua {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            z-index: 20;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-            transition: 0.2s;
-        }
-
-        .btn-bo-qua:hover {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
         /* Nhãn % phù hợp */
         .badge-match {
             position: absolute;
@@ -300,12 +277,12 @@
                     $idKhachHang = $_SESSION['IdTaiKhoan'];
                     $maHHDangXem = $chiTiet['MaHH'] ?? 0; // ID sản phẩm hiện tại để tránh gợi ý trùng
 
-                    $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=15";
+                    $api_url = "http://127.0.0.1:5000/recommend?user_id=$idKhachHang&top_n=8";
 
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $api_url);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
                     $response = curl_exec($ch);
                     curl_close($ch);
 
@@ -369,9 +346,7 @@
                 ?>
                                 <a href="chiTietSanPhamController.php?id=<?= $maHH_item ?>" class="product-link">
                                     <?= $productClass ?>
-                                    <button class="btn-bo-qua shadow" onclick="boQuaSanPham(<?= $maHH_item ?>, this, event)" title="Bỏ qua / Không thích">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
+
                                     <?= $badgeHtml ?>
 
                                     <div class='product-item-top'>
@@ -574,17 +549,6 @@
                 });
             }
         });
-
-        // Xử lý nút bỏ qua sản phẩm
-        function boQuaSanPham(mahh, btnElement, event) {
-            event.preventDefault();
-            $(btnElement).closest('.product-link').fadeOut(300);
-            $.post('boQuaGoiY.php', {
-                mahh: mahh
-            }, function(response) {
-                console.log("Đã loại bỏ sản phẩm khỏi gợi ý.");
-            });
-        }
     </script>
 </body>
 

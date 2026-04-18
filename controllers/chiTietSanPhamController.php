@@ -46,17 +46,23 @@ if ($maHH <= 0) {
             $nutThemGioHangClass = $chiTiet['SoLuongHH'] == 0 ?  "id = 'add-to-cart-button' style ='text-decoration: line-through;'" : "id ='add-to-cart-button'";
             $nutMuaNgayClass = $chiTiet['SoLuongHH'] == 0 ?  "id = 'buy-now-button' style ='text-decoration: line-through;'" : "id ='buy-now-button'";
             //yêu thích
-            if (isset($_SESSION['IdTaiKhoan'])) {
-                $yeuThichModel = new YeuThichModel($conn);
-                // Gọi hàm kiểm tra từ model (đã tạo ở bài trước)
-                $daYeuThich = $yeuThichModel->kiemTraYeuThich($_SESSION['IdTaiKhoan'], $maHH);
+            if (isset($_SESSION['IdTaiKhoan']) && isset($_GET['id'])) {
+                $idKhachHang = (int)$_SESSION['IdTaiKhoan'];
+                $maHHDangXem = (int)$_GET['id'];
 
-                // --- CODE TRACKING AI (1 ĐIỂM - LƯỚT XEM) ---
-                $idTaiKhoanAI = $_SESSION['IdTaiKhoan'];
-                $sqlTrackView = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
-                                 VALUES ($idTaiKhoanAI, $maHH, 1) 
-                                 ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 1)";
-                $conn->query($sqlTrackView);
+                // 1. Lưu hành vi "Xem" (1 điểm) vào DB
+                $sql_ai = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
+               VALUES ($idKhachHang, $maHHDangXem, 1) 
+               ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 1)";
+                $conn->query($sql_ai);
+
+                // 2. Đánh thức AI Python học lại ngầm (Timeout 1s để web tải ngay lập tức không bị khựng)
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:5000/retrain");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+                @curl_exec($ch);
+                curl_close($ch);
             }
         }
     } catch (Exception $e) {
