@@ -19,7 +19,7 @@ all_users = []
 all_items = []
 user_history = {}
 top_trending_items = []
-is_training = False # Biến khóa để tránh train chồng chéo
+is_training = False 
 
 def get_db_connection():
     return mysql.connector.connect(host="localhost", user="root", password="", database="doan2")
@@ -29,7 +29,7 @@ def train_model():
     if is_training: return
     is_training = True
     
-    print("\n[AI] Đang cập nhật lại dữ liệu học tập...")
+    print("\n[AI] Đang cập nhật lại dữ liệu học tập (SVD)...")
     try:
         conn = get_db_connection()
         query = "SELECT IdTaiKhoan, MaHH, Diem AS SoSao FROM HanhVi_AI"
@@ -75,32 +75,77 @@ def recommend():
         exclude_ids_str = request.args.get('exclude', '')
         exclude_ids = [int(x) for x in exclude_ids_str.split(',')] if exclude_ids_str else []
 
-        # LỌC SẢN PHẨM HỢP LỆ
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT MaHH FROM HangHoa WHERE SoLuongHH > 0 AND TrangThaiDuyet = 'DaDuyet' AND IdNguoiBan != {user_id}")
-        valid_items = [row[0] for row in cursor.fetchall()]
+
+        # 1. Tìm Top 2 danh mục (MaDM) yêu thích nhất của User này (Content-Based)
+        fav_categories = []
+        if user_id > 0:
+            cursor.execute(f"""
+                SELECT h.MaDM 
+                FROM HanhVi_AI v 
+                JOIN HangHoa h ON v.MaHH = h.MaHH 
+                WHERE v.IdTaiKhoan = {user_id} 
+                GROUP BY h.MaDM 
+                ORDER BY SUM(v.Diem) DESC LIMIT 2
+            """)
+            fav_categories = [row[0] for row in cursor.fetchall()]
+
+        # 2. Lấy danh sách TẤT CẢ hàng hợp lệ (kèm theo MaDM để lát nữa xét thưởng)
+        cursor.execute(f"SELECT MaHH, MaDM FROM HangHoa WHERE SoLuongHH > 0 AND TrangThaiDuyet = 'DaDuyet' AND IdNguoiBan != {user_id}")
+        valid_items_data = cursor.fetchall()
+        valid_items = [row[0] for row in valid_items_data]
+        item_to_madm = {row[0]: row[1] for row in valid_items_data}
         conn.close()
 
         results = []
         if user_id not in all_users:
+            # USER MỚI TINH (Chưa có lịch sử) -> Đẩy đồ Trending
             for item_id in top_trending_items:
                 if item_id in valid_items and item_id not in exclude_ids:
                     results.append({"id": int(item_id), "match": 0, "reason": "Trending"})
                 if len(results) >= top_n: break
         else:
+            # USER CŨ -> SVD (Collaborative) KẾT HỢP DANH MỤC (Content-Based)
             user_idx = all_users.index(user_id)
             user_predictions = np.dot(user_factors[user_idx], item_factors)
             pred_series = pd.Series(user_predictions, index=all_items)
 
+            # Lọc bỏ đồ đã xem & đồ exclude (để tải thêm)
             already_rated = list(user_history.get(user_id, set()))
             items_to_drop = list(set(exclude_ids + already_rated))
-            
             pred_series = pred_series.drop(items_to_drop, errors='ignore')
+
+            # 3. ĐƯA SẢN PHẨM MỚI VÀO CUỘC CHƠI (Gán điểm mặc định là 0)
+            new_items = [item for item in valid_items if item not in pred_series.index and item not in items_to_drop]
+            if new_items:
+                new_items_series = pd.Series(0.0, index=new_items)
+                pred_series = pd.concat([pred_series, new_items_series])
+
+            # Chỉ giữ lại hàng còn tồn kho
             pred_series = pred_series[pred_series.index.isin(valid_items)]
-            
+
+            # 4. THUẬT TOÁN BƠM ĐIỂM (BOOST SCORE) THEO DANH MỤC YÊU THÍCH
+            if fav_categories and not pred_series.empty:
+                max_svd_score = pred_series.max() if pred_series.max() > 0 else 1.0
+                bonus_1 = max_svd_score * 0.8  # Thưởng 80% sức mạnh SVD cho danh mục Top 1
+                bonus_2 = max_svd_score * 0.4  # Thưởng 40% cho danh mục Top 2
+
+                def apply_bonus(item_id, score):
+                    madm = item_to_madm.get(item_id)
+                    if madm == fav_categories[0]:
+                        return score + bonus_1
+                    elif len(fav_categories) > 1 and madm == fav_categories[1]:
+                        return score + bonus_2
+                    return score
+                
+                # Cập nhật lại điểm số
+                pred_series = pd.Series({i: apply_bonus(i, score) for i, score in pred_series.items()})
+
+            # Lấy Top N
             top_items = pred_series.sort_values(ascending=False).head(top_n)
 
+            # Quy đổi điểm ra % mượt mà
             if not top_items.empty:
                 max_score = top_items.max()
                 min_score = top_items.min()
@@ -109,12 +154,17 @@ def recommend():
                         match_percent = int(60 + ((score - min_score) / (max_score - min_score)) * 39)
                     else:
                         match_percent = 85
-                    results.append({"id": int(item_id), "match": match_percent, "reason": "AI_Match"})
+                    
+                    # Phân loại nhãn để Web hiển thị
+                    reason = "AI_Match" if item_id not in new_items else "Gợi ý mới"
+                    results.append({"id": int(item_id), "match": match_percent, "reason": reason})
 
+        # =========================================================
+        # IN TERMINAL (DEBUG)
+        # =========================================================
         if results:
             print(f"\n---> [AI] Đang gợi ý cho User {user_id} ({len(results)} món):")
             
-            # 1. Kết nối DB lấy tên cho các ID này
             id_list = [str(r['id']) for r in results]
             id_str = ",".join(id_list)
             
@@ -124,22 +174,14 @@ def recommend():
             name_dict = {row[0]: row[1] for row in cursor2.fetchall()}
             conn2.close()
 
-            # 2. Vòng lặp in ra từng món theo đúng thứ tự mảng results (Trái qua phải trên web)
             for r in results:
                 item_id = r['id']
                 full_name = name_dict.get(item_id, "Sản phẩm không tên")
-                
-                # Cắt ngắn tên sản phẩm (Lấy tối đa 4 từ đầu tiên)
                 words = full_name.split()
-                if len(words) > 4:
-                    short_name = " ".join(words[:4]) + " ..."
-                else:
-                    short_name = full_name
-                    
-                print(f"id {item_id} - {short_name}")
+                short_name = " ".join(words[:4]) + " ..." if len(words) > 4 else full_name
+                print(f"id {item_id} - {short_name} ({r['match']}%)")
         else:
             print(f"\n---> [AI] Không có gợi ý nào cho User {user_id}.")
-        # =========================================================
 
         return jsonify(results)
     except Exception as e:

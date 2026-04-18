@@ -25,7 +25,7 @@
             <div class="shop-header-container">
                 <div class="shop-info-wrapper">
                     <div class="shop-left">
-                        <img src="../<?php echo !empty($shopInfo['Avatar']) ? $shopInfo['Avatar'] : 'assets/images/placeholder.png'; ?>"
+                        <img src="../<?php echo !empty($shopInfo['Avatar']) ? $shopInfo['Avatar'] : 'assets/images/user.png'; ?>"
                             alt="Avatar" class="shop-avatar">
                         <a href="chatController.php?IdTaiKhoan=<?php echo $shopInfo['IdTaiKhoan']; ?>" class="btn-chat-shop">
                             <i class="fa-solid fa-comments"></i> Chat ngay

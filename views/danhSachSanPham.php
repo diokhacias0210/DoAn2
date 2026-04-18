@@ -123,118 +123,10 @@
                 <div class="tieu-de-san-pham">
                     <h2><i class="fa-solid fa-minus"></i> CÓ THỂ BẠN SẼ THÍCH</h2>
                 </div>
-
-                <div class="horizontal-scroll-wrapper mt-3">
-                    <?php
-                    $hasRecommendations = false;
-                    $idCheck = isset($_SESSION['IdTaiKhoan']) ? $_SESSION['IdTaiKhoan'] : 0;
-
-                    if ($idCheck > 0) {
-                        $api_url = "http://127.0.0.1:5000/recommend?user_id=$idCheck&top_n=8";
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $api_url);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                        $response = curl_exec($ch);
-                        curl_close($ch);
-
-                        if ($response) {
-                            $goi_y_list = json_decode($response, true);
-                            if (!empty($goi_y_list) && !isset($goi_y_list['error'])) {
-                                $hasRecommendations = true;
-                                $ids = array_column($goi_y_list, 'id');
-                                $ids_string = implode(',', $ids);
-
-                                $sql_ai = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
-                                           FROM HangHoa hh 
-                                           WHERE MaHH IN ($ids_string) 
-                                           AND IdNguoiBan != $idCheck 
-                                           ORDER BY FIELD(MaHH, $ids_string)";
-                                $result_ai = $conn->query($sql_ai);
-
-                                $sanphams = [];
-                                while ($row = $result_ai->fetch_assoc()) {
-                                    $sanphams[$row['MaHH']] = $row;
-                                }
-
-                                foreach ($goi_y_list as $item) {
-                                    $sp = $sanphams[$item['id']] ?? null;
-                                    if (!$sp) continue;
-
-                                    if (isset($item['reason']) && $item['reason'] == 'Trending') {
-                                        $badgeHtml = '<div class="badge-match" style="background:#fd7e14;"><i class="fa-solid fa-fire"></i> Đang thịnh hành</div>';
-                                    } else {
-                                        $badgeHtml = '<div class="badge-match">Phù hợp ' . $item['match'] . '%</div>';
-                                    }
-
-                                    $maHH = $sp['MaHH'];
-                                    $tenHH = htmlspecialchars($sp['TenHH']);
-                                    $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
-                                    $imgSrc = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
-                                    $rating = isset($sp['Rating']) ? number_format((float)$sp['Rating'], 1) : "0.0";
-                                    $gia = number_format($sp['Gia'], 0, ',', '.');
-
-                                    if (!empty($sp['GiaTri']) && $sp['GiaTri'] > 0) {
-                                        $giaGiamVal = $sp['Gia'] - ($sp['Gia'] * ($sp['GiaTri'] / 100));
-                                        $giaGiam = number_format($giaGiamVal, 0, ',', '.');
-                                        $giaHienThi = "<span class='gia-goc'>{$gia} đ</span><span class='gia-giam'>{$giaGiam} đ</span>";
-                                    } else {
-                                        $giaHienThi = "<span class='gia-giam'>{$gia} đ</span>";
-                                    }
-                    ?>
-                                    <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
-                                        <div class="product-item">
-                                            <?= $badgeHtml ?>
-                                            <div class="product-item-top">
-                                                <img src="<?= $imgSrc ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                                                <div class="tieude-sanpham"><?= $tenHH ?></div>
-                                            </div>
-                                            <div class="product-item-bottom">
-                                                <div class="gia-rating">
-                                                    <div class="rating"><i class="fa-solid fa-star"></i><span><?= $rating ?></span></div>
-                                                    <div class="gia-san-pham"><?= $giaHienThi ?></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                            <?php
-                                }
-                            }
-                        }
-                    }
-
-                    if (!$hasRecommendations) {
-                        $sql_new = "SELECT hh.*, (SELECT URL FROM HinhAnh ha WHERE ha.MaHH = hh.MaHH LIMIT 1) as Anh 
-                                    FROM HangHoa hh 
-                                    WHERE TrangThaiDuyet = 'DaDuyet' AND SoLuongHH > 0 AND IdNguoiBan != $idCheck 
-                                    ORDER BY NgayThem DESC LIMIT 8";
-                        $result_new = $conn->query($sql_new);
-                        while ($sp = $result_new->fetch_assoc()) {
-                            $maHH = $sp['MaHH'];
-                            $tenHH = htmlspecialchars($sp['TenHH']);
-                            $anh = $sp['Anh'] ?? 'assets/images/placeholder.png';
-                            $imgSrc = (strpos($anh, 'http') === 0) ? $anh : '../' . $anh;
-                            $gia = number_format($sp['Gia'], 0, ',', '.');
-                            ?>
-                            <a href="chiTietSanPhamController.php?id=<?= $maHH ?>" class="product-link">
-                                <div class="product-item">
-                                    <div class="badge-match" style="background:#28a745;">Mới nhất</div>
-                                    <div class="product-item-top">
-                                        <img src="<?= $imgSrc ?>" style="height: 180px; width: 100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                                        <div class="tieude-sanpham"><?= $tenHH ?></div>
-                                    </div>
-                                    <div class="product-item-bottom">
-                                        <div class="gia-rating">
-                                            <div class="rating"><i class="fa-solid fa-star"></i><span>0.0</span></div>
-                                            <div class="gia-san-pham"><span class="gia-giam"><?= $gia ?> đ</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                    <?php
-                        }
-                    }
-                    ?>
+                <div class="horizontal-scroll-wrapper mt-3" id="danh-sach-goi-y-ai">
+                    <div class="w-100 text-center py-4 text-muted">
+                        <div class="spinner-border spinner-border-sm text-danger"></div> Đang tải gợi ý...
+                    </div>
                 </div>
             </div>
 
@@ -311,6 +203,15 @@
     <script src="../assets/js/loadLocSanPham.js"></script>
     <script src="../assets/js/js.js"></script>
     <script src="../assets/js/liveSearch.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../controllers/ajaxLayGoiYAI.php')
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('danh-sach-goi-y-ai').innerHTML = html;
+                });
+        });
+    </script>
 </body>
 
 </html>
