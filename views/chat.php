@@ -124,7 +124,7 @@
         const chatBox = document.getElementById('chatBox');
         const txtMessage = document.getElementById('txtMessage');
 
-        function toggleShop(element) { /* giữ nguyên code cũ của bạn */ 
+        function toggleShop(element) {
             const items = element.nextElementSibling;
             const icon = element.querySelector('.toggle-icon');
             if (items.style.display === "none" || items.style.display === "") {
@@ -179,7 +179,7 @@
                 formData.append('MaTN', maTN);
                 formData.append('NoiDung', newContent.trim());
                 
-                fetch('../controllers/chatController.php', { method: 'POST', body: formData }) // Bên sellerChat là '../../' nhé
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData }) 
                     .then(response => response.text())
                     .then(text => {
                         if (text.trim() === "QUATHAIGIAN") {
@@ -196,7 +196,7 @@
                 formData.append('action', 'recall');
                 formData.append('MaTN', maTN);
                 
-                fetch('../controllers/chatController.php', { method: 'POST', body: formData }) // Bên sellerChat là '../../' nhé
+                fetch('../controllers/chatController.php', { method: 'POST', body: formData }) 
                     .then(response => response.text())
                     .then(text => {
                         if (text.trim() === "QUATHAIGIAN") {

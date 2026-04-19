@@ -17,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* ĐÃ XÓA VIỀN MÀU BORDER-TOP Ở ĐÂY */
         .info-card {
             background: #fff;
             border-radius: 12px;

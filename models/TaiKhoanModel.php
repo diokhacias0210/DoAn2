@@ -91,12 +91,12 @@ class TaiKhoanModel
     {
         $this->conn->begin_transaction();
         try {
-            // 1. Chuyển tất cả địa chỉ của user này về KHÔNG mặc định (MacDinh = 0)
+            //  Chuyển tất cả địa chỉ của user này về KHÔNG mặc định (MacDinh = 0)
             $stmt1 = $this->conn->prepare("UPDATE DiaChi SET MacDinh = 0 WHERE IdTaiKhoan = ?");
             $stmt1->bind_param("i", $idUser);
             $stmt1->execute();
 
-            // 2. Chuyển địa chỉ được chọn thành mặc định (MacDinh = 1)
+            // Chuyển địa chỉ được chọn thành mặc định (MacDinh = 1)
             $stmt2 = $this->conn->prepare("UPDATE DiaChi SET MacDinh = 1 WHERE MaDC = ? AND IdTaiKhoan = ?");
             $stmt2->bind_param("ii", $maDC, $idUser);
             $stmt2->execute();

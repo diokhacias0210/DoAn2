@@ -36,7 +36,7 @@ $maHH_to_remove_from_cart = array_column($cart_items, 'MaHH');
 
 $conn->begin_transaction();
 try {
-    // 1. NHÓM SẢN PHẨM THEO NGƯỜI BÁN (IdNguoiBan)
+    //  NHÓM SẢN PHẨM THEO NGƯỜI BÁN (IdNguoiBan)
     $orders_by_seller = [];
     foreach ($cart_items as $item) {
         $seller_id = $item['IdNguoiBan'];
@@ -52,7 +52,7 @@ try {
 
     $ds_ma_don_hang = []; // Lưu các mã đơn hàng vừa tạo
 
-    // 2. TẠO ĐƠN HÀNG CHO TỪNG NGƯỜI BÁN
+    // TẠO ĐƠN HÀNG CHO TỪNG NGƯỜI BÁN
     foreach ($orders_by_seller as $seller_id => $order_data) {
         $tongTienDonnay = $order_data['total'];
 
@@ -86,14 +86,12 @@ try {
             $stmt_update_stock->bind_param("ii", $item['SoLuong'], $item['MaHH']);
             $stmt_update_stock->execute();
 
-            // --- BẮT ĐẦU: CODE TRACKING AI (5 ĐIỂM - CHỐT MUA) ---
+            // CODE TRACKING AI (5 ĐIỂM - CHỐT MUA) 
             $maHhAI = $item['MaHH'];
             $sqlTrackBuy = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
                             VALUES ($idUser, $maHhAI, 5) 
                             ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 5)";
             $conn->query($sqlTrackBuy);
-            // --- KẾT THÚC: CODE TRACKING AI ---
-            // =========================================================
         }
         $stmt_detail->close();
         $stmt_update_stock->close();
@@ -105,8 +103,7 @@ try {
         $stmt_payment->close();
     }
 
-    // 3. XÓA GIỎ HÀNG (Logic cũ giữ nguyên)
-    // ... (Copy đoạn code xóa giỏ hàng cũ của bạn vào đây) ...
+    // XÓA GIỎ HÀNG CỦA KHÁCH HÀNG (Dựa trên MaHH đã lưu ở trên)
     $maHH_to_remove_from_cart = array_column($cart_items, 'MaHH');
     $stmt_gh = $conn->prepare("SELECT MaGH FROM GioHang WHERE IdTaiKhoan = ?");
     $stmt_gh->bind_param("i", $idUser);
@@ -118,7 +115,6 @@ try {
             $placeholders = implode(',', array_fill(0, count($maHH_to_remove_from_cart), '?'));
             $types = str_repeat('i', count($maHH_to_remove_from_cart));
             $stmt_clear = $conn->prepare("DELETE FROM ChiTietGioHang WHERE MaGH = ? AND MaHH IN ($placeholders)");
-            // Bind params...
             $params = array_merge([$maGH], $maHH_to_remove_from_cart);
             $stmt_clear->bind_param("i" . $types, ...$params);
             $stmt_clear->execute();

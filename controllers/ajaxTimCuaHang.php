@@ -1,5 +1,5 @@
 <?php
-session_start(); // Đảm bảo đã khởi tạo session
+session_start(); 
 require_once __DIR__ . '/../includes/ketnoi.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -13,7 +13,7 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 // Nhận tọa độ từ JS (Trang Chủ) gửi lên qua phương thức POST
 $lat = isset($_POST['lat']) ? (float)$_POST['lat'] : 0;
 $lng = isset($_POST['lng']) ? (float)$_POST['lng'] : 0;
-$banKinh = 10000; // Giới hạn tìm kiếm: 10 km 
+$banKinh = 10; // Giới hạn tìm kiếm: 10 km 
 
 // Nếu không nhận được tọa độ hợp lệ thì báo lỗi luôn, không truy vấn CSDL
 if ($lat == 0 || $lng == 0) {

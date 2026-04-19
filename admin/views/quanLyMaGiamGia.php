@@ -151,7 +151,6 @@
 
         .checkbox-group input[type="checkbox"] {
             accent-color: #28a745;
-            /* màu xanh lá cho khớp theme */
             transform: scale(1.1);
         }
 

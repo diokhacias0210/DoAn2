@@ -17,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* Chỉnh màu xanh đồng bộ cho bảng */
         .qlt-table {
             background: #fff;
             border-radius: 8px;

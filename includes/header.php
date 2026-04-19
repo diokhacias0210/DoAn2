@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // KHAI BÁO ĐƯỜNG DẪN GỐC CỦA PROJECT
-// Nếu thư mục htdocs của bạn tên khác, hãy đổi '/DoAn2' thành tên tương ứng
 $baseURL = '/DoAn2';
 
 $soThongBaoMoi = 0;

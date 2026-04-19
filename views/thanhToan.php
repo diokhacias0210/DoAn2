@@ -314,9 +314,9 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        showAlert('Đặt hàng thành công! Đang chuyển hướng về giỏ hàng...', 'success'); // Cập nhật thông báo
+                        showAlert('Đặt hàng thành công! Đang chuyển hướng về lịch sử đơn hàng...', 'success');
                         setTimeout(() => {
-                            window.location.href = 'lichSuDonHangController.php'; // <<< SỬA LẠI ĐÍCH ĐẾN
+                            window.location.href = 'lichSuDonHangController.php'; 
                         }, 1500);
                     } else {
                         showAlert(data.message || 'Có lỗi xảy ra khi đặt hàng.', 'error');

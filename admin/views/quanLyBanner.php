@@ -82,7 +82,6 @@
             color: #721c24;
         }
 
-        /* Style Modal */
         .modals-overlay {
             position: fixed;
             top: 0;

@@ -20,7 +20,7 @@ $conn->begin_transaction();
 try {
     foreach ($categories as $madm) {
         $madm = (int)$madm;
-        // Tìm 1 sản phẩm nổi bật nhất của Danh mục này để làm mồi nhử
+        // Tìm 1 sản phẩm nổi bật nhất của Danh mục này để làm đối tượng khảo sát
         $sql = "SELECT hh.MaHH FROM HangHoa hh 
                 LEFT JOIN HanhVi_AI hv ON hh.MaHH = hv.MaHH
                 WHERE hh.MaDM = $madm AND hh.TrangThaiDuyet = 'DaDuyet' AND hh.SoLuongHH > 0

@@ -15,9 +15,8 @@ if (!empty($danhSachSanPham)) {
       $url = 'assets/images/placeholder.png';
     }
 
-    // --- XỬ LÝ ĐƯỜNG DẪN ẢNH THÔNG MINH ---
+    // XỬ LÝ ĐƯỜNG DẪN ẢNH THÔNG MINH 
     $imgSrc = (strpos($url, 'http') === 0) ? $url : '../' . $url;
-    // --------------------------------------
 
     $tenHH = htmlspecialchars($sp['TenHH']);
     $rating = $sp['Rating'];

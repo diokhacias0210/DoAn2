@@ -50,7 +50,7 @@ class chatModel
         return 0;
     }
 
-    // Lấy danh sách các phòng chat của một người dùng (ĐÃ BỔ SUNG SỐ TIN NHẮN CHƯA ĐỌC)
+    // Lấy danh sách các phòng chat của một người dùng (bao gồm cả tên người chat và số tin nhắn mới)
     public function layDanhSachPhongCuaNguoiDung($idNguoiDung)
     {
         $sql = "SELECT p.MaPhong, h.TenHH, 
@@ -75,7 +75,7 @@ class chatModel
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Lấy toàn bộ tin nhắn của một phòng (ĐÃ BỔ SUNG THÊM CÁC TRƯỜNG CHO SỬA/THU HỒI)
+    // Lấy toàn bộ tin nhắn của một phòng chat
     public function layDanhSachTinNhan($maPhong)
     {
         $sql = "SELECT MaTN, IdNguoiGui, NoiDung, NgayGui, DaChinhSua, TrangThai 
@@ -126,7 +126,7 @@ class chatModel
         return null;
     }
 
-    // ==================== THÊM MỚI: SỬA & THU HỒI TIN NHẮN ====================
+    //SỬA & THU HỒI TIN NHẮN 
     public function suaTinNhan($maTN, $noiDungMoi, $idNguoiGui)
     {
         // Lấy nội dung cũ để lưu lịch sử

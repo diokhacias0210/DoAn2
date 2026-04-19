@@ -151,6 +151,6 @@ class AdminDoanhThuModel
     public function duyetTatCaRutTien()
     {
         $sql = "UPDATE YeuCauRutTien SET TrangThai = 'DaChuyen', NgayXuLy = NOW() WHERE TrangThai = 'ChoDuyet'";
-        return $this->conn->execute_query($sql); // Dùng cho PHP 8.2+ hoặc $this->conn->query($sql)
+        return $this->conn->execute_query($sql); 
     }
 }

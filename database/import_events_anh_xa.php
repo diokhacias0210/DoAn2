@@ -9,7 +9,7 @@ if (!file_exists($csvFile)) {
     die("Lỗi: Không tìm thấy file tại $csvFile.");
 }
 
-// 1. LẤY TẤT CẢ MÃ HÀNG HÓA (MaHH) THẬT ĐANG CÓ TRÊN WEB
+// LẤY TẤT CẢ MÃ HÀNG HÓA (MaHH) THẬT ĐANG CÓ TRÊN WEB
 $sqlHangHoa = "SELECT MaHH FROM HangHoa WHERE TrangThaiDuyet = 'DaDuyet'";
 $resultHH = $conn->query($sqlHangHoa);
 $danhSachSanPhamThat = [];
@@ -38,7 +38,7 @@ try {
         $event = $row[2];
         $kaggleItemId = (int)$row[3];
 
-        // 2. THUẬT TOÁN ÁNH XẠ (MAPPING)
+        // THUẬT TOÁN ÁNH XẠ (MAPPING)
         // Nếu ID Kaggle này chưa từng xuất hiện, ta chọn ngẫu nhiên 1 món đồ Thật gắn cho nó
         if (!isset($tuDienAnhXa[$kaggleItemId])) {
             $tuDienAnhXa[$kaggleItemId] = $danhSachSanPhamThat[array_rand($danhSachSanPhamThat)];
@@ -47,18 +47,18 @@ try {
         // Lấy Mã Hàng Hóa Thật đã được dịch
         $maHHThap = $tuDienAnhXa[$kaggleItemId];
 
-        // 3. Quy đổi sự kiện thành sao
+        //  Quy đổi sự kiện thành sao
         $soSao = 1; // view
         if ($event == 'addtocart') $soSao = 3;
         if ($event == 'transaction') $soSao = 5;
 
-        // 4. Tạo User Ảo (Vẫn giữ User ảo để AI học)
+        //  Tạo User Ảo (Vẫn giữ User ảo để AI học)
         $emailFake = "user_" . $visitorId . "@kaggle.com";
         $sqlUser = "INSERT IGNORE INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang) 
                     VALUES ($visitorId, 'Khách $visitorId', '$emailFake', '0000000000', '123456', 0, 'ChuaKichHoat')";
         $conn->query($sqlUser);
 
-        // 5. Lưu Hành vi ngầm (Lưu ID Khách ảo + Mã Hàng Thật vào bảng AI)
+        // Lưu Hành vi ngầm (Lưu ID Khách ảo + Mã Hàng Thật vào bảng AI)
         $sqlRating = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
                       VALUES ($visitorId, $maHHThap, $soSao) 
                       ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, VALUES(Diem))";

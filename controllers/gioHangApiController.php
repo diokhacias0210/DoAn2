@@ -141,7 +141,7 @@ switch ($action) {
             $stmt_insert->execute();
             $stmt_insert->close();
         }
-        // --- CODE TRACKING AI (3 ĐIỂM - THÊM GIỎ) ---
+        // CODE TRACKING AI (3 ĐIỂM - THÊM GIỎ) 
         $sqlTrackCart = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
                          VALUES ($idUser, $maHH, 3) 
                          ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 3)";
@@ -171,7 +171,7 @@ switch ($action) {
         json_success(null, 'Cập nhật số lượng thành công.');
         break;
 
-    // XÓA KHỎI GIỎ HÀNG (REMOVE)
+    // XÓA KHỎI GIỎ HÀNG 
     case 'remove':
         $maHH = intval($_POST['MaHH'] ?? 0);
         if ($maHH <= 0) json_error('Dữ liệu không hợp lệ.');

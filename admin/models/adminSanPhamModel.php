@@ -216,7 +216,7 @@ class AdminSanPhamModel
         $stmt->bind_param("ii", $trangThai, $mahh);
         return $stmt->execute();
     }
-    // --- Lấy thông tin chi tiết cho Admin (Kèm thông tin người bán) ---
+    // Lấy thông tin chi tiết cho Admin (Kèm thông tin người bán)
     public function getChiTietSanPhamAdmin($id)
     {
         $sql = "SELECT hh.*, dm.TenDM, tk.TenTK as NguoiBan, tk.Email, tk.Sdt, tk.Avatar 

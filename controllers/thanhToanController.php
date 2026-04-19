@@ -33,5 +33,4 @@ if (empty($cart_items)) {
 $phiVanChuyen = 0;
 $tongThanhToan = $tongTien + $phiVanChuyen;
 
-// GỌI VIEW (Luôn ở cuối)include_once __DIR__ . '/../views/thanhToan.php';
 include_once __DIR__ . '/../views/thanhToan.php';

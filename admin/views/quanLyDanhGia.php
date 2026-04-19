@@ -194,7 +194,6 @@
                     if (!row.length) return;
                     if (result.deleted) return row.remove();
 
-                    // Code cập nhật nút Ẩn/Hiện
                     const statusCell = row.find(".trang-thai");
                     const btnCell = row.find(".action-buttons");
                     statusCell.text(result.newStatus);

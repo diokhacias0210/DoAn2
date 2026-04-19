@@ -17,12 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm_Password = $_POST['confirm_Password'] ?? '';
 
-    // THÊM: Lấy dữ liệu địa chỉ và tọa độ
+    // Lấy dữ liệu địa chỉ và tọa độ
     $diachi = trim($_POST['diachi'] ?? '');
     $vido = !empty($_POST['ViDo']) ? (float)$_POST['ViDo'] : null;
     $kinhdo = !empty($_POST['KinhDo']) ? (float)$_POST['KinhDo'] : null;
 
-    // Giữ lại giá trị cũ để hiển thị lại trên form nếu lỗi
     $old['tentk'] = $tentk;
     $old['email'] = $email;
     $old['phone'] = $phone;
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // THÊM: Check lỗi địa chỉ và tọa độ (Bắt buộc phải có cả 2)
+    // Check lỗi địa chỉ và tọa độ (Bắt buộc phải có cả 2)
     if (empty($diachi)) {
         $errors['diachi'] = 'Vui lòng nhập địa chỉ của bạn.';
     } elseif (empty($vido) || empty($kinhdo)) {
@@ -79,18 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['general'] = 'Đã xảy ra lỗi hệ thống, vui lòng thử lại.';
         }
     }
-
-    // // Thêm tài khoản m
-    // if (!$errors) {
-    //     // Model sẽ tự động hash mật khẩu
-    //     if ($dangKyModel->themTaiKhoan($tentk, $email, $phone, $password)) {
-    //         $success = "Đăng ký thành công! Bạn có thể đăng nhập.";
-    //         $old = [];
-    //         header("Location: dangNhapController.php");
-    //     } else {
-    //         $errors['general'] = "Có lỗi xảy ra. Vui lòng thử lại.";
-    //     }
-    // }
 }
 
 include_once __DIR__ . '/../views/dangKy.php';

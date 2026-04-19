@@ -26,7 +26,6 @@ if ($lat == 0 || $lng == 0) {
 
 $danhSachSanPham = [];
 
-// ... code ở trên giữ nguyên ...
 if ($lat != 0 && $lng != 0) {
     $idHienTai = $_SESSION['IdTaiKhoan']; // Lấy ID
 
@@ -47,7 +46,7 @@ if ($lat != 0 && $lng != 0) {
               AND hh.HienThi = 1
               AND hs.ViDo IS NOT NULL 
               AND hs.KinhDo IS NOT NULL
-              AND hs.IdTaiKhoan != $idHienTai -- ĐÂY LÀ DÒNG MỚI THÊM
+              AND hs.IdTaiKhoan != $idHienTai -- Loại bỏ sản phẩm của chính mình
             HAVING KhoangCachKm <= $banKinh
             ORDER BY KhoangCachKm ASC, hh.MaHH DESC
             LIMIT 100";

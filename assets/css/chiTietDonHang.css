@@ -168,7 +168,7 @@ body {
 
 @media screen and (max-width: 768px) {
 
-    /* 1. Reset container và padding */
+    /*  Reset container và padding */
     .container {
         padding-left: 15px !important;
         /* Giảm padding hai bên */
@@ -182,7 +182,7 @@ body {
         /* Giảm padding trong card */
     }
 
-    /* 2. Header đơn hàng: Xếp dọc */
+    /*  Header đơn hàng: Xếp dọc */
     .order-header {
         flex-direction: column;
         align-items: flex-start;
@@ -195,14 +195,14 @@ body {
         text-align: center;
     }
 
-    /* 3. Phần thông tin người nhận/đơn hàng: Chuyển thành 1 cột */
+    /*  Phần thông tin người nhận/đơn hàng: Chuyển thành 1 cột */
     .info-section {
         grid-template-columns: 1fr;
         /* 1 cột duy nhất */
         gap: 15px;
     }
 
-    /* 4. Biến đổi bảng sản phẩm thành dạng thẻ (Card) */
+    /* Biến đổi bảng sản phẩm thành dạng thẻ (Card) */
     /* Ẩn header bảng */
     .products-table thead {
         display: none;
@@ -275,7 +275,7 @@ body {
         font-size: 1.1em;
     }
 
-    /* 5. Nút quay lại */
+    /*  Nút quay lại */
     .back-btn {
         width: 100%;
         text-align: center;

@@ -1,21 +1,20 @@
 <?php
 session_start();
 
-// 1. Kiểm tra đăng nhập (Nếu chưa thì đuổi ra trang Login)
+//  Kiểm tra đăng nhập (Nếu chưa thì đuổi ra trang Login)
 if (!isset($_SESSION['IdTaiKhoan'])) {
     header("Location: dangNhapController.php");
     exit;
 }
 
-// 2. Gọi các file kết nối và Model cần thiết
+//  Gọi các file kết nối và Model cần thiết
 require_once '../includes/ketnoi.php';
 require_once '../models/kichHoatBanHangModel.php';
 
 $idUser = $_SESSION['IdTaiKhoan'];
 $model = new kichHoatBanHangModel($conn);
 
-// 3. Kiểm tra xem đã kích hoạt bán hàng chưa
-// Nếu kích hoạt rồi thì đuổi thẳng sang trang quản lý của Seller
+// Kiểm tra xem đã kích hoạt bán hàng chưa nếu kích hoạt rồi thì chuyển sang trang quản lý của Seller
 $sql = "SELECT TrangThaiBanHang FROM TaiKhoan WHERE IdTaiKhoan = $idUser";
 $res = $conn->query($sql);
 if ($res && $res->num_rows > 0) {
@@ -26,9 +25,8 @@ if ($res && $res->num_rows > 0) {
     }
 }
 
-// ==========================================================
-// 4. XỬ LÝ LƯU DỮ LIỆU (Khi người dùng bấm nút XÁC NHẬN trong Form)
-// ==========================================================
+
+//  XỬ LÝ LƯU DỮ LIỆU (Khi người dùng bấm nút XÁC NHẬN trong Form)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'kich_hoat') {
         $tenCuaHang = $_POST['TenCuaHang'] ?? '';
@@ -51,9 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// ==========================================================
-// 5. HIỂN THỊ GIAO DIỆN (Khi người dùng mới truy cập vào trang)
-// ==========================================================
 // Code sẽ chạy xuống đây nếu phương thức không phải là POST
 require_once '../views/kichHoatBanHang.php';
 ?>

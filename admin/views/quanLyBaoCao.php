@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Đồng bộ Layout chuẩn */
         .admin-container {
             padding: 20px;
             background: #f4f6f9;

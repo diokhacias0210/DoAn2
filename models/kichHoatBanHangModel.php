@@ -19,12 +19,12 @@ class kichHoatBanHangModel {
     // Kích hoạt bán hàng (Thêm hồ sơ + Đổi trạng thái)
     public function kichHoat($idUser, $tenCuaHang, $soCCCD, $diaChiKhoHang, $tenNganHang, $soTaiKhoan, $tenChuTaiKhoan, $viDo, $kinhDo) {
         
-        // Bước 1: Cập nhật trạng thái thành DangHoatDong trong bảng TaiKhoan
+        // Cập nhật trạng thái thành DangHoatDong trong bảng TaiKhoan
         $stmt1 = $this->conn->prepare("UPDATE TaiKhoan SET TrangThaiBanHang = 'DangHoatDong' WHERE IdTaiKhoan = ?");
         $stmt1->bind_param("i", $idUser);
         $stmt1->execute();
 
-        // Bước 2: Thêm thông tin vào bảng HoSoNguoiBan, bao gồm Ngân Hàng VÀ Tọa độ
+        //Thêm thông tin vào bảng HoSoNguoiBan, bao gồm Ngân Hàng VÀ Tọa độ
         $sql2 = "INSERT INTO HoSoNguoiBan (IdTaiKhoan, SoCCCD, DiaChiKhoHang, TenCuaHang, TenNganHang, SoTaiKhoanNganHang, TenChuTaiKhoan, ViDo, KinhDo, NgayDuyet) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
                  ON DUPLICATE KEY UPDATE 
