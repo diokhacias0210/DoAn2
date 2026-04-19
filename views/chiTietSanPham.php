@@ -297,7 +297,7 @@
                 });
         });
 
-        // Gần bạn nhất (Giữ nguyên bản cũ của bạn)
+        // Gần bạn nhất của người bán 
         document.addEventListener("DOMContentLoaded", function() {
             if (document.getElementById('danh-sach-sp-gan-nhat') && navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {

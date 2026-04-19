@@ -32,10 +32,9 @@
                         $maHH = $sp['MaHH'];
                         $tenHH = htmlspecialchars($sp['TenHH']);
                         
-                        // --- XỬ LÝ ẢNH THÔNG MINH ---
+                        // XỬ LÝ ĐƯỜNG DẪN ẢNH 
                         $url = !empty($sp['AnhDaiDien']) ? $sp['AnhDaiDien'] : 'assets/images/placeholder.png';
                         $anhDaiDien = (strpos($url, 'http') === 0) ? $url : '../' . $url;
-                        // ----------------------------
                         
                         $rating = $sp['Rating'] ?? 0; // Lấy rating từ model
 

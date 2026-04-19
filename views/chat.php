@@ -168,7 +168,7 @@
                     });
             }
 
-            // ==================== THÊM MỚI: SỬA & THU HỒI ====================
+            // SỬA & THU HỒI TIN NHẮN 
           
             window.editMessage = function(maTN) {
                 const newContent = prompt("Nhập nội dung tin nhắn mới:");

@@ -213,14 +213,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function moThongBao(maTB, tieuDe) {
-            // 1. Load data vào Modal
+            // Load data vào Modal
             document.getElementById('modal-tb-title').innerText = tieuDe;
             document.getElementById('modal-tb-content').innerHTML = document.getElementById('content-tb-' + maTB).innerHTML;
 
-            // 2. Hiện Modal
+            //  Hiện Modal
             new bootstrap.Modal(document.getElementById('modalDocThongBao')).show();
 
-            // 3. Nếu là thông báo chưa đọc, gửi AJAX để đổi trạng thái
+            // Nếu là thông báo chưa đọc, gửi AJAX để đổi trạng thái
             let item = document.getElementById('item-tb-' + maTB);
             if (item.classList.contains('unread')) {
                 $.ajax({

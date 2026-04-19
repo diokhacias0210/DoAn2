@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../includes/ketnoi.php'; // Đảm bảo đường dẫn này trỏ đúng vào file kết nối của bạn
+require_once '../includes/ketnoi.php'; 
 
 if (isset($_POST['mahh']) && isset($_SESSION['IdTaiKhoan'])) {
     $mahh = intval($_POST['mahh']);

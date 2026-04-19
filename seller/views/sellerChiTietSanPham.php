@@ -17,7 +17,7 @@
         .thumbnail.active { border-color: var(--bs-pink-500); }
         .star { color: #ffc107; }
         .review-card { border-left: 4px solid var(--bs-pink-500); }
-         /* --- MENU BÊN TRÁI (SIDEBAR) --- */
+         /* MENU BÊN TRÁI (SIDEBAR) */
         .seller-sidebar {
             background: #ffffff;
             border-radius: 10px;
@@ -51,7 +51,7 @@
             color: var(--bs-pink-600);
             border-left: 4px solid var(--bs-pink-600);
         }
-        /* --- BADGE TIN NHẮN --- */
+        /* BADGE TIN NHẮN */
         .chat-badge {
             position: absolute;
             top: 50%;
@@ -93,7 +93,7 @@
     <?php include '../../includes/header.php'; ?>
 
     <?php
-    // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+    // ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ĐỂ HIỂN THỊ BADGE TRÊN MENU "Tin nhắn"
     $soTinNhanChuaDoc = 0;
     if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
         $idSellerCurrent = $_SESSION['IdTaiKhoan'];
@@ -209,7 +209,7 @@
                         </div>
                     </div>
 
-                    <!-- ==================== PHẦN ĐÁNH GIÁ & BÌNH LUẬN ==================== -->
+                    <!--  PHẦN ĐÁNH GIÁ & BÌNH LUẬN  -->
                     <hr class="my-5">
                     <h5 class="fw-bold mb-4"><i class="fa-solid fa-star"></i> ĐÁNH GIÁ TỪ KHÁCH HÀNG</h5>
 

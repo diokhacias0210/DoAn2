@@ -369,14 +369,14 @@
         let mapThanhToan, markerThanhToan;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Khởi tạo bản đồ thanh toán (Mặc định ở Cần Thơ)
+            // Khởi tạo bản đồ thanh toán 
             mapThanhToan = L.map('mapThanhToan').setView([10.0299, 105.7706], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapThanhToan);
             markerThanhToan = L.marker([10.0299, 105.7706]).addTo(mapThanhToan);
 
             let addressSelect = document.getElementById('address-select');
 
-            // 2. Hàm xử lý cập nhật bản đồ theo địa chỉ
+            // Hàm xử lý cập nhật bản đồ theo địa chỉ
             function capNhatBanDoThanhToan() {
                 if (!addressSelect) return;
                 
@@ -407,10 +407,10 @@
             }
 
             if (addressSelect) {
-                // 3. Lắng nghe sự kiện khi người dùng click chọn địa chỉ khác
+                //  Lắng nghe sự kiện khi người dùng click chọn địa chỉ khác
                 addressSelect.addEventListener('change', capNhatBanDoThanhToan);
                 
-                // 4. Tự động chạy một lần khi vừa vào trang để map nhảy tới địa chỉ Mặc định
+                // Tự động chạy một lần khi vừa vào trang thanh toán, hàm sử lý cập nhật bản đồ để map nhảy tới địa chỉ Mặc định
                 setTimeout(function() {
                     mapThanhToan.invalidateSize(); // Fix lỗi khung xám
                     capNhatBanDoThanhToan();
@@ -440,7 +440,7 @@
             let viDoMoi = document.getElementById('ViDo_moi');
             let kinhDoMoi = document.getElementById('KinhDo_moi');
 
-            // 1. Khi kéo ghim trên bản đồ
+            //  Khi kéo ghim trên bản đồ
             markerModal.on('dragend', function() {
                 let latlng = markerModal.getLatLng();
                 viDoMoi.value = latlng.lat;
@@ -455,7 +455,7 @@
                 });
             });
 
-            // 2. Hàm dịch chữ thành Tọa độ
+            // Hàm dịch chữ thành Tọa độ
             function timViTriBando(text) {
                  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(text)}`)
                 .then(res => res.json())
@@ -469,7 +469,7 @@
                 });
             }
 
-            // 3. Gõ chữ tự động tìm (sau 1 giây)
+            //  Gõ chữ tự động tìm (sau 1 giây)
             let typingTimer;
             inputDiaChiMoi.addEventListener('keyup', function() {
                 clearTimeout(typingTimer);
@@ -480,7 +480,7 @@
                 }, 1000); 
             });
             
-            // 4. Gắn hàm cho nút "Tìm"
+            // Gắn hàm cho nút "Tìm"
             window.timViTriModal = function() {
                 let text = inputDiaChiMoi.value;
                 if(text) {

@@ -78,7 +78,7 @@ def recommend():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # 1. Tìm Top 2 danh mục (MaDM) yêu thích nhất của User này (Content-Based)
+        # Tìm Top 2 danh mục (MaDM) yêu thích nhất của User này (Content-Based)
         fav_categories = []
         if user_id > 0:
             cursor.execute(f"""
@@ -91,7 +91,7 @@ def recommend():
             """)
             fav_categories = [row[0] for row in cursor.fetchall()]
 
-        # 2. Lấy danh sách TẤT CẢ hàng hợp lệ (kèm theo MaDM để lát nữa xét thưởng)
+        #  Lấy danh sách TẤT CẢ hàng hợp lệ (kèm theo MaDM để lát nữa xét thưởng)
         cursor.execute(f"SELECT MaHH, MaDM FROM HangHoa WHERE SoLuongHH > 0 AND TrangThaiDuyet = 'DaDuyet' AND IdNguoiBan != {user_id}")
         valid_items_data = cursor.fetchall()
         valid_items = [row[0] for row in valid_items_data]
@@ -116,7 +116,7 @@ def recommend():
             items_to_drop = list(set(exclude_ids + already_rated))
             pred_series = pred_series.drop(items_to_drop, errors='ignore')
 
-            # 3. ĐƯA SẢN PHẨM MỚI VÀO CUỘC CHƠI (Gán điểm mặc định là 0)
+            #  ĐƯA SẢN PHẨM MỚI VÀO CUỘC CHƠI (Gán điểm mặc định là 0)
             new_items = [item for item in valid_items if item not in pred_series.index and item not in items_to_drop]
             if new_items:
                 new_items_series = pd.Series(0.0, index=new_items)
@@ -125,7 +125,7 @@ def recommend():
             # Chỉ giữ lại hàng còn tồn kho
             pred_series = pred_series[pred_series.index.isin(valid_items)]
 
-            # 4. THUẬT TOÁN BƠM ĐIỂM (BOOST SCORE) THEO DANH MỤC YÊU THÍCH
+            #  THUẬT TOÁN BƠM ĐIỂM (BOOST SCORE) THEO DANH MỤC YÊU THÍCH
             if fav_categories and not pred_series.empty:
                 max_svd_score = pred_series.max() if pred_series.max() > 0 else 1.0
                 bonus_1 = max_svd_score * 0.8  # Thưởng 80% sức mạnh SVD cho danh mục Top 1
@@ -159,9 +159,7 @@ def recommend():
                     reason = "AI_Match" if item_id not in new_items else "Gợi ý mới"
                     results.append({"id": int(item_id), "match": match_percent, "reason": reason})
 
-        # =========================================================
         # IN TERMINAL (DEBUG)
-        # =========================================================
         if results:
             print(f"\n---> [AI] Đang gợi ý cho User {user_id} ({len(results)} món):")
             

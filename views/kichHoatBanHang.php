@@ -98,7 +98,7 @@
                 }).addTo(map);
             }
 
-            // 1. Dùng API để dịch Địa chỉ -> Tọa độ
+            //  Dùng API để dịch Địa chỉ -> Tọa độ
             const searchUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Vietnam')}`;
 
             fetch(searchUrl)
@@ -123,7 +123,7 @@
                         marker = L.marker([lat, lon], { draggable: true }).addTo(map);
                         marker.bindPopup(`<b>Vị trí ban đầu:</b><br>${data[0].display_name}`).openPopup();
 
-                        // --- TÍNH NĂNG MỚI: BẮT SỰ KIỆN KHI NGƯỜI DÙNG KÉO THẢ GHIM ---
+                        //  BẮT SỰ KIỆN KHI NGƯỜI DÙNG KÉO THẢ GHIM 
                         marker.on('dragend', function(event) {
                             const position = marker.getLatLng();
                             
@@ -135,7 +135,7 @@
                             const inputDiaChi = document.getElementById('DiaChiKhoHang');
                             inputDiaChi.value = 'Đang dịch tọa độ thành địa chỉ...';
 
-                            // 2. Dùng API Reverse Geocoding để dịch ngược Tọa độ -> Địa chỉ mới
+                            // Dùng API Reverse Geocoding để dịch ngược Tọa độ -> Địa chỉ mới
                             const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}&accept-language=vi`; // Ưu tiên tiếng Việt
 
                             fetch(reverseUrl)
@@ -155,7 +155,7 @@
                                     inputDiaChi.value = 'Có lỗi xảy ra khi lấy tên đường.';
                                 });
                         });
-                        // --- KẾT THÚC SỰ KIỆN KÉO THẢ ---
+                        // KẾT THÚC SỰ KIỆN KÉO THẢ 
 
                     } else {
                         alert('Không tìm thấy địa chỉ này trên bản đồ. Vui lòng nhập chi tiết hơn (ví dụ thêm Phường, Quận, Thành phố)!');

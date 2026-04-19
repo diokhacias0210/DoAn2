@@ -76,7 +76,7 @@
   <?php include '../includes/header.php'; ?>
 
   <?php
-  // Logic Modal khảo sát giữ nguyên
+  // Logic Modal khảo sát gợi ý AI: Chỉ hiển thị nếu user đã đăng nhập và chưa có tương tác nào được ghi nhận trong HanhVi_AI
   $showSurvey = false;
   if (isset($_SESSION['IdTaiKhoan'])) {
     $idKhach = (int)$_SESSION['IdTaiKhoan'];
@@ -215,7 +215,7 @@
   <script src="../assets/js/js.js"></script>
 
   <script>
-    // --- GỌI GỢI Ý AI BẰNG AJAX---
+    //  GỌI GỢI Ý AI BẰNG AJAX
     document.addEventListener("DOMContentLoaded", function() {
       fetch('ajaxLayGoiYAI.php')
         .then(res => res.text())
@@ -247,7 +247,7 @@
       }
     <?php endif; ?>
 
-    // --- JS KHOẢNG CÁCH: GIỮ NGUYÊN NGUYÊN BẢN CỦA BẠN (Dòng 204 - 256) ---
+    // Xử lý tìm cửa hàng gần nhất bằng GPS
     var latDuPhong = <?= $userLat ?? 0 ?>;
     var lngDuPhong = <?= $userLng ?? 0 ?>;
     document.addEventListener("DOMContentLoaded", function() {
@@ -264,12 +264,12 @@
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            function(position) {
-              statusDiv.className = 'alert alert-success text-center small shadow-sm';
-              statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
-              goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
-              goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
-            },
+            // function(position) {
+            //   statusDiv.className = 'alert alert-success text-center small shadow-sm';
+            //   statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
+            //   goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
+            //   goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
+            // },
             function(error) {
               if (latDuPhong != 0 && lngDuPhong != 0) {
                 statusDiv.className = 'alert alert-info text-center small shadow-sm';
