@@ -3,7 +3,7 @@ set_time_limit(0);
 require_once __DIR__ . '/../includes/ketnoi.php';
 
 $csvFile = __DIR__ . '/events.csv';
-$limit = 50000;
+$limit = 500000;
 
 if (!file_exists($csvFile)) {
     die("Lỗi: Không tìm thấy file tại $csvFile.");

@@ -39,7 +39,7 @@ $sql = "SELECT
         WHERE tk.TrangThaiBanHang = 'DangHoatDong'
           AND hs.ViDo IS NOT NULL 
           AND hs.KinhDo IS NOT NULL
-          AND tk.IdTaiKhoan != $idHienTai  -- ĐÂY LÀ DÒNG MỚI THÊM: Loại bỏ cửa hàng của chính mình
+          AND tk.IdTaiKhoan != $idHienTai  -- Loại bỏ cửa hàng của chính mình
         HAVING KhoangCachKm <= $banKinh
         ORDER BY KhoangCachKm ASC";
 

@@ -247,53 +247,79 @@
       }
     <?php endif; ?>
 
-    // Xử lý tìm cửa hàng gần nhất bằng GPS
+    // GỌI API TÌM CỬA HÀNG THEO VỊ TRÍ
     var latDuPhong = <?= $userLat ?? 0 ?>;
     var lngDuPhong = <?= $userLng ?? 0 ?>;
     document.addEventListener("DOMContentLoaded", function() {
       requestLocation();
     });
 
+    // =============================== PHẦN CODE CŨ CÓ HỎI SỬ DỤNG GPS HAY KHÔNG RỒI CHUYỂN QUA MẶC ĐỊNH ===============================
+    // function requestLocation() {
+    //   let statusDiv = document.getElementById('status-message');
+    //   if (!statusDiv) return;
+
+    //   statusDiv.style.display = 'block';
+    //   statusDiv.className = 'alert alert-info text-center small';
+    //   statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Đang xác định vị trí...';
+
+    //   if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(
+    //       function(position) {
+    //         statusDiv.className = 'alert alert-success text-center small shadow-sm';
+    //         statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
+    //         goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
+    //         goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
+    //       },
+    //       function(error) {
+    //         if (latDuPhong != 0 && lngDuPhong != 0) {
+    //           statusDiv.className = 'alert alert-info text-center small shadow-sm';
+    //           statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+    //           goiApiTimCuaHang(latDuPhong, lngDuPhong);
+    //           goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
+    //         } else {
+    //           statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+    //           statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng bật GPS hoặc thiết lập địa chỉ mặc định để tìm cửa hàng.';
+    //         }
+    //       }
+    //     );
+    //   } else {
+    //     if (latDuPhong != 0 && lngDuPhong != 0) {
+    //       statusDiv.className = 'alert alert-info text-center small shadow-sm';
+    //       statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+    //       goiApiTimCuaHang(latDuPhong, lngDuPhong);
+    //       goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
+    //     } else {
+    //       statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+    //       statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
+    //     }
+    //   }
+    // }
+
+    // =============================== PHẦN CODE MỚI SỬ DỤNG THẲNG ĐỊA CHỈ MẶC ĐỊNH KHÔNG CÓ HỎI GPS ===============================
     function requestLocation() {
         let statusDiv = document.getElementById('status-message');
         if (!statusDiv) return;
 
         statusDiv.style.display = 'block';
-        statusDiv.className = 'alert alert-info text-center small';
-        statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Đang xác định vị trí...';
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            // function(position) {
-            //   statusDiv.className = 'alert alert-success text-center small shadow-sm';
-            //   statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
-            //   goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
-            //   goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
-            // },
-            function(error) {
-              if (latDuPhong != 0 && lngDuPhong != 0) {
-                statusDiv.className = 'alert alert-info text-center small shadow-sm';
-                statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
-                goiApiTimCuaHang(latDuPhong, lngDuPhong);
-                goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
-              } else {
-                statusDiv.className = 'alert alert-warning text-center small shadow-sm';
-                statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng bật GPS hoặc thiết lập địa chỉ mặc định để tìm cửa hàng.';
-              }
-            }
-          );
-        } else {
-          if (latDuPhong != 0 && lngDuPhong != 0) {
-            statusDiv.className = 'alert alert-info text-center small shadow-sm';
-            statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+        // Kiểm tra xem đã có tọa độ mặc định chưa (latDuPhong, lngDuPhong khác 0)
+        if (typeof latDuPhong !== 'undefined' && typeof lngDuPhong !== 'undefined' && latDuPhong != 0 && lngDuPhong != 0) {
+            
+            // Hiện ngay thông báo thành công, không có bước "Đang xác định..."
+            statusDiv.className = 'alert alert-success text-center small shadow-sm';
+            statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị sản phẩm quanh <b>địa chỉ mặc định</b> của bạn.';
+            
+            // Trực tiếp gọi API tìm kiếm
             goiApiTimCuaHang(latDuPhong, lngDuPhong);
             goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
-          } else {
+            
+        } else {
+            // Trường hợp người dùng chưa thiết lập địa chỉ
             statusDiv.className = 'alert alert-warning text-center small shadow-sm';
-            statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
-          }
+            statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng thiết lập địa chỉ trong hồ sơ để xem các cửa hàng và sản phẩm gần bạn.';
         }
-      }
+    }
 
     function goiApiTimCuaHang(lat, lng) {
       let formData = new FormData();
