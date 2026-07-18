@@ -9,11 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="../../assets/css/header.css" rel="stylesheet">
     <link href="../../assets/css/color.css" rel="stylesheet">
-    <!-- ✅ Load CSS chat để khung chat giống hệt bên người mua -->
     <link href="../../assets/css/chat.css" rel="stylesheet">
 
     <style>
-        /* Giữ nguyên toàn bộ style cũ của bạn (không thay đổi) */
         .seller-wrapper { max-width: 1300px; margin: 0 auto; padding: 0 15px; }
         .seller-content-box { background: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); min-height: 600px; }
         .seller-sidebar {
@@ -52,10 +50,8 @@
 
         .chat-badge { position: absolute; top: -4px; right: -8px; background-color: #dc3545; color: white; font-size: 11px; font-weight: bold; padding: 3px 6px; border-radius: 50px; line-height: 1; border: 2px solid #fff; }
         
-        /* Chỉ tinh chỉnh nhẹ để khung chat vừa vặn */
         .chat-wrapper { height: 70vh; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; }
 
-        /* CSS Accordion Khách hàng */
         .shop-group {
             border-bottom: 1px solid #eee;
         }
@@ -101,7 +97,7 @@
     <?php include '../../includes/header.php'; ?>
 
     <?php
-    // Phần đếm tin nhắn chưa đọc (giữ nguyên)
+    // Phần đếm tin nhắn chưa đọc để hiển thị badge trên menu
     $soTinNhanChuaDoc = 0;
     if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
         $idSellerCurrent = $_SESSION['IdTaiKhoan'];
@@ -141,8 +137,7 @@
             <div class="col-md-9">
                 <div class="seller-content-box">
                     <div class="chat-wrapper" style="display: flex;">
-                        
-                        <!-- ==================== SIDEBAR BÊN TRÁI (GIỮ NGUYÊN 100% CODE CŨ) ==================== -->
+                        <!-- DANH SÁCH KHÁCH HÀNG BÊN TRÁI -->
                         <div class="sidebar" style="width: 320px; border-right: 1px solid #ddd; background: #fff; display: flex; flex-direction: column;">
                             <div class="sidebar-header" style="background: var(--bs-pink-500); color: white; padding: 15px; font-weight: bold; text-align: center;">
                                 Khách hàng nhắn tin
@@ -215,7 +210,7 @@
                             </div>
                         </div>
 
-                        <!-- ==================== KHUNG CHAT BÊN PHẢI (ĐÃ ĐỒNG BỘ GIỐNG BÊN NGƯỜI MUA) ==================== -->
+                        <!-- KHUNG CHAT BÊN PHẢI -->
                         <div class="chat-window" style="flex: 1; display: flex; flex-direction: column;">
                             <?php if ($maPhong > 0 && isset($chiTietPhong) && !empty($chiTietPhong)): ?>
                                 <div class="chat-header">
@@ -295,7 +290,6 @@
                     });
             }
 
-            // Sửa & Thu hồi tin nhắn
             // Sửa & Thu hồi tin nhắn
             window.editMessage = function(maTN) {
                 const newContent = prompt("Nhập nội dung tin nhắn mới:");

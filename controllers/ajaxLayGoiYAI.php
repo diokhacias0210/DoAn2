@@ -1,5 +1,4 @@
 <?php
-// File: controllers/ajaxLayGoiYAI.php
 session_start();
 require_once '../includes/ketnoi.php';
 
@@ -10,7 +9,7 @@ $exclude = isset($_GET['exclude']) ? (int)$_GET['exclude'] : 0;
 $api_url = "http://127.0.0.1:5000/recommend?user_id=$idCheck&top_n=8";
 $ch = curl_init($api_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+curl_setopt($ch, CURLOPT_TIMEOUT, 1);
 $response = curl_exec($ch);
 curl_close($ch);
 

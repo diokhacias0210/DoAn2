@@ -16,7 +16,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        /* CSS MÀU XANH GIỐNG TRANG QUẢN LÝ ĐÁNH GIÁ */
         .qldh-table {
             width: 100%;
             background: white;
@@ -44,7 +43,6 @@
             background: #f8f9fa;
         }
 
-        /* Fix Select2 Bootstrap 5 UI */
         .select2-container .select2-selection--multiple {
             min-height: 38px;
             border: 1px solid #dee2e6;
@@ -279,7 +277,7 @@
             $('.select2-multiple').select2({
                 placeholder: " Gõ tên hoặc ID để tìm kiếm...",
                 allowClear: true,
-                dropdownParent: $('#modalSendNotif') // Quan trọng: fix lỗi select2 nằm dưới Modal
+                dropdownParent: $('#modalSendNotif')
             });
 
             // Ẩn thông báo alert sau 3s

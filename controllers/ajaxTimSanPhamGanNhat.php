@@ -11,15 +11,13 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 
 $lat = isset($_POST['lat']) ? (float)$_POST['lat'] : 0;
 $lng = isset($_POST['lng']) ? (float)$_POST['lng'] : 0;
-$banKinh = 10000; // Tìm sản phẩm trong bán kính 10km
+$banKinh = 10; // Tìm sản phẩm trong bán kính 10km
 
 if ($lat == 0 || $lng == 0) {
     echo json_encode(['status' => 'error', 'message' => 'Lỗi tọa độ.']);
     exit;
 }
 
-// SQL MỚI: Rút trích tối đa 2 sản phẩm mỗi cửa hàng để đảm bảo đa dạng
-// SQL MỚI CẬP NHẬT: Ưu tiên đa dạng shop trước, nếu thiếu sẽ tự động bù sản phẩm khác vào cho đủ 20
 // Lấy ID của người đang dùng app
 $idHienTai = $_SESSION['IdTaiKhoan'];
 
@@ -51,7 +49,7 @@ $sql = "WITH RankedProducts AS (
             CASE WHEN rn <= 2 THEN 0 ELSE 1 END ASC, 
             KhoangCachKm ASC,  
             MaHH DESC          
-        LIMIT 20";  
+        LIMIT 8";  
 
 $result = $conn->query($sql);
 $data = [];

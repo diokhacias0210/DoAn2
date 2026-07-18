@@ -167,7 +167,6 @@
             margin-top: 80px;
         }
 
-        /* Đẩy xuống tránh header */
     </style>
 </head>
 
@@ -194,7 +193,7 @@
     </div>
 
     <?php
-    // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+    // ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ĐỂ HIỂN THỊ BADGE TRÊN MENU "Tin nhắn"
     $soTinNhanChuaDoc = 0;
     if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
         $idSellerCurrent = $_SESSION['IdTaiKhoan'];

@@ -19,7 +19,7 @@ class DangKyModel
         return $exists;
     }
 
-    // Đã thêm ViDo, KinhDo và DiaChi vào hàm
+    // Thêm ViDo, KinhDo và DiaChi vào hàm đăng ký
     public function themTaiKhoan($tentk, $email, $phone, $password, $vido, $kinhdo, $diachi)
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -27,14 +27,14 @@ class DangKyModel
         // Dùng Transaction để đảm bảo lưu cả 2 bảng thành công
         $this->conn->begin_transaction();
         try {
-            // 1. Lưu vào bảng TaiKhoan
+            // Lưu vào bảng TaiKhoan
             $stmt = $this->conn->prepare("INSERT INTO TaiKhoan (TenTK, Email, Sdt, MatKhau, ViDo, KinhDo) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssdd", $tentk, $email, $phone, $hash, $vido, $kinhdo);
             $stmt->execute();
             $idTaiKhoan = $stmt->insert_id; // Lấy ID vừa tạo
             $stmt->close();
 
-            // 2. Lưu địa chỉ mặc định vào bảng DiaChi
+            // Lưu địa chỉ mặc định vào bảng DiaChi
             $is_default = 1;
             $stmt2 = $this->conn->prepare("INSERT INTO DiaChi (IdTaiKhoan, DiaChiChiTiet, MacDinh) VALUES (?, ?, ?)");
             $stmt2->bind_param("isi", $idTaiKhoan, $diachi, $is_default);

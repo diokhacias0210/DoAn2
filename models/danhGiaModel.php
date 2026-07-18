@@ -64,17 +64,17 @@ class DanhGiaModel
     }
     public function themDanhGiaVaBinhLuan($idTaiKhoan, $maHH, $soSao, $noiDung)
     {
-        // 1. Kiểm tra đã mua (dùng hàm có sẵn)
+        //  Kiểm tra đã mua (dùng hàm có sẵn)
         if (!$this->kiemTraCoMaThanhToan($idTaiKhoan, $maHH)) {
             return ['success' => false, 'message' => 'Bạn cần mua sản phẩm này và có mã thanh toán trước khi đánh giá.'];
         }
 
-        // 2. Kiểm tra đã đánh giá chưa (dùng hàm có sẵn)
+        // Kiểm tra đã đánh giá chưa (dùng hàm có sẵn)
         if ($this->kiemTraDaDanhGia($idTaiKhoan, $maHH)) {
             return ['success' => false, 'message' => 'Bạn đã đánh giá sản phẩm này rồi.'];
         }
 
-        // 3. Bắt đầu transaction
+        //  Bắt đầu transaction
         $this->conn->begin_transaction();
 
         try {

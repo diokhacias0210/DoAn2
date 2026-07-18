@@ -14,7 +14,7 @@ $giaSauGiam = 0;
 $daYeuThich = false;
 $errorMessage = '';
 
-// 3. VALIDATE VÀ LẤY DỮ LIỆU TỪ MODEL
+//  VALIDATE VÀ LẤY DỮ LIỆU TỪ MODEL
 if ($maHH <= 0) {
     $errorMessage = 'ID sản phẩm không hợp lệ';
 } else {
@@ -50,13 +50,12 @@ if ($maHH <= 0) {
                 $idKhachHang = (int)$_SESSION['IdTaiKhoan'];
                 $maHHDangXem = (int)$_GET['id'];
 
-                // 1. Lưu hành vi "Xem" (1 điểm) vào DB vẫn giữ nguyên để AI có dữ liệu sau này
+                // Lưu hành vi "Xem" (1 điểm) vào DB vẫn giữ nguyên để AI có dữ liệu sau này
                 $sql_ai = "INSERT INTO HanhVi_AI (IdTaiKhoan, MaHH, Diem) 
                VALUES ($idKhachHang, $maHHDangXem, 1) 
                ON DUPLICATE KEY UPDATE Diem = GREATEST(Diem, 1)";
                 $conn->query($sql_ai);
 
-                // 2. CHIẾN THUẬT C: KIỂM SOÁT TẦN SUẤT RETRAIN
                 // Khởi tạo biến đếm nếu chưa có
                 if (!isset($_SESSION['view_count_ai'])) {
                     $_SESSION['view_count_ai'] = 0;
@@ -79,7 +78,6 @@ if ($maHH <= 0) {
                     $_SESSION['view_count_ai'] = 0;
                     $_SESSION['retrain_limit'] = rand(5, 10);
 
-                    // Ghi log nhẹ nhàng để bạn theo dõi trong file log của PHP (nếu cần)
                     // error_log("AI đã thực hiện học lại sau " . $_SESSION['retrain_limit'] . " lần xem.");
                 }
             }

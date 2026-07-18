@@ -2,9 +2,6 @@ DROP DATABASE IF EXISTS doan2;
 CREATE DATABASE doan2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE doan2;
 
--- =============================================
--- 1. CẤU TRÚC 27 BẢNG (GIỮ NGUYÊN CỦA BẠN - ĐÃ THÊM CỘT SODU)
--- =============================================
 CREATE TABLE TaiKhoan ( 
     IdTaiKhoan INT(10) PRIMARY KEY AUTO_INCREMENT, 
     TenTK VARCHAR(100) NOT NULL,
@@ -117,14 +114,14 @@ CREATE TABLE DonHang (
     IdNguoiBan INT(10) NOT NULL, 
     NgayDat DATETIME DEFAULT CURRENT_TIMESTAMP,
     DiaChiGiao VARCHAR(255),
-    TongTien DECIMAL(10,2) UNSIGNED, -- Đã sửa để khớp số thập phân
+    TongTien DECIMAL(10,2) UNSIGNED, 
     TrangThai ENUM('Chờ xử lý', 'Đã xác nhận', 'Đang giao', 'Hoàn tất', 'Đã hủy') DEFAULT 'Chờ xử lý',
     TrangThaiThanhToan ENUM('ChuaThanhToan', 'DaThanhToan', 'ChoHoanTien') DEFAULT 'ChuaThanhToan', 
     GhiChu TEXT,
     NgaySua DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PhiSan DECIMAL(10,2) DEFAULT 0, 
     TienNguoiBanNhan DECIMAL(10,2) DEFAULT 0, 
-    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan), -- Đã bỏ CASCADE
+    FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan), 
     FOREIGN KEY (IdNguoiBan) REFERENCES TaiKhoan(IdTaiKhoan)
 );
 
@@ -136,7 +133,7 @@ CREATE TABLE ThanhToan (
     NgayThanhToan DATETIME DEFAULT CURRENT_TIMESTAMP,
     PhuongThuc ENUM('Tiền mặt', 'Chuyển khoản', 'Ví điện tử', 'Thẻ ngân hàng') DEFAULT 'Tiền mặt',
     TrangThai ENUM('Thành công', 'Thất bại', 'Đang xử lý') DEFAULT 'Đang xử lý',
-    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) -- Đã bỏ CASCADE
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH) 
 );
 
 CREATE TABLE ChiTietDonHang ( 
@@ -146,8 +143,8 @@ CREATE TABLE ChiTietDonHang (
     SoLuongSanPham SMALLINT UNSIGNED, 
     DonGia DECIMAL(10,2) UNSIGNED,
     GiamGia DECIMAL(10,2) DEFAULT 0,
-    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH), -- Đã bỏ CASCADE
-    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) -- Đã bỏ CASCADE
+    FOREIGN KEY (MaDH) REFERENCES DonHang(MaDH),
+    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) 
 );
 
 CREATE TABLE LichSuDonHang ( 
@@ -202,7 +199,7 @@ CREATE TABLE ThongBao (
     LoaiTB ENUM('HeThong', 'DonHang', 'KhuyenMai', 'ViPham', 'BaoCao') DEFAULT 'HeThong',
     NguoiGui INT(10) DEFAULT NULL, 
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (NguoiGui) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE SET NULL -- Đã bổ sung
+    FOREIGN KEY (NguoiGui) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE SET NULL 
 );
 
 CREATE TABLE ThongBaoNguoiDung (
@@ -234,19 +231,19 @@ CREATE TABLE TinNhan (
     LoaiTin ENUM('VanBan', 'HinhAnh') DEFAULT 'VanBan',
     DaXem BOOLEAN DEFAULT 0,
     NgayGui DATETIME DEFAULT CURRENT_TIMESTAMP,
-    TrangThai TINYINT(1) DEFAULT 0, -- Đã sửa ; thành ,
-    DaChinhSua TINYINT(1) DEFAULT 0, -- Đã sửa ; thành ,
+    TrangThai TINYINT(1) DEFAULT 0, 
+    DaChinhSua TINYINT(1) DEFAULT 0,
     FOREIGN KEY (MaPhong) REFERENCES PhongChat(MaPhong) ON DELETE CASCADE,
-    FOREIGN KEY (IdNguoiGui) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE -- Đã bổ sung
+    FOREIGN KEY (IdNguoiGui) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE 
 );
 
 CREATE TABLE LichSuTinNhan (
     IdLichSu INT AUTO_INCREMENT PRIMARY KEY,
-    MaTN INT NOT NULL, -- Đã sửa IdTinNhan thành MaTN cho khớp
+    MaTN INT NOT NULL, 
     NoiDungCu TEXT,
     LoaiThayDoi ENUM('Sua', 'ThuHoi'),
     ThoiGianThayDoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (MaTN) REFERENCES TinNhan(MaTN) ON DELETE CASCADE -- Đã sửa khớp
+    FOREIGN KEY (MaTN) REFERENCES TinNhan(MaTN) ON DELETE CASCADE 
 );
 
 CREATE TABLE Banner (
@@ -270,7 +267,7 @@ CREATE TABLE BaoCao (
     NgayTao DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (IdNguoiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
     FOREIGN KEY (IdDoiTuongBiBaoCao) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
-    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE -- Đã bổ sung
+    FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE 
 );
 
 CREATE TABLE KhangCao (
@@ -326,9 +323,7 @@ CREATE TABLE HanhVi_AI (
     FOREIGN KEY (IdTaiKhoan) REFERENCES TaiKhoan(IdTaiKhoan) ON DELETE CASCADE,
     FOREIGN KEY (MaHH) REFERENCES HangHoa(MaHH) ON DELETE CASCADE
 );
--- =============================================
--- 2. INSERT DỮ LIỆU CŨ CỦA BẠN
--- =============================================
+
 
 INSERT INTO CauHinhHeThong (TenCauHinh, GiaTri, MoTa) VALUES ('PhiSan', '5', 'Phí sàn phần trăm (%) thu trên mỗi đơn hàng hoàn tất');
 
@@ -456,9 +451,6 @@ INSERT INTO MaGiamGia (Code, MoTa, GiaTri, SoLuong, TrangThai) VALUES
 INSERT INTO MaGiamGiaDanhMuc (MaGG, MaDM) VALUES 
 (1, 1), (2, 2), (3, 7);
 
--- =============================================
--- 3. THÊM MỚI DỮ LIỆU (CÁC BẢNG CÒN LẠI VÀ SỐ DƯ TÍNH TOÁN)
--- =============================================
 
 -- Thêm Yêu Thích & Giỏ Hàng
 INSERT INTO YeuThich (IdTaiKhoan, MaHH) VALUES (6, 1), (7, 2), (8, 4), (9, 7), (10, 10);
@@ -554,9 +546,6 @@ INSERT INTO ThongBao (TieuDe, NoiDung, LoaiTB, NguoiGui) VALUES
 INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES (1, 6, 0), (1, 7, 0), (2, 6, 0);
 USE doan2;
 
--- =============================================
--- 1. THÊM 20 ĐƠN HÀNG MỚI (Mã 101 đến 120 để tránh trùng)
--- =============================================
 INSERT INTO DonHang (MaDH, IdTaiKhoan, IdNguoiBan, DiaChiGiao, TongTien, TrangThai, TrangThaiThanhToan, GhiChu, PhiSan, TienNguoiBanNhan, NgayDat) VALUES
 (101, 7, 3, '123 Cầu Giấy, Hà Nội', 1100000, 'Hoàn tất', 'DaThanhToan', 'Giao trong giờ hành chính', 55000, 1045000, '2023-12-05 09:00:00'),
 (102, 8, 4, '456 Lê Lợi, Đà Nẵng', 1800000, 'Hoàn tất', 'DaThanhToan', 'Nhờ shop bọc kỹ', 90000, 1710000, '2023-12-06 14:30:00'),
@@ -579,9 +568,6 @@ INSERT INTO DonHang (MaDH, IdTaiKhoan, IdNguoiBan, DiaChiGiao, TongTien, TrangTh
 (119, 11, 3, '77G Lê Hồng Phong, Vũng Tàu', 160000, 'Hoàn tất', 'DaThanhToan', 'Giao buổi tối', 8000, 152000, '2023-12-23 18:25:00'),
 (120, 5, 4, '88H Nguyễn Thiện Thuật, Cần Thơ', 120000, 'Đã hủy', 'ChoHoanTien', 'Mua nhầm mẫu', 0, 0, '2023-12-24 10:30:00');
 
--- =============================================
--- 2. CHI TIẾT 20 ĐƠN HÀNG VÀ LỊCH SỬ
--- =============================================
 INSERT INTO ChiTietDonHang (MaDH, MaHH, SoLuongSanPham, DonGia, GiamGia) VALUES
 (101, 14, 1, 1100000, 0), (102, 28, 1, 1800000, 0), (103, 7, 1, 1600000, 0),
 (104, 22, 1, 140000, 0), (105, 40, 2, 39000, 0), (106, 6, 1, 120000, 0),
@@ -604,10 +590,6 @@ INSERT INTO ThanhToan (MaDH, MaThanhToan, SoTien, PhuongThuc, TrangThai) VALUES
 (118, 'COD_118', 300000, 'Tiền mặt', 'Thành công'),
 (119, 'BANK_119', 160000, 'Chuyển khoản', 'Thành công');
 
--- =============================================
--- 3. CẬP NHẬT TỰ ĐỘNG VÀO SỐ DƯ VÀ BIẾN ĐỘNG
--- (Tính tổng tiền thực nhận của các đơn Hoàn Tất)
--- =============================================
 -- Người bán 2 nhận: DH106, 109, 112, 115, 118 (Tổng: 703,000đ)
 UPDATE HoSoNguoiBan SET SoDu = SoDu + 703000 WHERE IdTaiKhoan = 2;
 INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, NoiDung, MaDH) VALUES
@@ -631,10 +613,6 @@ INSERT INTO BienDongSoDu (IdTaiKhoan, LoaiGiaoDich, SoTien, SoDuSauGiaoDich, Noi
 (4, 'CongTienDonHang', 74100, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=4), 'Đơn #105 hoàn tất', 105),
 (4, 'CongTienDonHang', 332500, (SELECT SoDu FROM HoSoNguoiBan WHERE IdTaiKhoan=4), 'Đơn #114 hoàn tất', 114);
 
-
--- =============================================
--- 4. THÊM ĐÁNH GIÁ (REVIEW) VÀ BÌNH LUẬN THỰC TẾ
--- =============================================
 INSERT IGNORE INTO DanhGiaSao (IdTaiKhoan, MaHH, SoSao) VALUES
 (7, 14, 5), (8, 28, 5), (11, 40, 4), (5, 6, 4), (8, 3, 5),
 (9, 25, 5), (11, 8, 3), (6, 26, 5), (7, 9, 5), (10, 2, 4), (11, 11, 5);
@@ -653,9 +631,6 @@ INSERT INTO BinhLuan (IdTaiKhoan, MaHH, NoiDung) VALUES
 (11, 11, 'Quạt tản nhiệt led tản sáng đều, chạy rất êm không bị ồn ào.');
 
 
--- =============================================
--- 5. BÁO CÁO, KHÁNG CÁO & THÔNG BÁO HỆ THỐNG
--- =============================================
 INSERT INTO BaoCao (MaBC, IdNguoiBaoCao, IdDoiTuongBiBaoCao, MaHH, LoaiBaoCao, LyDoChinh, ChiTiet, TrangThai, NgayTao) VALUES
 (101, 6, 4, NULL, 'NguoiBan', 'Thái độ phục vụ tệ', 'Shop này chửi khách trong tin nhắn khi mình hỏi về bảo hành.', 'ChoXuLy', '2023-12-25 10:00:00'),
 (102, 11, 3, 11, 'SanPham', 'Hàng không đúng mô tả', 'Quạt giao tới không có dây cắm led như hình ảnh quảng cáo.', 'ViPham', '2023-12-26 09:30:00'),
@@ -675,8 +650,7 @@ INSERT INTO ThongBaoNguoiDung (MaTB, IdNhan, DaXem) VALUES
 (103, 2, 1);
 
 
--- Bảng TaiKhoan cần thêm tọa độ nhà riêng cho người bán (Mình đặt trùng với Cửa hàng cho tiện test)
--- =====================================================================
+-- Bảng TaiKhoan cần thêm tọa độ nhà riêng cho người bán (để tiện cho việc định vị khi giao hàng và quản lý kho hàng)
 INSERT INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiBanHang, ViDo, KinhDo) VALUES
 (12, 'shop_hanoi', 'hanoi@gmail.com', '0901000101', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 21.028511, 105.804817),
 (13, 'shop_haiphong', 'haiphong@gmail.com', '0901000102', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 20.844911, 106.688084),
@@ -689,8 +663,8 @@ INSERT INTO TaiKhoan (IdTaiKhoan, TenTK, Email, Sdt, MatKhau, VaiTro, TrangThaiB
 (20, 'shop_vungtau', 'vungtau@gmail.com', '0901000109', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 10.345990, 107.094260),
 (21, 'shop_camau', 'camau@gmail.com', '0901000110', '$2y$10$Kyb2Fv7jzCGrx8j3B4sLN.l4nvJ2vLUwUkrfLyDiQh2P.gHMXT1Pm', 0, 'DangHoatDong', 9.176900, 105.150000);
 
--- =====================================================================
--- 2. THÊM TỌA ĐỘ VÀO BẢNG HoSoNguoiBan (Kho Hàng)
+
+-- THÊM TỌA ĐỘ VÀO BẢNG HoSoNguoiBan (Kho Hàng)
 INSERT INTO HoSoNguoiBan (IdTaiKhoan, TenCuaHang, DiaChiKhoHang, ViDo, KinhDo, NgayDuyet, SoDu) VALUES
 (12, 'Hà Nội 2Hand Store', '1 Kim Mã, Ba Đình, Hà Nội', 21.028511, 105.804817, NOW(), 0),
 (13, 'Hải Phòng Vintage', '12 Lạch Tray, Ngô Quyền, Hải Phòng', 20.844911, 106.688084, NOW(), 0),
@@ -794,7 +768,6 @@ INSERT INTO HinhAnh (MaHH, URL) VALUES
 
 
 -- thêm sp từ 71 đến 100
--- người bán 21
 
 -- hh71
 INSERT INTO HangHoa (MaHH, IdNguoiBan, MaDM, TenHH, SoLuongHH, Gia, GiaThiTruong, ChatLuongHang, TinhTrangHang, TrangThaiDuyet, MoTa) VALUES 

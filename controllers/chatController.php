@@ -77,8 +77,7 @@ switch ($action) {
                 echo "    </div>";
                 echo "    <div class='message-time'>$time</div>";
 
-                // Chỉ tin nhắn của mình + chưa thu hồi mới có nút hover
-                // Chỉ hiện Icon nếu thời gian <= 10 phút VÀ tin nhắn chưa bị thu hồi
+                // Chỉ hiện Icon tin nhắn của mình nếu thời gian <= 10 phút VÀ tin nhắn chưa bị thu hồi
                 if ($tn['IdNguoiGui'] == $idNguoiDung && $tn['TrangThai'] != 1) {
                     $phutDaQua = (time() - strtotime($tn['NgayGui'])) / 60;
                     if ($phutDaQua <= 10) {
@@ -101,7 +100,7 @@ switch ($action) {
         }
         break;
 
-    // ==================== THÊM MỚI: SỬA & THU HỒI (GIỚI HẠN 10 PHÚT) ====================
+    // SỬA & THU HỒI (GIỚI HẠN 10 PHÚT) 
     case 'edit':
         $maTN = isset($_POST['MaTN']) ? (int)$_POST['MaTN'] : 0;
         $noiDung = isset($_POST['NoiDung']) ? trim($_POST['NoiDung']) : '';

@@ -20,7 +20,7 @@
             background-color: #f8f9fa;
         }
 
-        /* --- ĐỒNG BỘ KHUNG SƯỜN --- */
+        /*  ĐỒNG BỘ KHUNG SƯỜN  */
         .seller-wrapper {
             max-width: 1300px;
             margin: 0 auto;
@@ -35,7 +35,7 @@
             min-height: 600px;
         }
 
-        /* --- MENU BÊN TRÁI (SIDEBAR) --- */
+        /*  MENU BÊN TRÁI (SIDEBAR)  */
         .seller-sidebar {
             background: #ffffff;
             border-radius: 10px;
@@ -70,7 +70,7 @@
             border-left: 4px solid var(--bs-pink-600);
         }
 
-        /* --- BADGE TIN NHẮN --- */
+        /*  BADGE TIN NHẮN  */
         .chat-badge {
             position: absolute;
             top: 50%;
@@ -193,12 +193,12 @@
     <?php include '../../includes/header.php'; ?>
 
     <?php
-    // --- ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ---
+    // ĐẾM SỐ TIN NHẮN KHÁCH HÀNG CHƯA ĐỌC ĐỂ HIỂN THỊ BADGE TRÊN MENU "Tin nhắn" 
     $soTinNhanChuaDoc = 0;
     if (isset($_SESSION['IdTaiKhoan']) && isset($conn)) {
         $idSellerCurrent = $_SESSION['IdTaiKhoan'];
 
-        // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này, 
+        // Câu lệnh đếm các tin nhắn thuộc phòng chat của Seller này,
         // do người khác gửi (Khách hàng) và có trạng thái DaDoc = 0
         $sqlDemTinNhan = "SELECT COUNT(tn.MaTN) AS SoLuong 
                                 FROM TinNhan tn 

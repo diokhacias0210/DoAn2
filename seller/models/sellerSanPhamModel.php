@@ -1,5 +1,4 @@
 <?php
-// File: seller/models/sellerSanPhamModel.php
 
 class SellerSanPhamModel
 {

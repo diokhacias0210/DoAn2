@@ -1,5 +1,4 @@
 <?php
-// File: models/DiaChiModel.php
 class DiaChiModel
 {
     private $conn;

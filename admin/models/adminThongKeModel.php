@@ -1,5 +1,4 @@
 <?php
-// File: models/adminThongKeModel.php
 
 class ThongKe
 {
@@ -10,7 +9,7 @@ class ThongKe
         $this->conn = $connection;
     }
 
-    // ========== THỐNG KÊ TỔNG QUAN ==========
+    // THỐNG KÊ TỔNG QUAN 
     
     public function getTongDoanhThu()
     {
@@ -47,7 +46,7 @@ class ThongKe
         return $row['TongSanPham'];
     }
 
-    // ========== THỐNG KÊ THEO THỜI GIAN CỐ ĐỊNH ==========
+    //THỐNG KÊ THEO THỜI GIAN CỐ ĐỊNH 
     
     public function getDoanhThuTheoNgay($ngay = null)
     {
@@ -110,7 +109,7 @@ class ThongKe
         return $result->fetch_assoc();
     }
 
-    // ========== THỐNG KÊ THEO BỘ LỌC ==========
+    // THỐNG KÊ THEO BỘ LỌC THỜI GIAN 
     
     public function getDoanhThuTheoKhoangThoiGian($tuNgay, $denNgay)
     {
@@ -148,7 +147,7 @@ class ThongKe
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // ========== TOP SẢN PHẨM BÁN CHẠY ==========
+    //TOP SẢN PHẨM BÁN CHẠY
     
     public function getTopSanPhamBanChay($limit = 5)
     {
@@ -238,7 +237,7 @@ class ThongKe
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // ========== THỐNG KÊ BỔ SUNG ==========
+    // THỐNG KÊ BỔ SUNG 
     
     public function getThongKeSanPhamTheoDanhMuc()
     {

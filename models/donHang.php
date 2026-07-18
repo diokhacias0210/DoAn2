@@ -39,7 +39,6 @@ class DonHang
         if ($stmt === false) {
             throw new Exception("Lỗi CSDL (prepare failed): " . $this->conn->error);
         }
-        // =========================
 
         $stmt->bind_param("i", $idTaiKhoan);
         $stmt->execute();
@@ -122,7 +121,7 @@ class DonHang
                 $stmt->execute();
             }
 
-            // CẬP NHẬT lịch sử thay vì INSERT
+            // CẬP NHẬT hoặc INSERT vào LichSuDonHang
             $stmt = $this->conn->prepare("SELECT MaLichSu FROM LichSuDonHang WHERE MaDH = ? LIMIT 1");
             $stmt->bind_param("i", $maDH);
             $stmt->execute();
@@ -181,7 +180,7 @@ class DonHang
     {
         $this->conn->begin_transaction();
         try {
-            // 1. Kiểm tra đơn hàng tồn tại
+            // Kiểm tra đơn hàng tồn tại
             $stmt = $this->conn->prepare("SELECT TrangThai FROM DonHang WHERE MaDH = ?");
             $stmt->bind_param("i", $maDH);
             $stmt->execute();
@@ -193,7 +192,7 @@ class DonHang
 
             $trangThaiHienTai = $result->fetch_assoc()['TrangThai'];
 
-            // 2. Kiểm tra trạng thái hợp lệ
+            //  Kiểm tra trạng thái hợp lệ
             $trangThaiHopLe = [
                 'Chờ xử lý' => ['Đã xác nhận', 'Đã hủy'],
                 'Đã xác nhận' => ['Đang giao', 'Đã hủy'],
@@ -207,12 +206,12 @@ class DonHang
                 throw new Exception("Trạng thái mới không hợp lệ từ trạng thái hiện tại.");
             }
 
-            // 3. CẬP NHẬT bảng DonHang
+            //  CẬP NHẬT bảng DonHang
             $stmt = $this->conn->prepare("UPDATE DonHang SET TrangThai = ? WHERE MaDH = ?");
             $stmt->bind_param("si", $trangThaiMoi, $maDH);
             $stmt->execute();
 
-            // 4. CẬP NHẬT hoặc INSERT vào LichSuDonHang
+            //  CẬP NHẬT hoặc INSERT vào LichSuDonHang
             $stmt = $this->conn->prepare("SELECT MaLichSu FROM LichSuDonHang WHERE MaDH = ? LIMIT 1");
             $stmt->bind_param("i", $maDH);
             $stmt->execute();

@@ -14,7 +14,7 @@ $model = new SellerDonHangModel($conn);
 $message = '';
 $error = '';
 
-// --- XỬ LÝ CẬP NHẬT TRẠNG THÁI ---
+// XỬ LÝ CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] == 'update_status') {
     $maDH = intval($_POST['maDH']);
     $newStatus = $_POST['trangThai'];
@@ -54,7 +54,7 @@ if (isset($_SESSION['err'])) {
     unset($_SESSION['err']);
 }
 
-// --- LẤY DỮ LIỆU HIỂN THỊ (CÓ LỌC) ---
+// LẤY DỮ LIỆU HIỂN THỊ (CÓ LỌC VÀ PHÂN TRANG)
 $keyword = $_GET['search'] ?? '';
 $filter_status = $_GET['status'] ?? '';
 $tuNgay = $_GET['tungay'] ?? '';

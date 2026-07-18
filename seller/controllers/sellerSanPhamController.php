@@ -37,7 +37,6 @@ if ($tk_info && $tk_info['TrangThaiBanHang'] == 'BiKhoa') {
         $stmt_kc = $conn->prepare($sql_kc);
         $stmt_kc->bind_param("iis", $maBC, $_SESSION['IdTaiKhoan'], $noiDung);
         if ($stmt_kc->execute()) {
-            // SỬA Ở ĐÂY: Thêm ../ để thành ../../controllers/trangChuController.php
             echo "<script>alert('Đã gửi kháng cáo thành công. Admin sẽ xem xét sớm nhất!'); window.location.href='../../controllers/trangChuController.php';</script>";
             exit;
         }

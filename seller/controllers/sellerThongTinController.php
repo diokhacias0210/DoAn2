@@ -10,9 +10,7 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 
 $idUser = $_SESSION['IdTaiKhoan'];
 
-// =======================================================
 // XỬ LÝ KHI NGƯỜI DÙNG BẤM "LƯU THAY ĐỔI"
-// =======================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tenCuaHang = $_POST['TenCuaHang'] ?? '';
     $soCCCD = $_POST['SoCCCD'] ?? '';
@@ -23,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $conn->begin_transaction();
     try {
-        // 1. Cập nhật thông tin chữ vào bảng HoSoNguoiBan
+        // Cập nhật thông tin chữ vào bảng HoSoNguoiBan
         $sql_update_shop = "UPDATE HoSoNguoiBan 
                             SET TenCuaHang=?, SoCCCD=?, DiaChiKhoHang=?, TenNganHang=?, SoTaiKhoanNganHang=?, TenChuTaiKhoan=? 
                             WHERE IdTaiKhoan=?";
@@ -31,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("ssssssi", $tenCuaHang, $soCCCD, $diaChiKhoHang, $tenNganHang, $soTaiKhoanNganHang, $tenChuTaiKhoan, $idUser);
         $stmt->execute();
 
-        // 2. Xử lý Upload Avatar vào bảng TaiKhoan
+        //  Xử lý Upload Avatar vào bảng TaiKhoan
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
             $fileTmpPath = $_FILES['avatar']['tmp_name'];
             $fileName = time() . '_' . basename($_FILES['avatar']['name']);
@@ -67,9 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// =======================================================
+
 // LẤY DỮ LIỆU HIỂN THỊ RA GIAO DIỆN
-// =======================================================
 // Kết hợp bảng HoSoNguoiBan và TaiKhoan để lấy Avatar
 $sql = "SELECT h.*, t.Avatar 
         FROM HoSoNguoiBan h 

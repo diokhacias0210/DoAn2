@@ -8,7 +8,6 @@ class AdminBaoCaoModel
         $this->conn = $conn;
     }
 
-    // Lấy danh sách tất cả báo cáo
     // Lấy danh sách tất cả báo cáo (Có kèm nội dung kháng cáo nếu có)
     public function getDanhSachBaoCao($loai = '', $trangThai = '', $search = '')
     {

@@ -26,7 +26,6 @@
 
         .qlnd-table th {
             background-color: #4CAF50 !important;
-            /* Đã đồng bộ màu */
             color: white;
             border: none;
             vertical-align: middle;

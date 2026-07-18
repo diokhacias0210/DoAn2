@@ -10,11 +10,11 @@ if (!isset($_SESSION['IdTaiKhoan'])) {
 
 $idSeller = $_SESSION['IdTaiKhoan'];
 
-// ==================== THÊM MỚI: SỬ DỤNG MODEL ====================
+// THÊM MỚI: SỬ DỤNG MODEL CHO CHAT 
 require_once '../../models/chatModel.php';
 $chatModel = new chatModel($conn);
 
-// LẤY DANH SÁCH PHÒNG CHAT KÈM SỐ TIN NHẮN CHƯA ĐỌC (giữ nguyên code cũ của bạn)
+// LẤY DANH SÁCH PHÒNG CHAT KÈM SỐ TIN NHẮN CHƯA ĐỌC (để hiển thị badge số lượng tin nhắn mới)
 $sql = "SELECT p.MaPhong, p.MaHH, h.TenHH, t.TenTK AS TenNguoiChat,
                (SELECT COUNT(tn.MaTN) 
                 FROM TinNhan tn 

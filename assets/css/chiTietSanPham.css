@@ -728,7 +728,7 @@ display: flex ;
 
 /* --- RESPONSIVE CHO ĐIỆN THOẠI (MOBILE) --- */
 @media (max-width: 768px) {
-  /* 1. Căn chỉnh lại lề toàn trang */
+  /* Căn chỉnh lại lề toàn trang */
   .giua-trang {
     padding-left: 15px;  /* Giảm lề trái phải 120px -> 15px */
     padding-right: 15px;
@@ -739,7 +739,7 @@ display: flex ;
     padding: 0; /* Bỏ padding thừa */
   }
 
-  /* 2. Tiêu đề trang */
+  /*  Tiêu đề trang */
   .tieude-chitietsanpham {
     flex-direction: column; /* Xếp dọc */
     gap: 15px;
@@ -756,7 +756,7 @@ display: flex ;
     justify-content: center;
   }
 
-  /* 3. Phần ảnh và thông tin (Container Top) */
+  /* Phần ảnh và thông tin (Container Top) */
   .container-top {
     grid-template-columns: 1fr; /* Chuyển thành 1 cột */
     gap: 20px;

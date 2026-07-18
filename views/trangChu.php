@@ -76,7 +76,7 @@
   <?php include '../includes/header.php'; ?>
 
   <?php
-  // Logic Modal khảo sát giữ nguyên
+  // Logic Modal khảo sát gợi ý AI: Chỉ hiển thị nếu user đã đăng nhập và chưa có tương tác nào được ghi nhận trong HanhVi_AI
   $showSurvey = false;
   if (isset($_SESSION['IdTaiKhoan'])) {
     $idKhach = (int)$_SESSION['IdTaiKhoan'];
@@ -215,7 +215,7 @@
   <script src="../assets/js/js.js"></script>
 
   <script>
-    // --- GỌI GỢI Ý AI BẰNG AJAX---
+    //  GỌI GỢI Ý AI BẰNG AJAX
     document.addEventListener("DOMContentLoaded", function() {
       fetch('ajaxLayGoiYAI.php')
         .then(res => res.text())
@@ -247,34 +247,78 @@
       }
     <?php endif; ?>
 
-    // --- JS KHOẢNG CÁCH: GIỮ NGUYÊN NGUYÊN BẢN CỦA BẠN (Dòng 204 - 256) ---
+    // GỌI API TÌM CỬA HÀNG THEO VỊ TRÍ
     var latDuPhong = <?= $userLat ?? 0 ?>;
     var lngDuPhong = <?= $userLng ?? 0 ?>;
     document.addEventListener("DOMContentLoaded", function() {
       requestLocation();
     });
 
+    // =============================== PHẦN CODE CŨ CÓ HỎI SỬ DỤNG GPS HAY KHÔNG RỒI CHUYỂN QUA MẶC ĐỊNH ===============================
+    // function requestLocation() {
+    //   let statusDiv = document.getElementById('status-message');
+    //   if (!statusDiv) return;
+
+    //   statusDiv.style.display = 'block';
+    //   statusDiv.className = 'alert alert-info text-center small';
+    //   statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Đang xác định vị trí...';
+
+    //   if (navigator.geolocation) {
+    //     navigator.geolocation.getCurrentPosition(
+    //       function(position) {
+    //         statusDiv.className = 'alert alert-success text-center small shadow-sm';
+    //         statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
+    //         goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
+    //         goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
+    //       },
+    //       function(error) {
+    //         if (latDuPhong != 0 && lngDuPhong != 0) {
+    //           statusDiv.className = 'alert alert-info text-center small shadow-sm';
+    //           statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+    //           goiApiTimCuaHang(latDuPhong, lngDuPhong);
+    //           goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
+    //         } else {
+    //           statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+    //           statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng bật GPS hoặc thiết lập địa chỉ mặc định để tìm cửa hàng.';
+    //         }
+    //       }
+    //     );
+    //   } else {
+    //     if (latDuPhong != 0 && lngDuPhong != 0) {
+    //       statusDiv.className = 'alert alert-info text-center small shadow-sm';
+    //       statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+    //       goiApiTimCuaHang(latDuPhong, lngDuPhong);
+    //       goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
+    //     } else {
+    //       statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+    //       statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Trình duyệt không hỗ trợ GPS. Vui lòng thiết lập địa chỉ mặc định.';
+    //     }
+    //   }
+    // }
+
+    // =============================== PHẦN CODE MỚI SỬ DỤNG THẲNG ĐỊA CHỈ MẶC ĐỊNH KHÔNG CÓ HỎI GPS ===============================
     function requestLocation() {
-      let statusDiv = document.getElementById('status-message');
-      if (!statusDiv) return;
-      statusDiv.style.display = 'block';
-      statusDiv.className = 'alert alert-info text-center small';
-      statusDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-info"></div> Đang xác định vị trí...';
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          statusDiv.className = 'alert alert-success text-center small shadow-sm';
-          statusDiv.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Đang gợi ý cửa hàng theo vị trí hiện tại của bạn.';
-          goiApiTimCuaHang(position.coords.latitude, position.coords.longitude);
-          goiApiTimSanPhamGanNhat(position.coords.latitude, position.coords.longitude);
-        }, function(error) {
-          if (latDuPhong != 0 && lngDuPhong != 0) {
-            statusDiv.className = 'alert alert-info text-center small shadow-sm';
-            statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị cửa hàng quanh <b>địa chỉ mặc định</b> của bạn.';
+        let statusDiv = document.getElementById('status-message');
+        if (!statusDiv) return;
+
+        statusDiv.style.display = 'block';
+
+        // Kiểm tra xem đã có tọa độ mặc định chưa (latDuPhong, lngDuPhong khác 0)
+        if (typeof latDuPhong !== 'undefined' && typeof lngDuPhong !== 'undefined' && latDuPhong != 0 && lngDuPhong != 0) {
+            
+            // Hiện ngay thông báo thành công, không có bước "Đang xác định..."
+            statusDiv.className = 'alert alert-success text-center small shadow-sm';
+            statusDiv.innerHTML = '<i class="fa-solid fa-house-user"></i> Đang hiển thị sản phẩm quanh <b>địa chỉ mặc định</b> của bạn.';
+            
+            // Trực tiếp gọi API tìm kiếm
             goiApiTimCuaHang(latDuPhong, lngDuPhong);
             goiApiTimSanPhamGanNhat(latDuPhong, lngDuPhong);
-          }
-        });
-      }
+            
+        } else {
+            // Trường hợp người dùng chưa thiết lập địa chỉ
+            statusDiv.className = 'alert alert-warning text-center small shadow-sm';
+            statusDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Vui lòng thiết lập địa chỉ trong hồ sơ để xem các cửa hàng và sản phẩm gần bạn.';
+        }
     }
 
     function goiApiTimCuaHang(lat, lng) {
@@ -292,18 +336,20 @@
           if (data.status === 'success') {
             if (data.data.length > 0) {
               data.data.forEach(shop => {
-                html += `<a href="chiTietNguoiBanController.php?IdTaiKhoan=${shop.IdTaiKhoan}" class="product-link">
-                    <div class="product-item p-3 d-flex flex-column justify-content-between h-100" style="border: 1px solid #eee; background: #fff; border-radius: 12px;">
-                        <div>
-                            <h5 class="text-primary text-truncate mb-2" title="${shop.TenCuaHang}"><i class="fa-solid fa-store"></i> <b>${shop.TenCuaHang}</b></h5>
-                            <p class="text-muted small mb-0" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;"><i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}</p>
+                html += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm border-0" style="border-radius: 12px;">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary"><b>${shop.TenCuaHang}</b></h5>
+                                <p class="card-text text-muted small"><i class="fa-solid fa-location-dot"></i> ${shop.DiaChi}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-light text-danger">Cách: ${shop.KhoangCachKm} km</span>
+                                    <a href="chiTietNguoiBanController.php?IdTaiKhoan=${shop.IdTaiKhoan}" class="btn btn-sm btn-outline-danger">Ghé thăm</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2" style="border-top: 1px dashed #ddd;">
-                            <span class="badge bg-light text-danger fw-bold"><i class="fa-solid fa-route"></i> ${shop.KhoangCachKm} km</span>
-                            <span class="btn btn-sm btn-outline-danger" style="font-size: 12px;">Ghé thăm</span>
-                        </div>
-                    </div></a>`;
-              });
+                    </div>`;
+                });
             } else {
               statusDiv.innerHTML = 'Không có cửa hàng nào trong bán kính 10km.';
             }

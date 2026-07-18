@@ -12,7 +12,7 @@ $danhMucModel = new AdminDanhMucModel($conn);
 $message = '';
 $error = '';
 $keyword = ''; // Biến lưu từ khóa tìm kiếm
-// 4. XỬ LÝ LOGIC (POST, GET)
+// XỬ LÝ LOGIC (POST, GET)
 try {
 
     // ---- Xử lý TÌM KIẾM (GET) ----

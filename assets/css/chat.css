@@ -205,9 +205,9 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* ==================== HIỆU ỨNG & KHUNG TIN NHẮN (ZALO STYLE) ==================== */
+/* ==================== HIỆU ỨNG & KHUNG TIN NHẮN ==================== */
 
-/* 1. Bao bọc ngoài cùng của một tin nhắn */
+/*  Bao bọc ngoài cùng của một tin nhắn */
 .msg {
     display: flex;
     flex-direction: column;
@@ -233,7 +233,7 @@ body {
     align-items: flex-start;
 }
 
-/* 2. Bong bóng Chat (Thẻ trực tiếp chứa chữ) */
+/*  Bong bóng Chat (Thẻ trực tiếp chứa chữ) */
 .message-bubble {
     position: relative;
     padding: 10px 16px;
@@ -259,7 +259,7 @@ body {
     border-bottom-left-radius: 4px; /* Vát đuôi nhọn ở góc dưới trái */
 }
 
-/* 3. Thời gian gửi */
+/* Thời gian gửi */
 .message-time {
     font-size: 11px;
     color: #999;

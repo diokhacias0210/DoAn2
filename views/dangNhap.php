@@ -1,6 +1,4 @@
-<?php
-// TOÀN BỘ LOGIC PHP Ở ĐẦU ĐÃ BỊ XÓA
-?>
+
 <!DOCTYPE html>
 <html lang="en">
 

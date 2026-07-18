@@ -25,7 +25,7 @@
             background-color: #f8f9fa;
         }
 
-        /* --- ĐỒNG BỘ KHUNG SƯỜN --- */
+        /* ĐỒNG BỘ KHUNG SƯỜN  */
         .seller-wrapper {
             max-width: 1300px;
             margin: 0 auto;
@@ -40,7 +40,7 @@
             min-height: 600px;
         }
 
-        /* --- MENU BÊN TRÁI (SIDEBAR) --- */
+        /* MENU BÊN TRÁI (SIDEBAR) */
         .seller-sidebar {
             background: #ffffff;
             border-radius: 10px;
@@ -75,7 +75,7 @@
             border-left: 4px solid var(--bs-pink-600);
         }
 
-        /* --- BADGE TIN NHẮN --- */
+        /*  BADGE TIN NHẮN  */
         .chat-badge {
             position: absolute;
             top: 50%;

@@ -290,9 +290,7 @@ class SanPham
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    /**
-     * Đếm tổng sản phẩm của người bán (để tính xem còn nút "Xem thêm" không)
-     */
+     // Đếm tổng sản phẩm của người bán (để tính xem còn nút "Xem thêm" không)
     public function demSanPhamCuaNguoiBan($idNguoiBan, $iddanhmuc = null, $tukhoa = null)
     {
         $sql = "SELECT COUNT(*) as dem FROM HangHoa 

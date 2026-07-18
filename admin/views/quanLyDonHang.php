@@ -24,7 +24,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        /* ĐỔI MÀU TIÊU ĐỀ BẢNG GIỐNG TRANG THÔNG BÁO/BÁO CÁO */
         .qldh-table th {
             background-color: #4CAF50 !important;
             color: white;
